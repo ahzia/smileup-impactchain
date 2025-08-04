@@ -26,7 +26,9 @@ export default function Navigation() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="flex flex-col items-center h-auto p-2 min-w-0"
+                className={`flex flex-col items-center h-auto p-2 min-w-0 transition-colors ${
+                  isActive ? 'bg-primary/10 hover:bg-primary/20' : 'hover:bg-muted'
+                }`}
               >
                 <Icon
                   className={`text-2xl transition-colors ${
