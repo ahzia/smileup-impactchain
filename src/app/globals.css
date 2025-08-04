@@ -120,3 +120,66 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* DialogFlow Messenger Customization */
+.dark {
+  /* Message Bubbles */
+  --df-messenger-message-bot-background: linear-gradient(
+    to bottom right,
+    hsl(var(--secondary)),
+    hsl(var(--card))
+  );
+  --df-messenger-message-user-background: linear-gradient(
+    to bottom right,
+    hsl(var(--muted)),
+    hsl(var(--card))
+  );
+  --df-messenger-message-user-font-color: hsl(var(--foreground));
+  --df-messenger-message-bot-writing-font-color: hsl(var(--foreground));
+  
+  /* Input Area */
+  --df-messenger-input-box-background: hsl(var(--muted));
+  --df-messenger-input-box-border: 1px solid hsl(var(--border));
+  --df-messenger-input-box-focus-border: 2px solid hsl(var(--primary));
+  
+  /* Feedback Icons */
+  --df-messenger-message-feedback-icon-font-color: hsl(var(--primary));
+  
+  /* Chat Area */
+  --df-messenger-chat-background: hsl(var(--background));
+  
+  /* Titlebar */
+  --df-messenger-titlebar-background: linear-gradient(
+    to right,
+    hsl(var(--primary)),
+    hsl(var(--primary-foreground))
+  );
+  --df-messenger-titlebar-font-color: hsl(var(--foreground));
+  
+  /* Buttons */
+  --df-messenger-button-titlebar-color: hsl(var(--primary));
+  --df-messenger-chat-scroll-button-background: hsl(var(--foreground));
+  --df-messenger-chat-scroll-button-font-color: hsl(var(--primary));
+  --df-messenger-link-font-color: hsl(var(--primary));
+  --df-messenger-link-hover-font-color: hsl(var(--primary));
+  
+  /* Border radius */
+  --df-messenger-message-bot-border-top-left-radius: 16px;
+  --df-messenger-message-bot-border-top-right-radius: 16px;
+  --df-messenger-message-bot-border-bottom-left-radius: 16px;
+  --df-messenger-message-bot-border-bottom-right-radius: 16px;
+  --df-messenger-message-user-border-top-left-radius: 16px;
+  --df-messenger-message-user-border-top-right-radius: 16px;
+  --df-messenger-message-user-border-bottom-left-radius: 16px;
+  --df-messenger-message-user-border-bottom-right-radius: 16px;
+  
+  /* General styling */
+  --df-messenger-font-family: "Inter", sans-serif;
+  --df-messenger-font-size: 14px;
+  --df-messenger-font-color: hsl(var(--foreground));
+  --df-messenger-primary-color: hsl(var(--primary));
+  --df-messenger-input-background: hsl(var(--muted));
+  --df-messenger-message-feedback-icon-background: transparent;
+  --df-messenger-message-feedback-icon-font-color-active: hsl(var(--primary));
+  --df-messenger-send-icon-color: hsl(var(--primary));
+}
