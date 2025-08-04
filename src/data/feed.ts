@@ -1,7 +1,7 @@
 export interface FeedPost {
   id: string;
-  mediaType: "video" | "image";
-  mediaUrl: string;
+  mediaType: "video" | "image" | "text";
+  mediaUrl?: string;
   title: string;
   description: string;
   community: {
@@ -22,7 +22,7 @@ export const feedPosts: FeedPost[] = [
   {
     id: "post_001",
     mediaType: "video",
-    mediaUrl: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=600&fit=crop",
+    mediaUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
     title: "Beach Cleanup Success - 500kg of waste collected!",
     description: "Our amazing volunteers spent the weekend cleaning up the local beach. We collected over 500kg of plastic waste and marine debris. This is what community action looks like! 🌊♻️",
     community: {
@@ -60,7 +60,7 @@ export const feedPosts: FeedPost[] = [
   {
     id: "post_003",
     mediaType: "video",
-    mediaUrl: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=600&fit=crop",
+    mediaUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
     title: "Hackathon Results - 15 new apps for nonprofits",
     description: "Our 48-hour hackathon brought together 50 developers who created 15 innovative apps for local nonprofits. Technology for social good! 💻❤️",
     community: {
@@ -78,22 +78,21 @@ export const feedPosts: FeedPost[] = [
   },
   {
     id: "post_004",
-    mediaType: "image",
-    mediaUrl: "https://images.unsplash.com/photo-1523240798132-8757214e6b0a?w=400&h=600&fit=crop",
-    title: "Digital Literacy Workshop - Free coding classes",
-    description: "Teaching seniors how to use technology safely and effectively. Digital skills are essential for everyone! 📱💻",
+    mediaType: "text",
+    title: "Mental Health Awareness Campaign",
+    description: "Breaking the stigma around mental health. Join our community in creating safe spaces for open dialogue and support. Every conversation matters. 💚🧠",
     community: {
-      id: "comm_002",
-      name: "Tech for Social Impact",
-      logo: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=100&h=100&fit=crop"
+      id: "comm_005",
+      name: "Community Health Advocates",
+      logo: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=100&h=100&fit=crop"
     },
-    challenge: "The digital divide affects seniors disproportionately. We're making technology accessible to all ages.",
-    callToAction: ["Sign up for classes", "Volunteer to teach", "Donate devices"],
-    links: ["https://techforsocialimpact.org/classes", "https://techforsocialimpact.org/volunteer"],
-    smiles: 750,
-    commentsCount: 28,
-    likesCount: 189,
-    createdAt: "2024-03-10T09:30:00Z"
+    challenge: "Mental health stigma prevents people from seeking help. We're creating safe spaces for open dialogue.",
+    callToAction: ["Join our support groups", "Volunteer as a facilitator", "Donate to our programs"],
+    links: ["https://communityhealthadvocates.org/support", "https://communityhealthadvocates.org/volunteer"],
+    smiles: 1650,
+    commentsCount: 78,
+    likesCount: 432,
+    createdAt: "2024-03-14T14:30:00Z"
   },
   {
     id: "post_005",

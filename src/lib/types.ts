@@ -96,8 +96,8 @@ export interface CreateCommunityRequest {
 // Feed Types
 export interface FeedPost {
   id: string;
-  mediaType: "video" | "image";
-  mediaUrl: string;
+  mediaType: "video" | "image" | "text";
+  mediaUrl?: string;
   title: string;
   description: string;
   community: {
@@ -112,6 +112,7 @@ export interface FeedPost {
   commentsCount: number;
   likesCount: number;
   createdAt: string;
+  saved?: boolean;
 }
 
 export interface CreateFeedPostRequest {
