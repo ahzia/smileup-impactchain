@@ -8,6 +8,9 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
+    const missionId = params.id;
+    const body: CompleteMissionRequest = await request.json();
+
     // In real app, validate JWT token from Authorization header
     const authHeader = request.headers.get('authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -17,23 +20,11 @@ export async function POST(
       );
     }
 
-    const { id } = params;
-    const body: CompleteMissionRequest = await request.json();
-    const { proofType, proofUrl, proofText } = body;
-
-    // Validate input
-    if (!proofType) {
-      return NextResponse.json(
-        { success: false, error: 'Proof type is required' },
-        { status: 400 }
-      );
-    }
-
     // For mock implementation, use a default user ID
     const userId = 'user_001';
 
     // Complete mission
-    const result = await MissionService.completeMission(id, body, userId);
+    const result = await MissionService.completeMission(missionId, body, userId);
 
     return NextResponse.json({
       success: true,

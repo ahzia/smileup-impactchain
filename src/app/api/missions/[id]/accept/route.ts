@@ -7,6 +7,8 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
+    const missionId = params.id;
+
     // In real app, validate JWT token from Authorization header
     const authHeader = request.headers.get('authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -16,13 +18,11 @@ export async function POST(
       );
     }
 
-    const { id } = params;
-
     // For mock implementation, use a default user ID
     const userId = 'user_001';
 
     // Accept mission
-    const mission = await MissionService.acceptMission(id, userId);
+    const mission = await MissionService.acceptMission(missionId, userId);
 
     return NextResponse.json({
       success: true,
