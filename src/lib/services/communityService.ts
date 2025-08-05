@@ -364,4 +364,58 @@ export class CommunityService {
       data: { status: 'inactive' },
     });
   }
+
+  // ========================================
+  // API COMPATIBILITY METHODS
+  // ========================================
+
+  static async getCommunities(query: {
+    category?: string;
+    status?: string;
+    page?: number;
+    pageSize?: number;
+  }): Promise<any[]> {
+    let communities = await this.getAllCommunities(100);
+
+    // Filter by category
+    if (query.category && query.category !== 'all') {
+      communities = communities.filter(community => community.category === query.category);
+    }
+
+    // Filter by status
+    if (query.status && query.status !== 'all') {
+      communities = communities.filter(community => community.status === query.status);
+    }
+
+    // Pagination
+    const page = query.page || 1;
+    const pageSize = query.pageSize || 10;
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+
+    return communities.slice(startIndex, endIndex);
+  }
+
+  static async createCommunityWithUser(data: any, userId: string): Promise<any> {
+    const community = await this.createCommunity({
+      name: data.name,
+      description: data.description,
+      category: data.category,
+      logoUrl: data.logo,
+      bannerUrl: data.banner,
+      location: data.location,
+      website: data.website,
+      createdBy: userId,
+    });
+
+    // Add creator as admin
+    await this.joinCommunity(userId, community.id);
+    await this.updateMemberRole(userId, community.id, 'admin');
+
+    return {
+      id: community.id,
+      name: community.name,
+      status: community.status,
+    };
+  }
 } 

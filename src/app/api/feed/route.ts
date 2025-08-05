@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
     const userId = 'user_001';
 
     // Create feed post
-    const post = await FeedService.createFeedPost(body, userId);
+    const post = await FeedService.createFeedPostWithUser(body, userId);
 
     return NextResponse.json({
       success: true,

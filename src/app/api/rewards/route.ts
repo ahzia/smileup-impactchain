@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
     const userId = 'user_001';
 
     // Create reward
-    const reward = await RewardService.createReward(body, userId);
+    const reward = await RewardService.createRewardWithUser(body, userId);
 
     return NextResponse.json({
       success: true,

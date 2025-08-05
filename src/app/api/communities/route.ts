@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
     const userId = 'user_001';
 
     // Create community
-    const community = await CommunityService.createCommunity(body, userId);
+    const community = await CommunityService.createCommunityWithUser(body, userId);
 
     return NextResponse.json({
       success: true,

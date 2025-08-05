@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
     const userId = 'user_001';
 
     // Create mission
-    const mission = await MissionService.createMission(body, userId);
+    const mission = await MissionService.createMissionWithUser(body, userId);
 
     return NextResponse.json({
       success: true,
