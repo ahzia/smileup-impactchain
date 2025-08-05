@@ -73,7 +73,7 @@ async function deploySmilesToken() {
 
     console.log('✅ Sufficient balance for token deployment');
 
-    // Create token transaction with minimal required fields
+    // Create token transaction with supply key for minting
     const tokenCreateTx = new TokenCreateTransaction()
       .setTokenName("Smiles")
       .setTokenSymbol("SMILE")
@@ -82,7 +82,8 @@ async function deploySmilesToken() {
       .setTreasuryAccountId(operatorId)
       .setSupplyType(TokenSupplyType.Finite)
       .setMaxSupply(10000000) // 10M max supply
-      .setTokenMemo("SmileUp ImpactChain Reward Token");
+      .setTokenMemo("SmileUp ImpactChain Reward Token")
+      .setSupplyKey(operatorKey.publicKey); // Add supply key for minting
 
     console.log('🔄 Creating token...');
     

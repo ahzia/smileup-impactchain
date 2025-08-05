@@ -11,6 +11,9 @@
     "hedera:test": "node scripts/test-hedera-connection.js",
     "hedera:balance": "node scripts/check-balance.js",
     "hedera:deploy-token": "node scripts/deploy-smiles-token.js",
+    "hedera:test-token": "node scripts/test-token-service.js",
+    "hedera:test-hcs": "node scripts/test-hcs-service.js",
+    "hedera:test-wallet": "node scripts/test-wallet-service.js",
     "hedera:setup": "npm run hedera:validate && npm run hedera:test && npm run hedera:balance"
   },
   "dependencies": {
