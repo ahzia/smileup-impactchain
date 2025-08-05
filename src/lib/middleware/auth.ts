@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { UserService } from '../services/userService';
+import { JWTService } from '../services/jwtService';
 
 export interface AuthenticatedRequest extends NextRequest {
   user?: {
@@ -24,34 +25,35 @@ export class AuthMiddleware {
 
       const token = authHeader.substring(7);
       
-      // Simple token validation for development
-      if (!token.startsWith('jwt_')) {
+      // Use JWT service to verify token
+      try {
+        const decoded = JWTService.verifyAccessToken(token);
+        
+        // Check if token is blacklisted
+        if (JWTService.isTokenBlacklisted(token)) {
+          return null;
+        }
+
+        const user = await UserService.findUserById(decoded.userId);
+        
+        if (!user) {
+          return null;
+        }
+
+        // Add user to request
+        const authenticatedRequest = request as AuthenticatedRequest;
+        authenticatedRequest.user = {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: decoded.role || 'user',
+        };
+
+        return authenticatedRequest;
+      } catch (jwtError) {
+        console.error('JWT verification failed:', jwtError);
         return null;
       }
-
-      // Extract user ID from token (format: jwt_userId_timestamp)
-      const parts = token.split('_');
-      if (parts.length < 2) {
-        return null;
-      }
-
-      const userId = parts[1];
-      const user = await UserService.findUserById(userId);
-      
-      if (!user) {
-        return null;
-      }
-
-      // Add user to request
-      const authenticatedRequest = request as AuthenticatedRequest;
-      authenticatedRequest.user = {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        role: 'user',
-      };
-
-      return authenticatedRequest;
     } catch (error) {
       console.error('Token verification error:', error);
       return null;

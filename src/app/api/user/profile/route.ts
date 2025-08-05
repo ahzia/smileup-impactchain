@@ -1,21 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { AuthService } from '@/lib/services/authService';
+import { AuthMiddleware } from '@/lib/middleware/auth';
+import { JWTService } from '@/lib/services/jwtService';
 import { UpdateProfileRequest } from '@/lib/types';
 
 // GET /api/user/profile
 export async function GET(request: NextRequest) {
   try {
-    // In real app, validate JWT token from Authorization header
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    // Validate authentication and extract user ID from JWT token
+    const authResult = await AuthMiddleware.requireAuth(request);
+    
+    if (authResult instanceof NextResponse) {
+      return authResult; // Return error response
+    }
+
+    const userId = AuthMiddleware.getCurrentUserId(authResult);
+    if (!userId) {
       return NextResponse.json(
-        { success: false, error: 'Authorization token required' },
+        { success: false, error: 'User ID not found in token' },
         { status: 401 }
       );
     }
 
-    // For mock implementation, get current user
-    const user = await AuthService.getCurrentUser();
+    // Get current user profile
+    const user = await AuthService.getCurrentUser(userId);
 
     return NextResponse.json({
       success: true,
@@ -37,11 +45,17 @@ export async function GET(request: NextRequest) {
 // PUT /api/user/profile
 export async function PUT(request: NextRequest) {
   try {
-    // In real app, validate JWT token from Authorization header
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    // Validate authentication and extract user ID from JWT token
+    const authResult = await AuthMiddleware.requireAuth(request);
+    
+    if (authResult instanceof NextResponse) {
+      return authResult; // Return error response
+    }
+
+    const userId = AuthMiddleware.getCurrentUserId(authResult);
+    if (!userId) {
       return NextResponse.json(
-        { success: false, error: 'Authorization token required' },
+        { success: false, error: 'User ID not found in token' },
         { status: 401 }
       );
     }
@@ -58,7 +72,7 @@ export async function PUT(request: NextRequest) {
     }
 
     // Update profile
-    const updatedUser = await AuthService.updateProfile({
+    const updatedUser = await AuthService.updateProfile(userId, {
       name,
       bio,
       interests,
