@@ -175,3 +175,5 @@ pnpm-lock.yaml
 
 # Local development
 .local
+
+/src/generated/prisma
