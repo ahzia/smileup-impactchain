@@ -10,6 +10,7 @@
     "hedera:validate": "node scripts/validate-env.js",
     "hedera:test": "node scripts/test-hedera-connection.js",
     "hedera:balance": "node scripts/check-balance.js",
+    "hedera:deploy-token": "node scripts/deploy-smiles-token.js",
     "hedera:setup": "npm run hedera:validate && npm run hedera:test && npm run hedera:balance"
   },
   "dependencies": {

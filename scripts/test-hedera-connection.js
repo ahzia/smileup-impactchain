@@ -50,12 +50,23 @@ async function testHederaConnection() {
     console.log('✅ Successfully connected to Hedera network!');
     console.log('\n📊 Account Information:');
     console.log(`   Account ID: ${accountInfo.accountId.toString()}`);
-    console.log(`   Balance: ${accountInfo.balance.toString()} tinybars`);
+    console.log(`   Balance: ${accountInfo.balance.toString()}`);
     
-    // Convert balance to HBAR properly
-    const balanceInTinybars = accountInfo.balance.toString().split(' ')[0];
-    const hbarBalance = parseFloat(balanceInTinybars) / 100000000;
-    console.log(`   HBAR Balance: ${hbarBalance.toFixed(2)} HBAR`);
+    // Parse balance - check if it's in HBAR or tinybars
+    const balanceStr = accountInfo.balance.toString();
+    let hbarBalance;
+    
+    if (balanceStr.includes('ℏ')) {
+      // Balance is already in HBAR
+      const balanceInHbar = balanceStr.split(' ')[0];
+      hbarBalance = parseFloat(balanceInHbar);
+      console.log(`   HBAR Balance: ${hbarBalance.toFixed(2)} HBAR`);
+    } else {
+      // Balance is in tinybars, convert to HBAR
+      const balanceInTinybars = balanceStr.split(' ')[0];
+      hbarBalance = parseFloat(balanceInTinybars) / 100000000;
+      console.log(`   HBAR Balance: ${hbarBalance.toFixed(6)} HBAR`);
+    }
     
     console.log(`   Is Deleted: ${accountInfo.isDeleted}`);
     console.log(`   Proxy Account: ${accountInfo.proxyAccountId ? accountInfo.proxyAccountId.toString() : 'None'}`);

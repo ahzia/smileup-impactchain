@@ -41,8 +41,24 @@ async function checkBalance() {
     console.log('📊 Account Information:');
     console.log(`   Account ID: ${accountInfo.accountId.toString()}`);
     console.log(`   Network: ${network}`);
-    console.log(`   Balance: ${accountInfo.balance.toString()} tinybars`);
-    console.log(`   HBAR Balance: ${(Number(accountInfo.balance) / 100000000).toFixed(2)} HBAR`);
+    console.log(`   Balance: ${accountInfo.balance.toString()}`);
+    
+    // Parse balance - check if it's in HBAR or tinybars
+    const balanceStr = accountInfo.balance.toString();
+    let hbarBalance;
+    
+    if (balanceStr.includes('ℏ')) {
+      // Balance is already in HBAR
+      const balanceInHbar = balanceStr.split(' ')[0];
+      hbarBalance = parseFloat(balanceInHbar);
+      console.log(`   HBAR Balance: ${hbarBalance.toFixed(2)} HBAR`);
+    } else {
+      // Balance is in tinybars, convert to HBAR
+      const balanceInTinybars = balanceStr.split(' ')[0];
+      hbarBalance = parseFloat(balanceInTinybars) / 100000000;
+      console.log(`   HBAR Balance: ${hbarBalance.toFixed(6)} HBAR`);
+    }
+    
     console.log(`   Is Deleted: ${accountInfo.isDeleted}`);
     console.log(`   Auto Renew Period: ${accountInfo.autoRenewPeriod} seconds`);
 
@@ -78,7 +94,6 @@ async function checkBalance() {
     }
 
     // Balance recommendations
-    const hbarBalance = Number(accountInfo.balance) / 100000000;
     console.log('\n💡 Balance Recommendations:');
     
     if (hbarBalance < 0.5) {
