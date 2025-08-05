@@ -192,43 +192,43 @@ export default function MissionsPage() {
         ))}
       </div>
 
-      <div className="container mx-auto px-4 py-6 relative z-10">
+      <div className="container mx-auto px-4 py-4 relative z-10">
         {/* Beautiful Header Section */}
         <motion.div 
-          className="text-center mb-8"
+          className="text-center mb-4"
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <div className="flex items-center justify-center space-x-3 mb-4">
+          <div className="flex items-center justify-center space-x-2 mb-2">
             <motion.div
               animate={{ scale: [1, 1.1, 1] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
-              <div className="p-3 bg-gradient-to-br from-primary/20 via-primary/15 to-primary/20 rounded-xl border border-primary/30 backdrop-blur-sm">
-                <Target className="h-8 w-8 text-primary" />
+              <div className="p-2 bg-gradient-to-br from-primary/20 via-primary/15 to-primary/20 rounded-lg border border-primary/30 backdrop-blur-sm">
+                <Target className="h-5 w-5 text-primary" />
               </div>
             </motion.div>
             <motion.div
               animate={{ scale: [1, 1.1, 1] }}
               transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
             >
-              <div className="p-3 bg-gradient-to-br from-yellow-500/20 via-yellow-400/15 to-yellow-500/20 rounded-xl border border-yellow-500/30 backdrop-blur-sm">
-                <Trophy className="h-8 w-8 text-yellow-400" />
+              <div className="p-2 bg-gradient-to-br from-yellow-500/20 via-yellow-400/15 to-yellow-500/20 rounded-lg border border-yellow-500/30 backdrop-blur-sm">
+                <Trophy className="h-5 w-5 text-yellow-400" />
               </div>
             </motion.div>
             <motion.div
               animate={{ scale: [1, 1.1, 1] }}
               transition={{ duration: 2, repeat: Infinity, delay: 1 }}
             >
-              <div className="p-3 bg-gradient-to-br from-blue-500/20 via-blue-400/15 to-blue-500/20 rounded-xl border border-blue-500/30 backdrop-blur-sm">
-                <Zap className="h-8 w-8 text-blue-400" />
+              <div className="p-2 bg-gradient-to-br from-blue-500/20 via-blue-400/15 to-blue-500/20 rounded-lg border border-blue-500/30 backdrop-blur-sm">
+                <Zap className="h-5 w-5 text-blue-400" />
               </div>
             </motion.div>
           </div>
           
           <motion.h1 
-            className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary via-primary/90 to-primary bg-clip-text text-transparent mb-3"
+            className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary via-primary/90 to-primary bg-clip-text text-transparent mb-2"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
@@ -237,55 +237,39 @@ export default function MissionsPage() {
           </motion.h1>
           
           <motion.p 
-            className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed"
+            className="text-sm text-muted-foreground max-w-xl mx-auto mb-3"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            Embark on epic missions, complete challenges, and earn rewards. 
-            Every mission brings you closer to making a positive impact in the world.
+            Embark on epic missions, complete challenges, and earn rewards
           </motion.p>
           
           {/* Stats Row */}
           <motion.div 
-            className="flex flex-wrap justify-center gap-6 mt-6"
+            className="flex flex-wrap justify-center gap-3"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.6 }}
           >
-            <div className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-green-500/20 via-green-400/15 to-green-500/20 border border-green-500/30 rounded-lg backdrop-blur-sm">
-              <motion.div
-                animate={{ scale: [1, 1.1, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                <CheckCircle className="h-5 w-5 text-green-400" />
-              </motion.div>
-              <span className="text-sm font-semibold text-green-400">
-                {missions.filter(m => m.status === 'completed').length} Completed
+            <div className="flex items-center space-x-1 px-2 py-1 bg-gradient-to-r from-green-500/20 via-green-400/15 to-green-500/20 border border-green-500/30 rounded-md backdrop-blur-sm">
+              <CheckCircle className="h-3 w-3 text-green-400" />
+              <span className="text-xs font-semibold text-green-400">
+                {missions.filter(m => m.status === 'completed').length}
               </span>
             </div>
             
-            <div className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-500/20 via-blue-400/15 to-blue-500/20 border border-blue-500/30 rounded-lg backdrop-blur-sm">
-              <motion.div
-                animate={{ scale: [1, 1.1, 1] }}
-                transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-              >
-                <Clock className="h-5 w-5 text-blue-400" />
-              </motion.div>
-              <span className="text-sm font-semibold text-blue-400">
-                {missions.filter(m => m.status === 'accepted').length} In Progress
+            <div className="flex items-center space-x-1 px-2 py-1 bg-gradient-to-r from-blue-500/20 via-blue-400/15 to-blue-500/20 border border-blue-500/30 rounded-md backdrop-blur-sm">
+              <Clock className="h-3 w-3 text-blue-400" />
+              <span className="text-xs font-semibold text-blue-400">
+                {missions.filter(m => m.status === 'accepted').length}
               </span>
             </div>
             
-            <div className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-primary/20 via-primary/15 to-primary/20 border border-primary/30 rounded-lg backdrop-blur-sm">
-              <motion.div
-                animate={{ scale: [1, 1.1, 1] }}
-                transition={{ duration: 2, repeat: Infinity, delay: 1 }}
-              >
-                <Award className="h-5 w-5 text-primary" />
-              </motion.div>
-              <span className="text-sm font-semibold text-primary">
-                {missions.filter(m => m.status === 'available').length} Available
+            <div className="flex items-center space-x-1 px-2 py-1 bg-gradient-to-r from-primary/20 via-primary/15 to-primary/20 border border-primary/30 rounded-md backdrop-blur-sm">
+              <Target className="h-3 w-3 text-primary" />
+              <span className="text-xs font-semibold text-primary">
+                {missions.filter(m => m.status === 'available').length}
               </span>
             </div>
           </motion.div>
