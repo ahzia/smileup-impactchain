@@ -28,7 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background`}>
         <Providers>
           <ThemeProvider
             attribute="class"
@@ -36,10 +36,11 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <div className="min-h-screen pb-16">
+            {/* Main content area with proper spacing */}
+            <main className="min-h-screen relative bg-background">
               {children}
-              <Navigation />
-            </div>
+            </main>
+            <Navigation />
           </ThemeProvider>
         </Providers>
         
