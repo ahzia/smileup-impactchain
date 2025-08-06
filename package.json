@@ -22,7 +22,10 @@
     "db:backup": "node scripts/database-backup.js",
     "db:restore": "node scripts/database-restore.js",
     "db:setup": "node scripts/setup-fresh-database.js",
-    "db:reset": "npx prisma db push --force-reset && npx prisma generate && npm run db:setup"
+    "db:reset": "npx prisma db push --force-reset && npx prisma generate && npm run db:setup",
+    "db:cloud:migrate": "node scripts/migrate-to-cloud.js",
+    "db:cloud:backup": "node scripts/database-backup.js",
+    "db:cloud:studio": "npx prisma studio"
   },
   "dependencies": {
     "@hashgraph/hedera-wallet-connect": "^1.5.1",

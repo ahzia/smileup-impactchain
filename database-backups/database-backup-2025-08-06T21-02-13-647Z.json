@@ -1,0 +1,13 @@
+{
+  "timestamp": "2025-08-06T21:02:12.305Z",
+  "version": "1.0",
+  "tables": {
+    "users": [],
+    "communities": [],
+    "communityWallets": [],
+    "custodialWallets": [],
+    "missions": [],
+    "rewards": [],
+    "feedPosts": []
+  }
+}
