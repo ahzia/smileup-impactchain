@@ -413,3 +413,176 @@
 .feed-transition {
   transition: transform 0.3s ease-out;
 }
+
+/* AI Chat Custom Styles */
+.ai-chat-container {
+  backdrop-filter: blur(20px);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08));
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.dark .ai-chat-container {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ai-message-bubble {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.ai-message-bubble::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.ai-message-bubble:hover::before {
+  transform: translateX(100%);
+}
+
+.ai-message-bubble:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.user-message-bubble {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.user-message-bubble::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.user-message-bubble:hover::before {
+  transform: translateX(100%);
+}
+
+.user-message-bubble:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.typing-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--primary);
+  animation: typing-bounce 1.4s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(1) { animation-delay: -0.32s; }
+.typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes typing-bounce {
+  0%, 80%, 100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.ai-chat-header-glow {
+  background: linear-gradient(90deg, 
+    rgba(59, 130, 246, 0.15) 0%, 
+    rgba(59, 130, 246, 0.08) 30%, 
+    rgba(59, 130, 246, 0.03) 70%,
+    transparent 100%
+  );
+  position: relative;
+}
+
+.ai-chat-header-glow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, 
+    transparent 0%, 
+    rgba(59, 130, 246, 0.05) 50%, 
+    transparent 100%
+  );
+  animation: header-shimmer 3s ease-in-out infinite;
+}
+
+@keyframes header-shimmer {
+  0%, 100% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
+}
+
+.ai-chat-input-glow {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
+  transition: all 0.3s ease;
+  border-radius: 12px;
+}
+
+.ai-chat-input-glow:focus-within {
+  box-shadow: 0 0 30px rgba(59, 130, 246, 0.2), 0 0 0 1px rgba(59, 130, 246, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Floating particles for AI chat */
+.ai-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ai-particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.6) 0%, rgba(59, 130, 246, 0.2) 70%, transparent 100%);
+  border-radius: 50%;
+  animation: float 6s infinite linear;
+  box-shadow: 0 0 4px rgba(59, 130, 246, 0.4);
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(100vh) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px) translateX(100px);
+    opacity: 0;
+  }
+}
