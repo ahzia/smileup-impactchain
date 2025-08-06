@@ -134,28 +134,40 @@ export class RewardService {
       throw new Error('Reward is out of stock');
     }
 
-    // Create purchase and update user smiles and reward stock
-    const [userReward] = await prisma.$transaction([
-      prisma.userReward.create({
-        data: {
-          userId,
-          rewardId,
-        },
-      }),
-      prisma.user.update({
-        where: { id: userId },
-        data: { smiles: { decrement: reward.price } },
-      }),
-      prisma.reward.update({
-        where: { id: rewardId },
-        data: {
-          soldCount: { increment: 1 },
-          stock: reward.stock !== null ? { decrement: 1 } : undefined,
-        },
-      }),
-    ]);
+    // Import blockchain service
+    const { BlockchainService } = await import('./blockchainService');
 
-    return userReward;
+    try {
+      // Purchase reward with blockchain integration
+      const blockchainResult = await BlockchainService.purchaseRewardWithBlockchain({
+        userId,
+        rewardId
+      });
+
+      // Create purchase and update user smiles and reward stock
+      const [userReward] = await prisma.$transaction([
+        prisma.userReward.create({
+          data: {
+            userId,
+            rewardId,
+            blockchainTransactionId: blockchainResult.blockchainTransactionId,
+          },
+        }),
+        prisma.reward.update({
+          where: { id: rewardId },
+          data: {
+            soldCount: { increment: 1 },
+            stock: reward.stock !== null ? { decrement: 1 } : undefined,
+          },
+        }),
+      ]);
+
+      return userReward;
+
+    } catch (error) {
+      console.error('Reward purchase failed:', error);
+      throw new Error(`Reward purchase failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   }
 
   static async getUserRewards(userId: string): Promise<UserReward[]> {
@@ -261,19 +273,30 @@ export class RewardService {
   }
 
   static async createRewardWithUser(data: any, userId: string): Promise<any> {
-    const reward = await this.createReward({
-      name: data.title,
+    const rewardData = {
+      name: data.name,
       description: data.description,
-      price: data.cost,
-      category: data.type,
+      price: data.price,
+      category: data.category,
       imageUrl: data.imageUrl,
-      isAvailable: true,
-      stock: data.type === 'digital' || data.type === 'certificate' ? undefined : 100,
-    });
+      isAvailable: data.isAvailable ?? true,
+      stock: data.stock,
+      communityId: data.communityId, // Add community relationship
+    };
+
+    const reward = await this.createReward(rewardData);
 
     return {
       id: reward.id,
-      title: reward.name,
+      name: reward.name,
+      description: reward.description,
+      price: reward.price,
+      category: reward.category,
+      imageUrl: reward.imageUrl,
+      isAvailable: reward.isAvailable,
+      stock: reward.stock,
+      communityId: reward.communityId,
+      createdAt: reward.createdAt,
     };
   }
 } 

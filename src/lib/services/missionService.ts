@@ -256,30 +256,50 @@ export class MissionService {
       throw new Error('Mission is already completed');
     }
 
-    return await prisma.userMission.update({
-      where: {
-        userId_missionId: {
-          userId,
-          missionId,
-        },
-      },
-      data: {
-        status: 'completed',
-        completedAt: new Date(),
+    // Import blockchain service
+    const { BlockchainService } = await import('./blockchainService');
+
+    try {
+      // Complete mission with blockchain integration
+      const blockchainResult = await BlockchainService.completeMissionWithBlockchain({
+        userId,
+        missionId,
         proofText,
-        proofImages: proofImages || [],
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            avatarUrl: true,
+        proofImages
+      });
+
+      // Update user mission with blockchain transaction details
+      return await prisma.userMission.update({
+        where: {
+          userId_missionId: {
+            userId,
+            missionId,
           },
         },
-        mission: true,
-      },
-    });
+        data: {
+          status: 'completed',
+          completedAt: new Date(),
+          proofText,
+          proofImages: proofImages || [],
+          blockchainTransactionId: blockchainResult.blockchainTransactionId,
+          proofHash: blockchainResult.proofHash,
+        },
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              avatarUrl: true,
+            },
+          },
+          mission: true,
+        },
+      });
+
+    } catch (error) {
+      console.error('Mission completion failed:', error);
+      throw new Error(`Mission completion failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   }
 
   static async getUserMissions(userId: string): Promise<UserMission[]> {
@@ -469,22 +489,33 @@ export class MissionService {
   }
 
   static async createMissionWithUser(data: any, userId: string): Promise<any> {
-    const mission = await this.createMission({
+    const missionData = {
       title: data.title,
       description: data.description,
       reward: data.reward,
       proofRequired: data.proofRequired || false,
       deadline: data.deadline ? new Date(data.deadline) : undefined,
-      maxParticipants: data.effortLevel === 'High' ? 50 : data.effortLevel === 'Medium' ? 100 : 200,
+      maxParticipants: data.maxParticipants,
       category: data.category,
-      difficulty: data.effortLevel === 'High' ? 'hard' : data.effortLevel === 'Medium' ? 'medium' : 'easy',
-      tags: [data.category, data.effortLevel.toLowerCase()],
+      difficulty: data.difficulty || 'easy',
+      tags: data.tags || [],
       createdBy: userId,
-    });
+      communityId: data.communityId, // Add community relationship
+    };
+
+    const mission = await this.createMission(missionData);
 
     return {
       id: mission.id,
       title: mission.title,
+      description: mission.description,
+      reward: mission.reward,
+      status: mission.status,
+      category: mission.category,
+      difficulty: mission.difficulty,
+      createdBy: mission.createdBy,
+      communityId: mission.communityId,
+      createdAt: mission.createdAt,
     };
   }
 } 

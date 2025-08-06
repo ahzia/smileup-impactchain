@@ -75,6 +75,8 @@ model Community {
   members     CommunityMember[]
   feedPosts   FeedPost[]
   wallet      CommunityWallet?
+  missions    Mission[]
+  rewards     Reward[]
   
   @@map("communities")
 }
@@ -116,10 +118,12 @@ model Mission {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   createdBy       String? // User ID who created the mission
+  communityId     String? // Community ID who created the mission
   
   // Relationships
   users           UserMission[]
   proofs          MissionProof[]
+  community       Community? @relation(fields: [communityId], references: [id], onDelete: SetNull)
   
   @@map("missions")
 }
@@ -132,6 +136,8 @@ model UserMission {
   completedAt DateTime?
   proofText   String?
   proofImages String[] // Array of image URLs
+  blockchainTransactionId String? // Hedera transaction ID for reward transfer
+  proofHash   String? // Hash of the proof for HCS logging
   
   // Timestamps
   joinedAt    DateTime @default(now())
@@ -183,6 +189,7 @@ model Reward {
   isAvailable Boolean  @default(true)
   stock       Int?     // null for unlimited
   soldCount   Int      @default(0)
+  communityId String?  // Community ID who created the reward
   
   // Timestamps
   createdAt   DateTime @default(now())
@@ -190,6 +197,7 @@ model Reward {
   
   // Relationships
   purchases   UserReward[]
+  community   Community? @relation(fields: [communityId], references: [id], onDelete: SetNull)
   
   @@map("rewards")
 }
@@ -198,6 +206,7 @@ model UserReward {
   id          String   @id @default(cuid())
   userId      String
   rewardId    String
+  blockchainTransactionId String? // Hedera transaction ID for purchase
   purchasedAt DateTime @default(now())
   
   // Relationships
