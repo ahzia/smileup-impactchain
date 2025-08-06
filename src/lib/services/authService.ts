@@ -1,5 +1,6 @@
 import { UserService } from './userService';
 import { JWTService, TokenPair } from './jwtService';
+import { CustodialWalletService } from '../wallet/custodialWalletService';
 import { User, LoginRequest, RegisterRequest, LoginResponse, UpdateProfileRequest } from '@/lib/types';
 
 export class AuthService {
@@ -59,6 +60,22 @@ export class AuthService {
       interests: userData.interests,
       avatarUrl: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
     });
+
+    // Automatically create custodial wallet for new user
+    try {
+      console.log('🔐 Starting automatic wallet creation for user:', newUser.id);
+      const custodialWalletService = new CustodialWalletService();
+      const wallet = await custodialWalletService.createWalletForUser(newUser.id);
+      console.log('✅ Successfully created custodial wallet for new user:', newUser.id, 'Account ID:', wallet.accountId);
+    } catch (walletError) {
+      console.error('❌ Failed to create custodial wallet for user:', newUser.id, 'Error:', walletError);
+      console.error('❌ Wallet creation error details:', {
+        message: walletError instanceof Error ? walletError.message : 'Unknown error',
+        stack: walletError instanceof Error ? walletError.stack : undefined
+      });
+      // Continue with registration even if wallet creation fails
+      // The user can create the wallet later from the profile page
+    }
 
     // Generate token pair
     const tokenPair = JWTService.generateUserTokens(newUser);

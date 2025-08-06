@@ -19,6 +19,7 @@ export class AuthMiddleware {
   static async verifyToken(request: NextRequest): Promise<AuthenticatedRequest | null> {
     try {
       const authHeader = request.headers.get('authorization');
+      
       if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return null;
       }

@@ -44,6 +44,7 @@ model User {
   likes           Like[]
   missionProofs   MissionProof[]
   blockchainWallets BlockchainWallet[]
+  custodialWallets CustodialWallet[]
   
   @@map("users")
 }
@@ -72,6 +73,7 @@ model Community {
   // Relationships
   members     CommunityMember[]
   feedPosts   FeedPost[]
+  wallet      CommunityWallet?
   
   @@map("communities")
 }
@@ -343,4 +345,40 @@ model UserAnalytics {
   updatedAt       DateTime @updatedAt
   
   @@map("user_analytics")
+}
+
+model CustodialWallet {
+  id                  String   @id @default(cuid())
+  userId              String
+  accountId           String   @unique
+  publicKey           String
+  encryptedPrivateKey String
+  hbarBalance         Float    @default(0)
+  smilesBalance       Float    @default(0)
+  isActive            Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([accountId])
+}
+
+model CommunityWallet {
+  id                  String   @id @default(cuid())
+  communityId         String   @unique
+  accountId           String   @unique
+  publicKey           String
+  encryptedPrivateKey String
+  hbarBalance         Float    @default(0)
+  smilesBalance       Float    @default(0)
+  isActive            Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+
+  @@index([communityId])
+  @@index([accountId])
 }

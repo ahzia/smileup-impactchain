@@ -6,13 +6,15 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { useAuth } from '@/contexts/AuthContext';
 import { 
   Edit, 
   Wallet, 
   TrendingUp, 
   Award,
   Crown,
-  Star
+  Star,
+  LogOut
 } from 'lucide-react';
 
 interface ProfileHeaderProps {
@@ -20,6 +22,17 @@ interface ProfileHeaderProps {
 }
 
 export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user }) => {
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    const confirmed = window.confirm('Are you sure you want to logout?');
+    if (confirmed) {
+      logout();
+      // Redirect to home page after logout
+      window.location.href = '/';
+    }
+  };
+
   const getLevelColor = (level: number) => {
     if (level >= 10) return 'text-purple-600 bg-purple-100 border-purple-200';
     if (level >= 7) return 'text-blue-600 bg-blue-100 border-blue-200';
@@ -123,11 +136,20 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user }) => {
             </Card>
           </div>
 
-          {/* Edit Button */}
-          <div className="flex-shrink-0">
+          {/* Action Buttons */}
+          <div className="flex-shrink-0 flex space-x-2">
             <Button variant="outline" size="sm">
               <Edit className="h-4 w-4 mr-2" />
               Edit Profile
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={handleLogout}
+              className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+              Logout
             </Button>
           </div>
         </div>

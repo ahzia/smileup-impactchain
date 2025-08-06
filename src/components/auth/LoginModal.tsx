@@ -6,30 +6,17 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { 
-  User, 
-  Lock, 
-  Mail, 
-  Eye, 
-  EyeOff, 
-  LogIn,
-  Sparkles,
-  Heart,
-  Target,
-  TrendingUp
-} from 'lucide-react';
+import { User, Lock, Mail, Eye, EyeOff, LogIn, Sparkles, Heart, Target, TrendingUp } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onLoginSuccess: (user: any) => void;
+  onLoginSuccess?: (user: any) => void;
 }
 
-export const LoginModal: React.FC<LoginModalProps> = ({ 
-  isOpen, 
-  onClose, 
-  onLoginSuccess 
-}) => {
+export function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginModalProps) {
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -38,36 +25,37 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError('');
+    setLoading(true);
 
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        // Store tokens
-        localStorage.setItem('accessToken', data.data.accessToken);
-        localStorage.setItem('refreshToken', data.data.refreshToken);
-        
-        // Call success callback
-        onLoginSuccess(data.data.user);
+      const success = await login(email, password);
+      
+      if (success) {
         onClose();
+        if (onLoginSuccess) {
+          // Get user data from auth context
+          const userData = JSON.parse(localStorage.getItem('smileup_user') || '{}');
+          onLoginSuccess(userData);
+        }
       } else {
-        setError(data.error || 'Login failed');
+        setError('Invalid email or password');
       }
-    } catch (err) {
-      setError('Network error. Please try again.');
+    } catch (error) {
+      setError('Login failed. Please try again.');
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDemoLogin = async () => {
+    setEmail('demo@smileup.com');
+    setPassword('demo123');
+    
+    // Auto-submit after setting demo credentials
+    setTimeout(() => {
+      handleSubmit(new Event('submit') as any);
+    }, 100);
   };
 
   return (
@@ -200,10 +188,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                 {/* Demo Login */}
                 <Button
                   variant="outline"
-                  onClick={() => {
-                    setEmail('demo@smileup.com');
-                    setPassword('demo123');
-                  }}
+                  onClick={handleDemoLogin}
                   className="w-full bg-gradient-to-r from-muted/50 via-muted/30 to-muted/50 border-border/50 hover:from-accent/50 hover:via-accent/30 hover:to-accent/50 backdrop-blur-sm"
                 >
                   <Sparkles className="h-4 w-4 mr-2" />

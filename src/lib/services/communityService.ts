@@ -1,5 +1,6 @@
 import { prisma } from '../database/client';
 import { Community, CommunityMember, FeedPost } from '../../generated/prisma';
+import { CommunityWalletService } from '../wallet/communityWalletService';
 
 export interface CreateCommunityData {
   name: string;
@@ -407,6 +408,22 @@ export class CommunityService {
       website: data.website,
       createdBy: userId,
     });
+
+    // Automatically create community wallet
+    try {
+      console.log('🔐 Starting automatic wallet creation for community:', community.id);
+      const communityWalletService = new CommunityWalletService();
+      const wallet = await communityWalletService.createWalletForCommunity(community.id);
+      console.log('✅ Successfully created community wallet for community:', community.id, 'Account ID:', wallet.accountId);
+    } catch (walletError) {
+      console.error('❌ Failed to create community wallet for community:', community.id, 'Error:', walletError);
+      console.error('❌ Community wallet creation error details:', {
+        message: walletError instanceof Error ? walletError.message : 'Unknown error',
+        stack: walletError instanceof Error ? walletError.stack : undefined
+      });
+      // Continue with community creation even if wallet creation fails
+      // The community can create the wallet later if needed
+    }
 
     // Add creator as admin
     await this.joinCommunity(userId, community.id);

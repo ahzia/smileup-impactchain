@@ -8,6 +8,12 @@ import { ProfileBadges } from '@/components/profile/ProfileBadges';
 import { ProfileActivities } from '@/components/profile/ProfileActivities';
 import { ProfileSettings } from '@/components/profile/ProfileSettings';
 import { LoginModal } from '@/components/auth/LoginModal';
+import { RegisterModal } from '@/components/auth/RegisterModal';
+import { WalletConnect } from '@/components/wallet/WalletConnect';
+import { CustodialWalletConnect } from '@/components/wallet/CustodialWalletConnect';
+import { BalanceDisplay } from '@/components/wallet/BalanceDisplay';
+import { WalletProvider } from '@/contexts/WalletContext';
+import { AuthProvider, useAuth } from '@/contexts/AuthContext';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -26,7 +32,8 @@ import {
   LogIn,
   Sparkles,
   Heart,
-  Lock
+  Lock,
+  User
 } from 'lucide-react';
 import { 
   LoadingSpinner, 
@@ -34,46 +41,27 @@ import {
   PageHeader 
 } from '@/components/common';
 
-export default function ProfilePage() {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+function ProfilePageContent() {
+  const { user, isAuthenticated, isLoading } = useAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
 
-  // Load user profile from API
-  useEffect(() => {
-    const loadProfile = async () => {
-      try {
-        const response = await fetch('/api/user/profile');
-        const data = await response.json();
-        
-        if (data.success && data.data) {
-          setUser(data.data);
-        } else {
-          // User not authenticated
-          setUser(null);
-        }
-      } catch (error) {
-        console.error('Error loading profile:', error);
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadProfile();
-  }, []);
-
   const handleLoginSuccess = (userData: User) => {
-    setUser(userData);
+    // Auth context will handle the user state automatically
     setShowLoginModal(false);
   };
 
-  if (loading) {
+  const handleRegisterSuccess = (userData: User) => {
+    // Auth context will handle the user state automatically
+    setShowRegisterModal(false);
+  };
+
+  if (isLoading) {
     return <LoadingSpinner />;
   }
 
-  if (!user) {
+  if (!isAuthenticated || !user) {
     return (
       <div className="min-h-screen bg-background relative overflow-hidden pb-20">
         <AnimatedBackground />
@@ -98,109 +86,57 @@ export default function ProfilePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <motion.div 
-              className="text-8xl mb-6"
-              animate={{ 
-                scale: [1, 1.1, 1],
-                rotate: [0, 5, -5, 0]
-              }}
-              transition={{ duration: 4, repeat: Infinity }}
-            >
-              👤
-            </motion.div>
-            
-            <motion.h2 
-              className="text-3xl font-bold mb-4 bg-gradient-to-r from-primary via-primary/90 to-primary bg-clip-text text-transparent"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              Welcome to Your Profile
-            </motion.h2>
-            
-            <motion.p 
-              className="text-lg text-muted-foreground mb-8"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-            >
-              Sign in to view your impact journey, track your progress, and manage your achievements.
-            </motion.p>
-
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.6 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
               className="space-y-6"
             >
-              {/* Features Preview */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <motion.div 
-                  className="bg-gradient-to-br from-card via-card/95 to-card border border-border/50 rounded-xl p-6 backdrop-blur-sm"
-                  whileHover={{ scale: 1.02 }}
-                  transition={{ duration: 0.2 }}
+              <div className="space-y-4">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.4 }}
+                  className="mx-auto w-24 h-24 bg-gradient-to-br from-primary/20 via-primary/15 to-primary/20 rounded-full flex items-center justify-center"
                 >
-                  <div className="w-12 h-12 bg-gradient-to-br from-green-500/20 via-green-400/15 to-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Heart className="h-6 w-6 text-green-400" />
-                  </div>
-                  <h3 className="font-semibold mb-2">Track Impact</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Monitor your contributions and see the difference you're making
-                  </p>
+                  <UserIcon className="h-12 w-12 text-primary" />
                 </motion.div>
-
-                <motion.div 
-                  className="bg-gradient-to-br from-card via-card/95 to-card border border-border/50 rounded-xl p-6 backdrop-blur-sm"
-                  whileHover={{ scale: 1.02 }}
-                  transition={{ duration: 0.2, delay: 0.1 }}
-                >
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500/20 via-blue-400/15 to-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Target className="h-6 w-6 text-blue-400" />
-                  </div>
-                  <h3 className="font-semibold mb-2">Earn Rewards</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Collect badges and rewards for your community contributions
+                
+                <div className="space-y-2">
+                  <h2 className="text-2xl font-bold">Sign In to Continue</h2>
+                  <p className="text-muted-foreground">
+                    Join the SmileUp community and start making a difference
                   </p>
-                </motion.div>
-
-                <motion.div 
-                  className="bg-gradient-to-br from-card via-card/95 to-card border border-border/50 rounded-xl p-6 backdrop-blur-sm"
-                  whileHover={{ scale: 1.02 }}
-                  transition={{ duration: 0.2, delay: 0.2 }}
-                >
-                  <div className="w-12 h-12 bg-gradient-to-br from-purple-500/20 via-purple-400/15 to-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <TrendingUp className="h-6 w-6 text-purple-400" />
-                  </div>
-                  <h3 className="font-semibold mb-2">Level Up</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Progress through levels and unlock new opportunities
-                  </p>
-                </motion.div>
+                </div>
               </div>
 
-              {/* Login Button */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.8 }}
+                transition={{ duration: 0.6, delay: 0.6 }}
+                className="space-y-4"
               >
-                <Button
-                  onClick={() => setShowLoginModal(true)}
-                  className="bg-gradient-to-r from-primary via-primary/90 to-primary hover:from-primary/90 hover:via-primary hover:to-primary/90 text-primary-foreground font-semibold py-3 px-8 shadow-lg backdrop-blur-sm"
-                  size="lg"
-                >
-                  <LogIn className="h-5 w-5 mr-2" />
-                  Sign In to Continue
-                </Button>
-              </motion.div>
-
-              {/* Demo Account Info */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 1 }}
-                className="text-sm text-muted-foreground"
-              >
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Button 
+                    onClick={() => setShowLoginModal(true)}
+                    size="lg"
+                    className="bg-gradient-to-r from-primary via-primary/90 to-primary hover:from-primary/90 hover:via-primary/80 hover:to-primary/90 text-primary-foreground font-semibold"
+                  >
+                    <LogIn className="h-5 w-5 mr-2" />
+                    Sign In
+                  </Button>
+                  
+                  <Button 
+                    onClick={() => setShowRegisterModal(true)}
+                    size="lg"
+                    variant="outline"
+                    className="border-green-500 text-green-600 hover:bg-green-50 hover:text-green-700 font-semibold"
+                  >
+                    <User className="h-5 w-5 mr-2" />
+                    Create Account
+                  </Button>
+                </div>
+                
                 <p className="flex items-center justify-center">
                   <Sparkles className="h-4 w-4 mr-2" />
                   Try our demo account: demo@smileup.com / demo123
@@ -208,14 +144,21 @@ export default function ProfilePage() {
               </motion.div>
             </motion.div>
           </motion.div>
-        </div>
 
-        {/* Login Modal */}
-        <LoginModal
-          isOpen={showLoginModal}
-          onClose={() => setShowLoginModal(false)}
-          onLoginSuccess={handleLoginSuccess}
-        />
+          {/* Login Modal */}
+          <LoginModal
+            isOpen={showLoginModal}
+            onClose={() => setShowLoginModal(false)}
+            onLoginSuccess={handleLoginSuccess}
+          />
+
+          {/* Register Modal */}
+          <RegisterModal
+            isOpen={showRegisterModal}
+            onClose={() => setShowRegisterModal(false)}
+            onRegisterSuccess={handleRegisterSuccess}
+          />
+        </div>
       </div>
     );
   }
@@ -227,6 +170,33 @@ export default function ProfilePage() {
       <div className="container mx-auto px-4 py-4 relative z-10">
         {/* Profile Header */}
         <ProfileHeader user={user} />
+
+        {/* Wallet Section */}
+        <div className="mt-6">
+          <h2 className="text-xl font-semibold mb-4 flex items-center">
+            <Wallet className="h-5 w-5 mr-2" />
+            Blockchain Wallets
+          </h2>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Option 1: Custodial Wallet */}
+            <div>
+              <h3 className="text-lg font-medium mb-3 text-blue-600">Option 1: In-App Wallet</h3>
+              <CustodialWalletConnect />
+            </div>
+            
+            {/* Option 2: WalletConnect */}
+            <div>
+              <h3 className="text-lg font-medium mb-3 text-green-600">Option 2: External Wallet</h3>
+              <WalletConnect />
+            </div>
+          </div>
+          
+          {/* Balance Display */}
+          <div className="mt-6">
+            <BalanceDisplay />
+          </div>
+        </div>
 
         {/* Stats Cards */}
         <ProfileStats user={user} />
@@ -338,10 +308,18 @@ export default function ProfilePage() {
           </TabsContent>
 
           <TabsContent value="settings" className="mt-6">
-            <ProfileSettings user={user} onUpdate={setUser} />
+            <ProfileSettings user={user} />
           </TabsContent>
         </Tabs>
       </div>
     </div>
+  );
+}
+
+export default function ProfilePage() {
+  return (
+    <WalletProvider>
+      <ProfilePageContent />
+    </WalletProvider>
   );
 } 

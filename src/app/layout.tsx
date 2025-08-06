@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/common/ThemeProvider";
 import { Providers } from './providers';
+import { AuthProvider } from '@/contexts/AuthContext';
 import Navigation from '@/components/common/Navigation';
 import Script from 'next/script';
 import "./globals.css";
@@ -30,18 +31,20 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background`}>
         <Providers>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {/* Main content area with proper spacing */}
-            <main className="min-h-screen relative bg-background">
-              {children}
-            </main>
-            <Navigation />
-          </ThemeProvider>
+          <AuthProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {/* Main content area with proper spacing */}
+              <main className="min-h-screen relative bg-background">
+                {children}
+              </main>
+              <Navigation />
+            </ThemeProvider>
+          </AuthProvider>
         </Providers>
         
         {/* DialogFlow Messenger and related scripts */}
