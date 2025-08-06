@@ -33,7 +33,9 @@ import {
   Sparkles,
   Heart,
   Lock,
-  User
+  Zap,
+  Globe,
+  Star
 } from 'lucide-react';
 import { 
   LoadingSpinner, 
@@ -132,7 +134,7 @@ function ProfilePageContent() {
                     variant="outline"
                     className="border-green-500 text-green-600 hover:bg-green-50 hover:text-green-700 font-semibold"
                   >
-                    <User className="h-5 w-5 mr-2" />
+                    <UserIcon className="h-5 w-5 mr-2" />
                     Create Account
                   </Button>
                 </div>
@@ -172,22 +174,28 @@ function ProfilePageContent() {
         <ProfileHeader user={user} />
 
         {/* Wallet Section */}
-        <div className="mt-6">
-          <h2 className="text-xl font-semibold mb-4 flex items-center">
-            <Wallet className="h-5 w-5 mr-2" />
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold mb-6 flex items-center">
+            <Wallet className="h-6 w-6 mr-3 text-primary" />
             Blockchain Wallets
           </h2>
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Option 1: Custodial Wallet */}
-            <div>
-              <h3 className="text-lg font-medium mb-3 text-blue-600">Option 1: In-App Wallet</h3>
+            <div className="bg-gradient-to-br from-card via-card/95 to-card border border-border/50 rounded-2xl p-6 backdrop-blur-sm">
+              <h3 className="text-lg font-semibold mb-4 text-blue-600 flex items-center">
+                <Zap className="h-5 w-5 mr-2" />
+                In-App Wallet
+              </h3>
               <CustodialWalletConnect />
             </div>
             
             {/* Option 2: WalletConnect */}
-            <div>
-              <h3 className="text-lg font-medium mb-3 text-green-600">Option 2: External Wallet</h3>
+            <div className="bg-gradient-to-br from-card via-card/95 to-card border border-border/50 rounded-2xl p-6 backdrop-blur-sm">
+              <h3 className="text-lg font-semibold mb-4 text-green-600 flex items-center">
+                <Globe className="h-5 w-5 mr-2" />
+                External Wallet
+              </h3>
               <WalletConnect />
             </div>
           </div>
@@ -203,29 +211,32 @@ function ProfilePageContent() {
 
         {/* Profile Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="badges">Badges</TabsTrigger>
-            <TabsTrigger value="activities">Activities</TabsTrigger>
-            <TabsTrigger value="settings">Settings</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-4 bg-gradient-to-r from-card/50 to-card/30 backdrop-blur-sm border border-border/50">
+            <TabsTrigger value="overview" className="data-[state=active]:bg-primary/20 data-[state=active]:text-primary">Overview</TabsTrigger>
+            <TabsTrigger value="badges" className="data-[state=active]:bg-primary/20 data-[state=active]:text-primary">Badges</TabsTrigger>
+            <TabsTrigger value="activities" className="data-[state=active]:bg-primary/20 data-[state=active]:text-primary">Activities</TabsTrigger>
+            <TabsTrigger value="settings" className="data-[state=active]:bg-primary/20 data-[state=active]:text-primary">Settings</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="overview" className="mt-6">
+          <TabsContent value="overview" className="mt-8">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Bio Section */}
               <div className="lg:col-span-2 space-y-6">
-                <div className="bg-gradient-to-br from-card via-card/95 to-card border border-border/50 rounded-xl p-6 backdrop-blur-sm">
-                  <h3 className="text-lg font-semibold mb-4 flex items-center">
-                    <UserIcon className="h-5 w-5 mr-2" />
+                <div className="bg-gradient-to-br from-card via-card/95 to-card border border-border/50 rounded-2xl p-6 backdrop-blur-sm">
+                  <h3 className="text-xl font-bold mb-4 flex items-center">
+                    <UserIcon className="h-6 w-6 mr-3 text-primary" />
                     About Me
                   </h3>
-                  <p className="text-muted-foreground mb-4">{user.bio}</p>
+                  <p className="text-muted-foreground mb-4 text-base leading-relaxed">{user.bio}</p>
                   
                   <div className="space-y-3">
-                    <h4 className="font-medium">Interests</h4>
+                    <h4 className="font-semibold text-base flex items-center">
+                      <Star className="h-5 w-5 mr-2 text-yellow-500" />
+                      Interests
+                    </h4>
                     <div className="flex flex-wrap gap-2">
                       {user.interests.map((interest, index) => (
-                        <Badge key={index} variant="secondary">
+                        <Badge key={index} variant="secondary" className="text-sm px-3 py-1 bg-primary/10 text-primary border-primary/20 dark:bg-primary/20 dark:text-primary-foreground dark:border-primary/30">
                           {interest}
                         </Badge>
                       ))}
@@ -234,21 +245,27 @@ function ProfilePageContent() {
                 </div>
 
                 {/* Communities */}
-                <div className="bg-gradient-to-br from-card via-card/95 to-card border border-border/50 rounded-xl p-6 backdrop-blur-sm">
-                  <h3 className="text-lg font-semibold mb-4 flex items-center">
-                    <Users className="h-5 w-5 mr-2" />
+                <div className="bg-gradient-to-br from-card via-card/95 to-card border border-border/50 rounded-2xl p-6 backdrop-blur-sm">
+                  <h3 className="text-xl font-bold mb-4 flex items-center">
+                    <Users className="h-6 w-6 mr-3 text-primary" />
                     Communities
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <h4 className="font-medium text-sm text-muted-foreground mb-2">Joined</h4>
-                      <div className="text-2xl font-bold">{user.communitiesJoined.length}</div>
-                      <p className="text-sm text-muted-foreground">Communities</p>
+                    <div className="text-center p-4 bg-gradient-to-br from-green-50 to-green-100/50 dark:from-green-900/20 dark:to-green-800/20 rounded-xl border border-green-200/50 dark:border-green-700/30">
+                      <h4 className="font-semibold text-green-700 dark:text-green-300 mb-2 flex items-center justify-center">
+                        <Users className="h-4 w-4 mr-2" />
+                        Joined
+                      </h4>
+                      <div className="text-2xl font-bold text-green-600 dark:text-green-400 mb-1">{user.communitiesJoined.length}</div>
+                      <p className="text-xs text-green-600 dark:text-green-400">Communities</p>
                     </div>
-                    <div>
-                      <h4 className="font-medium text-sm text-muted-foreground mb-2">Created</h4>
-                      <div className="text-2xl font-bold">{user.communitiesCreated.length}</div>
-                      <p className="text-sm text-muted-foreground">Communities</p>
+                    <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100/50 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl border border-blue-200/50 dark:border-blue-700/30">
+                      <h4 className="font-semibold text-blue-700 dark:text-blue-300 mb-2 flex items-center justify-center">
+                        <Target className="h-4 w-4 mr-2" />
+                        Created
+                      </h4>
+                      <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-1">{user.communitiesCreated.length}</div>
+                      <p className="text-xs text-blue-600 dark:text-blue-400">Communities</p>
                     </div>
                   </div>
                 </div>
@@ -256,42 +273,42 @@ function ProfilePageContent() {
 
               {/* Quick Stats */}
               <div className="space-y-6">
-                <div className="bg-gradient-to-br from-card via-card/95 to-card border border-border/50 rounded-xl p-6 backdrop-blur-sm">
-                  <h3 className="text-lg font-semibold mb-4 flex items-center">
-                    <Trophy className="h-5 w-5 mr-2" />
-                    Achievements
+                <div className="bg-gradient-to-br from-card via-card/95 to-card border border-border/50 rounded-2xl p-6 backdrop-blur-sm">
+                  <h3 className="text-xl font-bold mb-4 flex items-center">
+                    <Trophy className="h-6 w-6 mr-3 text-primary" />
+                    Quick Stats
                   </h3>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">Level</span>
-                      <span className="font-bold">{user.level}</span>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-3 bg-gradient-to-r from-yellow-50 to-yellow-100/50 dark:from-yellow-900/20 dark:to-yellow-800/20 rounded-lg border border-yellow-200/50 dark:border-yellow-700/30">
+                      <span className="text-sm font-semibold text-yellow-700 dark:text-yellow-300">Smiles</span>
+                      <span className="font-bold text-yellow-600 dark:text-yellow-400 text-base">{user.smiles.toLocaleString()}</span>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">Score</span>
-                      <span className="font-bold">{user.score.toLocaleString()}</span>
+                    <div className="flex items-center justify-between p-3 bg-gradient-to-r from-blue-50 to-blue-100/50 dark:from-blue-900/20 dark:to-blue-800/20 rounded-lg border border-blue-200/50 dark:border-blue-700/30">
+                      <span className="text-sm font-semibold text-blue-700 dark:text-blue-300">Friends</span>
+                      <span className="font-bold text-blue-600 dark:text-blue-400 text-base">{user.friends}</span>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">Friends</span>
-                      <span className="font-bold">{user.friends}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">Badges</span>
-                      <span className="font-bold">{user.badges.length}</span>
+                    <div className="flex items-center justify-between p-3 bg-gradient-to-r from-purple-50 to-purple-100/50 dark:from-purple-900/20 dark:to-purple-800/20 rounded-lg border border-purple-200/50 dark:border-purple-700/30">
+                      <span className="text-sm font-semibold text-purple-700 dark:text-purple-300">Badges</span>
+                      <span className="font-bold text-purple-600 dark:text-purple-400 text-base">{user.badges.length}</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-card via-card/95 to-card border border-border/50 rounded-xl p-6 backdrop-blur-sm">
-                  <h3 className="text-lg font-semibold mb-4 flex items-center">
-                    <Calendar className="h-5 w-5 mr-2" />
+                <div className="bg-gradient-to-br from-card via-card/95 to-card border border-border/50 rounded-2xl p-6 backdrop-blur-sm">
+                  <h3 className="text-xl font-bold mb-4 flex items-center">
+                    <Calendar className="h-6 w-6 mr-3 text-primary" />
                     Member Since
                   </h3>
                   <div className="text-center">
-                    <div className="text-2xl font-bold">
-                      {new Date(user.createdAt).toLocaleDateString()}
+                    <div className="text-xl font-bold mb-1 text-foreground">
+                      {new Date(user.createdAt).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                      })}
                     </div>
                     <p className="text-sm text-muted-foreground">
-                      {Math.floor((Date.now() - new Date(user.createdAt).getTime()) / (1000 * 60 * 60 * 24))} days
+                      {Math.floor((Date.now() - new Date(user.createdAt).getTime()) / (1000 * 60 * 60 * 24))} days active
                     </p>
                   </div>
                 </div>
@@ -299,15 +316,15 @@ function ProfilePageContent() {
             </div>
           </TabsContent>
 
-          <TabsContent value="badges" className="mt-6">
+          <TabsContent value="badges" className="mt-8">
             <ProfileBadges badges={user.badges} />
           </TabsContent>
 
-          <TabsContent value="activities" className="mt-6">
+          <TabsContent value="activities" className="mt-8">
             <ProfileActivities activities={user.recentActivities} />
           </TabsContent>
 
-          <TabsContent value="settings" className="mt-6">
+          <TabsContent value="settings" className="mt-8">
             <ProfileSettings user={user} />
           </TabsContent>
         </Tabs>

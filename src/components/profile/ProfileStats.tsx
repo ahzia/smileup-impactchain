@@ -4,15 +4,25 @@ import React from 'react';
 import { User } from '@/lib/types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { motion } from 'framer-motion';
 import { 
   Trophy, 
   Users, 
   Target, 
-  Calendar,
   TrendingUp,
   Award,
   Star,
-  Heart
+  Heart,
+  Zap,
+  Sparkles,
+  Crown,
+  Medal,
+  Target as TargetIcon,
+  Flame,
+  Calendar,
+  Clock,
+  TrendingUp as TrendingUpIcon,
+  CheckCircle
 } from 'lucide-react';
 
 interface ProfileStatsProps {
@@ -22,46 +32,70 @@ interface ProfileStatsProps {
 export const ProfileStats: React.FC<ProfileStatsProps> = ({ user }) => {
   const stats = [
     {
-      icon: <Trophy className="h-5 w-5 text-yellow-500" />,
+      icon: <Trophy className="h-6 w-6 text-yellow-500" />,
       label: 'Level',
       value: user.level,
       subtitle: 'Current Level',
-      color: 'text-yellow-600'
+      color: 'text-yellow-600',
+      bgColor: 'bg-gradient-to-br from-yellow-400/20 to-yellow-600/20',
+      borderColor: 'border-yellow-500/30',
+      glowColor: 'shadow-yellow-500/25',
+      gradient: 'from-yellow-400 via-yellow-500 to-yellow-600'
     },
     {
-      icon: <Award className="h-5 w-5 text-blue-500" />,
+      icon: <Award className="h-6 w-6 text-blue-500" />,
       label: 'Score',
       value: user.score.toLocaleString(),
       subtitle: 'Total Points',
-      color: 'text-blue-600'
+      color: 'text-blue-600',
+      bgColor: 'bg-gradient-to-br from-blue-400/20 to-blue-600/20',
+      borderColor: 'border-blue-500/30',
+      glowColor: 'shadow-blue-500/25',
+      gradient: 'from-blue-400 via-blue-500 to-blue-600'
     },
     {
-      icon: <Users className="h-5 w-5 text-green-500" />,
+      icon: <Users className="h-6 w-6 text-green-500" />,
       label: 'Friends',
       value: user.friends,
       subtitle: 'Connections',
-      color: 'text-green-600'
+      color: 'text-green-600',
+      bgColor: 'bg-gradient-to-br from-green-400/20 to-green-600/20',
+      borderColor: 'border-green-500/30',
+      glowColor: 'shadow-green-500/25',
+      gradient: 'from-green-400 via-green-500 to-green-600'
     },
     {
-      icon: <Star className="h-5 w-5 text-purple-500" />,
+      icon: <Star className="h-6 w-6 text-purple-500" />,
       label: 'Badges',
       value: user.badges.length,
       subtitle: 'Earned',
-      color: 'text-purple-600'
+      color: 'text-purple-600',
+      bgColor: 'bg-gradient-to-br from-purple-400/20 to-purple-600/20',
+      borderColor: 'border-purple-500/30',
+      glowColor: 'shadow-purple-500/25',
+      gradient: 'from-purple-400 via-purple-500 to-purple-600'
     },
     {
-      icon: <Target className="h-5 w-5 text-orange-500" />,
+      icon: <TargetIcon className="h-6 w-6 text-orange-500" />,
       label: 'Communities',
       value: user.communitiesJoined.length,
       subtitle: 'Joined',
-      color: 'text-orange-600'
+      color: 'text-orange-600',
+      bgColor: 'bg-gradient-to-br from-orange-400/20 to-orange-600/20',
+      borderColor: 'border-orange-500/30',
+      glowColor: 'shadow-orange-500/25',
+      gradient: 'from-orange-400 via-orange-500 to-orange-600'
     },
     {
-      icon: <Heart className="h-5 w-5 text-red-500" />,
+      icon: <Heart className="h-6 w-6 text-red-500" />,
       label: 'Created',
       value: user.communitiesCreated.length,
       subtitle: 'Communities',
-      color: 'text-red-600'
+      color: 'text-red-600',
+      bgColor: 'bg-gradient-to-br from-red-400/20 to-red-600/20',
+      borderColor: 'border-red-500/30',
+      glowColor: 'shadow-red-500/25',
+      gradient: 'from-red-400 via-red-500 to-red-600'
     }
   ];
 
@@ -74,86 +108,303 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({ user }) => {
 
   const { currentLevel, nextLevel, progress } = getLevelProgress();
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20, scale: 0.9 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut" as const
+      }
+    }
+  };
+
+  const achievements = [
+    {
+      icon: <Trophy className="h-5 w-5" />,
+      title: "Level Achiever",
+      description: `Reached Level ${user.level}`,
+      color: "text-yellow-600",
+      bgColor: "bg-yellow-500/10",
+      borderColor: "border-yellow-500/20",
+      completed: true
+    },
+    {
+      icon: <Users className="h-5 w-5" />,
+      title: "Social Butterfly",
+      description: `${user.friends} friends connected`,
+      color: "text-blue-600",
+      bgColor: "bg-blue-500/10",
+      borderColor: "border-blue-500/20",
+      completed: user.friends >= 5
+    },
+    {
+      icon: <Star className="h-5 w-5" />,
+      title: "Badge Collector",
+      description: `${user.badges.length} badges earned`,
+      color: "text-purple-600",
+      bgColor: "bg-purple-500/10",
+      borderColor: "border-purple-500/20",
+      completed: user.badges.length >= 3
+    },
+    {
+      icon: <TargetIcon className="h-5 w-5" />,
+      title: "Community Leader",
+      description: `${user.communitiesCreated.length} communities created`,
+      color: "text-green-600",
+      bgColor: "bg-green-500/10",
+      borderColor: "border-green-500/20",
+      completed: user.communitiesCreated.length >= 1
+    }
+  ];
+
   return (
-    <div className="mb-8">
+    <motion.div 
+      className="mb-8"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
       {/* Level Progress */}
-      <div className="bg-card border rounded-lg p-6 mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h3 className="text-lg font-semibold flex items-center">
-              <TrendingUp className="h-5 w-5 mr-2" />
-              Level Progress
-            </h3>
-            <p className="text-sm text-muted-foreground">
-              {user.score % 1000} / 1000 XP to next level
-            </p>
+      <motion.div 
+        className="bg-gradient-to-br from-card via-card/95 to-card border border-border/50 rounded-3xl p-8 backdrop-blur-sm mb-8 relative overflow-hidden"
+        variants={itemVariants}
+      >
+        {/* Animated background */}
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-secondary/5 to-primary/5 animate-pulse"></div>
+        <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/10 to-transparent rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-secondary/10 to-transparent rounded-full blur-2xl"></div>
+        
+        <div className="relative z-10">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h3 className="text-2xl font-bold flex items-center mb-3">
+                <div className="relative mr-4">
+                  <Zap className="h-8 w-8 text-primary" />
+                  <motion.div
+                    className="absolute inset-0 bg-primary/20 rounded-full"
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  />
+                </div>
+                Level Progress
+              </h3>
+              <p className="text-muted-foreground text-lg">
+                {user.score % 1000} / 1000 XP to next level
+              </p>
+            </div>
+            <Badge variant="outline" className="text-sm font-bold bg-primary/10 border-primary/30 px-4 py-2">
+              <Crown className="h-4 w-4 mr-2" />
+              Level {currentLevel} → {nextLevel}
+            </Badge>
           </div>
-          <Badge variant="outline" className="text-sm">
-            Level {currentLevel} → {nextLevel}
-          </Badge>
+          
+          <div className="relative">
+            <div className="w-full bg-muted/30 rounded-full h-6 mb-3 overflow-hidden">
+              <motion.div 
+                className="bg-gradient-to-r from-primary via-primary/90 to-secondary h-6 rounded-full relative"
+                style={{ width: `${progress}%` }}
+                initial={{ width: 0 }}
+                animate={{ width: `${progress}%` }}
+                transition={{ duration: 1.5, ease: "easeOut" }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse"></div>
+                <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
+                  <Sparkles className="h-3 w-3 text-white" />
+                </div>
+              </motion.div>
+            </div>
+            
+            <div className="flex justify-between text-sm text-muted-foreground font-semibold">
+              <span>Level {currentLevel}</span>
+              <span>Level {nextLevel}</span>
+            </div>
+          </div>
         </div>
-        
-        <div className="w-full bg-muted rounded-full h-3 mb-2">
-          <div 
-            className="bg-gradient-to-r from-primary to-secondary h-3 rounded-full transition-all duration-300"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-        
-        <div className="flex justify-between text-sm text-muted-foreground">
-          <span>Level {currentLevel}</span>
-          <span>Level {nextLevel}</span>
-        </div>
-      </div>
+      </motion.div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      <motion.div 
+        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4"
+        variants={containerVariants}
+      >
         {stats.map((stat, index) => (
-          <Card key={index} className="hover:shadow-md transition-shadow">
-            <CardContent className="p-4 text-center">
-              <div className="flex justify-center mb-2">
-                {stat.icon}
-              </div>
-              <div className={`text-2xl font-bold ${stat.color}`}>
-                {stat.value}
-              </div>
-              <div className="text-sm font-medium text-muted-foreground">
-                {stat.label}
-              </div>
-              <div className="text-xs text-muted-foreground">
-                {stat.subtitle}
-              </div>
-            </CardContent>
-          </Card>
+          <motion.div
+            key={index}
+            variants={itemVariants}
+            whileHover={{ 
+              scale: 1.05,
+              transition: { duration: 0.2 }
+            }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Card className={`hover:shadow-2xl transition-all duration-500 border-2 ${stat.borderColor} bg-gradient-to-br from-card via-card/95 to-card backdrop-blur-sm relative overflow-hidden group`}>
+              {/* Animated background glow */}
+              <div className={`absolute inset-0 bg-gradient-to-br ${stat.bgColor} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
+              <div className={`absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-transparent to-current opacity-10 rounded-full blur-xl group-hover:opacity-20 transition-opacity duration-500`}></div>
+              
+              <CardContent className="p-4 text-center relative z-10">
+                <motion.div 
+                  className={`flex justify-center mb-3 p-3 rounded-xl ${stat.bgColor} mx-auto w-16 h-16 items-center border ${stat.borderColor} group-hover:shadow-lg transition-all duration-300`}
+                  whileHover={{ rotate: 5 }}
+                >
+                  {stat.icon}
+                </motion.div>
+                
+                <motion.div 
+                  className={`text-2xl font-bold ${stat.color} mb-1 bg-gradient-to-r ${stat.gradient} bg-clip-text text-transparent`}
+                  initial={{ scale: 0.8 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  {stat.value}
+                </motion.div>
+                
+                <div className="text-sm font-bold text-foreground mb-1">
+                  {stat.label}
+                </div>
+                
+                <div className="text-xs text-muted-foreground font-medium">
+                  {stat.subtitle}
+                </div>
+                
+                {/* Floating particles */}
+                <div className="absolute inset-0 pointer-events-none">
+                  <motion.div
+                    className="absolute top-2 right-2 w-1 h-1 bg-current opacity-60 rounded-full"
+                    animate={{ 
+                      y: [0, -10, 0],
+                      opacity: [0.6, 1, 0.6]
+                    }}
+                    transition={{ 
+                      duration: 2, 
+                      repeat: Infinity,
+                      delay: index * 0.2
+                    }}
+                  />
+                  <motion.div
+                    className="absolute bottom-4 left-3 w-1 h-1 bg-current opacity-40 rounded-full"
+                    animate={{ 
+                      y: [0, 8, 0],
+                      opacity: [0.4, 0.8, 0.4]
+                    }}
+                    transition={{ 
+                      duration: 1.5, 
+                      repeat: Infinity,
+                      delay: index * 0.3
+                    }}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
-      {/* Member Since */}
-      <div className="mt-6">
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-3">
-              <Calendar className="h-5 w-5 text-muted-foreground" />
-              <div>
-                <div className="font-semibold">Member Since</div>
-                <div className="text-sm text-muted-foreground">
-                  {new Date(user.createdAt).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                  })}
+      {/* Achievement Timeline */}
+      <motion.div 
+        className="mt-8"
+        variants={containerVariants}
+      >
+        <div className="bg-gradient-to-br from-card via-card/95 to-card border border-border/50 rounded-3xl p-6 backdrop-blur-sm">
+          <div className="flex items-center mb-4">
+            <div className="relative mr-3">
+              <Medal className="h-6 w-6 text-primary" />
+              <motion.div
+                className="absolute inset-0 bg-primary/20 rounded-full"
+                animate={{ scale: [1, 1.2, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              />
+            </div>
+            <h3 className="text-xl font-bold">Achievements</h3>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+            {achievements.map((achievement, index) => (
+              <motion.div
+                key={index}
+                variants={itemVariants}
+                className={`relative p-3 rounded-xl border ${achievement.borderColor} ${achievement.bgColor} transition-all duration-300 hover:scale-105`}
+              >
+                <div className="flex items-center space-x-2">
+                  <div className={`p-1.5 rounded-full ${achievement.bgColor} ${achievement.color}`}>
+                    {achievement.icon}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-semibold text-sm text-foreground truncate">{achievement.title}</h4>
+                    <p className="text-xs text-muted-foreground truncate">{achievement.description}</p>
+                  </div>
+                  <div className="flex-shrink-0">
+                    {achievement.completed ? (
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: index * 0.1 }}
+                      >
+                        <CheckCircle className="h-4 w-4 text-green-500" />
+                      </motion.div>
+                    ) : (
+                      <div className="w-4 h-4 border-2 border-muted-foreground/30 rounded-full"></div>
+                    )}
+                  </div>
+                </div>
+                
+                {/* Progress indicator */}
+                <div className="mt-2">
+                  <div className="w-full bg-muted/30 rounded-full h-1.5">
+                    <motion.div 
+                      className={`h-1.5 rounded-full ${achievement.completed ? 'bg-green-500' : 'bg-muted-foreground/30'}`}
+                      initial={{ width: 0 }}
+                      animate={{ width: achievement.completed ? '100%' : '30%' }}
+                      transition={{ duration: 1, delay: index * 0.2 }}
+                    />
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+          
+          {/* Member since info - More compact */}
+          <motion.div
+            variants={itemVariants}
+            className="mt-4 p-3 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-xl border border-primary/20"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Calendar className="h-4 w-4 text-primary" />
+                <div>
+                  <h4 className="font-semibold text-sm text-foreground">Member Since</h4>
+                  <p className="text-xs text-muted-foreground">
+                    {new Date(user.createdAt).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric'
+                    })}
+                  </p>
                 </div>
               </div>
-              <div className="ml-auto text-right">
-                <div className="font-semibold">
+              <div className="text-right">
+                <div className="text-lg font-bold text-primary">
                   {Math.floor((Date.now() - new Date(user.createdAt).getTime()) / (1000 * 60 * 60 * 24))}
                 </div>
-                <div className="text-sm text-muted-foreground">days</div>
+                <div className="text-xs text-muted-foreground">days active</div>
               </div>
             </div>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+          </motion.div>
+        </div>
+      </motion.div>
+    </motion.div>
   );
 }; 
