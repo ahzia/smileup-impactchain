@@ -179,7 +179,7 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({ user }) => {
     >
       {/* Level Progress */}
       <motion.div 
-        className="bg-gradient-to-br from-card via-card/95 to-card border border-border/50 rounded-3xl p-8 backdrop-blur-sm mb-8 relative overflow-hidden"
+        className="bg-gradient-to-br from-card via-card/95 to-card border border-border/50 rounded-2xl md:rounded-3xl p-6 md:p-8 backdrop-blur-sm mb-8 md:mb-10 relative overflow-hidden"
         variants={itemVariants}
       >
         {/* Animated background */}
@@ -188,11 +188,11 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({ user }) => {
         <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-secondary/10 to-transparent rounded-full blur-2xl"></div>
         
         <div className="relative z-10">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 md:mb-8 gap-4">
             <div>
-              <h3 className="text-2xl font-bold flex items-center mb-3">
-                <div className="relative mr-4">
-                  <Zap className="h-8 w-8 text-primary" />
+              <h3 className="text-2xl md:text-3xl font-bold flex items-center mb-3 md:mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                <div className="relative mr-3 md:mr-4">
+                  <Zap className="h-8 w-8 md:h-10 md:w-10 text-primary" />
                   <motion.div
                     className="absolute inset-0 bg-primary/20 rounded-full"
                     animate={{ scale: [1, 1.2, 1] }}
@@ -201,33 +201,33 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({ user }) => {
                 </div>
                 Level Progress
               </h3>
-              <p className="text-muted-foreground text-lg">
+              <p className="text-muted-foreground text-base md:text-lg font-medium">
                 {user.score % 1000} / 1000 XP to next level
               </p>
             </div>
-            <Badge variant="outline" className="text-sm font-bold bg-primary/10 border-primary/30 px-4 py-2">
-              <Crown className="h-4 w-4 mr-2" />
+            <Badge variant="outline" className="text-sm font-bold bg-primary/10 border-primary/30 px-4 md:px-6 py-2 md:py-3 text-base md:text-lg self-start md:self-auto">
+              <Crown className="h-4 w-4 md:h-5 md:w-5 mr-2" />
               Level {currentLevel} → {nextLevel}
             </Badge>
           </div>
           
           <div className="relative">
-            <div className="w-full bg-muted/30 rounded-full h-6 mb-3 overflow-hidden">
+            <div className="w-full bg-muted/30 rounded-full h-6 md:h-8 mb-3 md:mb-4 overflow-hidden">
               <motion.div 
-                className="bg-gradient-to-r from-primary via-primary/90 to-secondary h-6 rounded-full relative"
+                className="bg-gradient-to-r from-primary via-primary/90 to-secondary h-6 md:h-8 rounded-full relative"
                 style={{ width: `${progress}%` }}
                 initial={{ width: 0 }}
                 animate={{ width: `${progress}%` }}
                 transition={{ duration: 1.5, ease: "easeOut" }}
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse"></div>
-                <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
-                  <Sparkles className="h-3 w-3 text-white" />
+                <div className="absolute right-2 md:right-3 top-1/2 transform -translate-y-1/2">
+                  <Sparkles className="h-3 w-3 md:h-4 md:w-4 text-white" />
                 </div>
               </motion.div>
             </div>
             
-            <div className="flex justify-between text-sm text-muted-foreground font-semibold">
+            <div className="flex justify-between text-sm md:text-base text-muted-foreground font-semibold">
               <span>Level {currentLevel}</span>
               <span>Level {nextLevel}</span>
             </div>
@@ -237,7 +237,7 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({ user }) => {
 
       {/* Stats Grid */}
       <motion.div 
-        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4"
+        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6"
         variants={containerVariants}
       >
         {stats.map((stat, index) => (
@@ -255,16 +255,16 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({ user }) => {
               <div className={`absolute inset-0 bg-gradient-to-br ${stat.bgColor} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
               <div className={`absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-transparent to-current opacity-10 rounded-full blur-xl group-hover:opacity-20 transition-opacity duration-500`}></div>
               
-              <CardContent className="p-4 text-center relative z-10">
+              <CardContent className="p-4 md:p-6 text-center relative z-10">
                 <motion.div 
-                  className={`flex justify-center mb-3 p-3 rounded-xl ${stat.bgColor} mx-auto w-16 h-16 items-center border ${stat.borderColor} group-hover:shadow-lg transition-all duration-300`}
+                  className={`flex justify-center mb-3 md:mb-4 p-3 md:p-4 rounded-xl md:rounded-2xl ${stat.bgColor} mx-auto w-16 h-16 md:w-20 md:h-20 items-center border ${stat.borderColor} group-hover:shadow-lg transition-all duration-300`}
                   whileHover={{ rotate: 5 }}
                 >
                   {stat.icon}
                 </motion.div>
                 
                 <motion.div 
-                  className={`text-2xl font-bold ${stat.color} mb-1 bg-gradient-to-r ${stat.gradient} bg-clip-text text-transparent`}
+                  className={`text-2xl md:text-3xl font-bold ${stat.color} mb-1 md:mb-2 bg-gradient-to-r ${stat.gradient} bg-clip-text text-transparent`}
                   initial={{ scale: 0.8 }}
                   animate={{ scale: 1 }}
                   transition={{ delay: index * 0.1 }}
@@ -272,11 +272,11 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({ user }) => {
                   {stat.value}
                 </motion.div>
                 
-                <div className="text-sm font-bold text-foreground mb-1">
+                <div className="text-sm md:text-base font-bold text-foreground mb-1">
                   {stat.label}
                 </div>
                 
-                <div className="text-xs text-muted-foreground font-medium">
+                <div className="text-xs md:text-sm text-muted-foreground font-medium">
                   {stat.subtitle}
                 </div>
                 
@@ -315,35 +315,40 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({ user }) => {
 
       {/* Achievement Timeline */}
       <motion.div 
-        className="mt-8"
+        className="mt-8 md:mt-10"
         variants={containerVariants}
       >
-        <div className="bg-gradient-to-br from-card via-card/95 to-card border border-border/50 rounded-3xl p-6 backdrop-blur-sm">
-          <div className="flex items-center mb-4">
-            <div className="relative mr-3">
-              <Medal className="h-6 w-6 text-primary" />
-              <motion.div
-                className="absolute inset-0 bg-primary/20 rounded-full"
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              />
+        <div className="bg-gradient-to-br from-card via-card/95 to-card border border-border/50 rounded-2xl md:rounded-3xl p-6 md:p-8 backdrop-blur-sm">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 md:mb-6 gap-3">
+            <div className="flex items-center">
+              <div className="relative mr-3 md:mr-4">
+                <Medal className="h-6 w-6 md:h-8 md:w-8 text-primary" />
+                <motion.div
+                  className="absolute inset-0 bg-primary/20 rounded-full"
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
+              </div>
+              <h3 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Achievements</h3>
             </div>
-            <h3 className="text-xl font-bold">Achievements</h3>
+            <Badge variant="outline" className="text-xs md:text-sm font-semibold bg-primary/10 border-primary/30 text-primary self-start md:self-auto">
+              {achievements.filter(a => a.completed).length}/{achievements.length} Complete
+            </Badge>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
             {achievements.map((achievement, index) => (
               <motion.div
                 key={index}
                 variants={itemVariants}
-                className={`relative p-3 rounded-xl border ${achievement.borderColor} ${achievement.bgColor} transition-all duration-300 hover:scale-105`}
+                className={`relative p-3 md:p-4 rounded-xl md:rounded-2xl border-2 ${achievement.borderColor} ${achievement.bgColor} transition-all duration-300 hover:scale-105 hover:shadow-lg`}
               >
-                <div className="flex items-center space-x-2">
-                  <div className={`p-1.5 rounded-full ${achievement.bgColor} ${achievement.color}`}>
+                <div className="flex items-center space-x-2 md:space-x-3">
+                  <div className={`p-1.5 md:p-2 rounded-full ${achievement.bgColor} ${achievement.color}`}>
                     {achievement.icon}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-semibold text-sm text-foreground truncate">{achievement.title}</h4>
+                    <h4 className="font-bold text-xs md:text-sm text-foreground truncate">{achievement.title}</h4>
                     <p className="text-xs text-muted-foreground truncate">{achievement.description}</p>
                   </div>
                   <div className="flex-shrink-0">
@@ -353,19 +358,19 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({ user }) => {
                         animate={{ scale: 1 }}
                         transition={{ delay: index * 0.1 }}
                       >
-                        <CheckCircle className="h-4 w-4 text-green-500" />
+                        <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-green-500" />
                       </motion.div>
                     ) : (
-                      <div className="w-4 h-4 border-2 border-muted-foreground/30 rounded-full"></div>
+                      <div className="w-4 h-4 md:w-5 md:h-5 border-2 border-muted-foreground/30 rounded-full"></div>
                     )}
                   </div>
                 </div>
                 
                 {/* Progress indicator */}
-                <div className="mt-2">
-                  <div className="w-full bg-muted/30 rounded-full h-1.5">
+                <div className="mt-2 md:mt-3">
+                  <div className="w-full bg-muted/30 rounded-full h-1.5 md:h-2">
                     <motion.div 
-                      className={`h-1.5 rounded-full ${achievement.completed ? 'bg-green-500' : 'bg-muted-foreground/30'}`}
+                      className={`h-1.5 md:h-2 rounded-full ${achievement.completed ? 'bg-green-500' : 'bg-muted-foreground/30'}`}
                       initial={{ width: 0 }}
                       animate={{ width: achievement.completed ? '100%' : '30%' }}
                       transition={{ duration: 1, delay: index * 0.2 }}
@@ -379,13 +384,13 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({ user }) => {
           {/* Member since info - More compact */}
           <motion.div
             variants={itemVariants}
-            className="mt-4 p-3 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-xl border border-primary/20"
+            className="mt-4 md:mt-6 p-3 md:p-4 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-xl md:rounded-2xl border border-primary/20"
           >
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <Calendar className="h-4 w-4 text-primary" />
+              <div className="flex items-center space-x-2 md:space-x-3">
+                <Calendar className="h-4 w-4 md:h-5 md:w-5 text-primary" />
                 <div>
-                  <h4 className="font-semibold text-sm text-foreground">Member Since</h4>
+                  <h4 className="font-bold text-xs md:text-sm text-foreground">Member Since</h4>
                   <p className="text-xs text-muted-foreground">
                     {new Date(user.createdAt).toLocaleDateString('en-US', {
                       year: 'numeric',
@@ -396,7 +401,7 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({ user }) => {
                 </div>
               </div>
               <div className="text-right">
-                <div className="text-lg font-bold text-primary">
+                <div className="text-lg md:text-xl font-bold text-primary">
                   {Math.floor((Date.now() - new Date(user.createdAt).getTime()) / (1000 * 60 * 60 * 24))}
                 </div>
                 <div className="text-xs text-muted-foreground">days active</div>
