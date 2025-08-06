@@ -33,7 +33,7 @@ export const TextCard: React.FC<TextCardProps> = React.memo(({
   };
 
   return (
-    <div className="slider-children h-full relative">
+    <div className="h-full w-full relative">
       {/* Right Sidebar */}
       {!aiChatOpen && (
         <FeedSidebar
@@ -46,9 +46,11 @@ export const TextCard: React.FC<TextCardProps> = React.memo(({
       )}
 
       {/* Text Content - Always use slideshow for text */}
-      <SlideShowCard
-        post={post}
-      />
+      <div className="absolute inset-0">
+        <SlideShowCard
+          post={post}
+        />
+      </div>
     </div>
   );
 }); 
