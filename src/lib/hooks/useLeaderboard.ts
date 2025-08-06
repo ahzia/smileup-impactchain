@@ -1,16 +1,15 @@
 import { useState, useEffect } from 'react';
 import { LeaderboardEntry } from '@/lib/types';
 
-interface LeaderboardFilter {
-  period: string;
-  limit: number;
+interface FilterState {
+  [key: string]: string;
 }
 
-export function useLeaderboard(initialFilter: LeaderboardFilter = { period: 'all', limit: 50 }) {
+export function useLeaderboard(initialFilter: FilterState = { sortBy: 'smiles', level: 'all' }) {
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [filter, setFilter] = useState<LeaderboardFilter>(initialFilter);
+  const [filter, setFilter] = useState<FilterState>(initialFilter);
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
@@ -19,7 +18,7 @@ export function useLeaderboard(initialFilter: LeaderboardFilter = { period: 'all
         setError(null);
         
         const response = await fetch(
-          `/api/leaderboard?period=${filter.period}&limit=${filter.limit}`
+          `/api/leaderboard?sortBy=${filter.sortBy}&level=${filter.level}`
         );
         const data = await response.json();
         
@@ -38,8 +37,8 @@ export function useLeaderboard(initialFilter: LeaderboardFilter = { period: 'all
     fetchLeaderboard();
   }, [filter]);
 
-  const updateFilter = (newFilter: Partial<LeaderboardFilter>) => {
-    setFilter(prev => ({ ...prev, ...newFilter }));
+  const updateFilter = (newFilter: FilterState) => {
+    setFilter(newFilter);
   };
 
   // Calculate statistics

@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
       .map(user => ({
         id: user.id,
         name: user.name,
-        avatar: user.avatar,
+        avatar: user.avatarUrl || '',
         smiles: user.smiles,
         level: user.level,
         score: user.score

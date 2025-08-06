@@ -1,5 +1,6 @@
 import { prisma } from '../database/client';
 import { Community, CommunityMember, FeedPost } from '../../generated/prisma';
+import { CommunityWalletService } from '../wallet/communityWalletService';
 
 export interface CreateCommunityData {
   name: string;
@@ -363,5 +364,75 @@ export class CommunityService {
       where: { id },
       data: { status: 'inactive' },
     });
+  }
+
+  // ========================================
+  // API COMPATIBILITY METHODS
+  // ========================================
+
+  static async getCommunities(query: {
+    category?: string;
+    status?: string;
+    page?: number;
+    pageSize?: number;
+  }): Promise<any[]> {
+    let communities = await this.getAllCommunities(100);
+
+    // Filter by category
+    if (query.category && query.category !== 'all') {
+      communities = communities.filter(community => community.category === query.category);
+    }
+
+    // Filter by status
+    if (query.status && query.status !== 'all') {
+      communities = communities.filter(community => community.status === query.status);
+    }
+
+    // Pagination
+    const page = query.page || 1;
+    const pageSize = query.pageSize || 10;
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+
+    return communities.slice(startIndex, endIndex);
+  }
+
+  static async createCommunityWithUser(data: any, userId: string): Promise<any> {
+    const community = await this.createCommunity({
+      name: data.name,
+      description: data.description,
+      category: data.category,
+      logoUrl: data.logo,
+      bannerUrl: data.banner,
+      location: data.location,
+      website: data.website,
+      createdBy: userId,
+    });
+
+    // Automatically create community wallet
+    try {
+      console.log('🔐 Starting automatic wallet creation for community:', community.id);
+      const communityWalletService = new CommunityWalletService();
+      const wallet = await communityWalletService.createWalletForCommunity(community.id);
+      console.log('✅ Successfully created community wallet for community:', community.id, 'Account ID:', wallet.accountId);
+    } catch (walletError) {
+      console.error('❌ Failed to create community wallet for community:', community.id, 'Error:', walletError);
+      console.error('❌ Community wallet creation error details:', {
+        message: walletError instanceof Error ? walletError.message : 'Unknown error',
+        stack: walletError instanceof Error ? walletError.stack : undefined
+      });
+      // Continue with community creation even if wallet creation fails
+      // The community can create the wallet later if needed
+    }
+
+    // Add creator as admin
+    await this.joinCommunity(userId, community.id);
+    await this.updateMemberRole(userId, community.id, 'admin');
+
+    return {
+      id: community.id,
+      name: community.name,
+      status: community.status,
+    };
   }
 } 

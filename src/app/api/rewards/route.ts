@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { RewardService } from '@/lib/services/rewardService';
+import { AuthMiddleware } from '@/lib/middleware/auth';
 import { CreateRewardRequest } from '@/lib/types';
 
 // GET /api/rewards
@@ -38,11 +39,17 @@ export async function GET(request: NextRequest) {
 // POST /api/rewards
 export async function POST(request: NextRequest) {
   try {
-    // In real app, validate JWT token from Authorization header
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    // Validate authentication and extract user ID from JWT token
+    const authResult = await AuthMiddleware.requireAuth(request);
+    
+    if (authResult instanceof NextResponse) {
+      return authResult; // Return error response
+    }
+
+    const userId = AuthMiddleware.getCurrentUserId(authResult);
+    if (!userId) {
       return NextResponse.json(
-        { success: false, error: 'Authorization token required' },
+        { success: false, error: 'User ID not found in token' },
         { status: 401 }
       );
     }
@@ -51,14 +58,14 @@ export async function POST(request: NextRequest) {
     const { title, description, type, cost, validity, emoji, imageUrl, communityId } = body;
 
     // Validate input
-    if (!title || !description || !type || !cost || !validity || !emoji || !imageUrl || !communityId) {
+    if (!title || !description || !type || cost === undefined || !validity || !emoji || !imageUrl || !communityId) {
       return NextResponse.json(
         { success: false, error: 'All required fields must be provided' },
         { status: 400 }
       );
     }
 
-    // Validate cost
+    // Validate cost amount
     if (cost < 0) {
       return NextResponse.json(
         { success: false, error: 'Cost must be non-negative' },
@@ -66,11 +73,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // For mock implementation, use a default user ID
-    const userId = 'user_001';
-
-    // Create reward
-    const reward = await RewardService.createReward(body, userId);
+    // Create reward with authenticated user
+    const reward = await RewardService.createRewardWithUser(body, userId);
 
     return NextResponse.json({
       success: true,

@@ -430,4 +430,61 @@ export class MissionService {
       totalReward: stat._sum.reward || 0,
     }));
   }
+
+  // ========================================
+  // API COMPATIBILITY METHODS
+  // ========================================
+
+  static async getMissions(query: {
+    type?: string;
+    status?: string;
+    communityId?: string;
+    page?: number;
+    pageSize?: number;
+  }): Promise<any[]> {
+    let missions = await this.getAvailableMissions(100);
+
+    // Filter by type (category)
+    if (query.type && query.type !== 'all') {
+      missions = missions.filter(mission => mission.category === query.type);
+    }
+
+    // Filter by status
+    if (query.status && query.status !== 'all') {
+      missions = missions.filter(mission => mission.status === query.status);
+    }
+
+    // Filter by community (if specified)
+    if (query.communityId) {
+      missions = missions.filter(mission => mission.createdBy === query.communityId);
+    }
+
+    // Pagination
+    const page = query.page || 1;
+    const pageSize = query.pageSize || 10;
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+
+    return missions.slice(startIndex, endIndex);
+  }
+
+  static async createMissionWithUser(data: any, userId: string): Promise<any> {
+    const mission = await this.createMission({
+      title: data.title,
+      description: data.description,
+      reward: data.reward,
+      proofRequired: data.proofRequired || false,
+      deadline: data.deadline ? new Date(data.deadline) : undefined,
+      maxParticipants: data.effortLevel === 'High' ? 50 : data.effortLevel === 'Medium' ? 100 : 200,
+      category: data.category,
+      difficulty: data.effortLevel === 'High' ? 'hard' : data.effortLevel === 'Medium' ? 'medium' : 'easy',
+      tags: [data.category, data.effortLevel.toLowerCase()],
+      createdBy: userId,
+    });
+
+    return {
+      id: mission.id,
+      title: mission.title,
+    };
+  }
 } 

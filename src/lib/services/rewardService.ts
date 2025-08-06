@@ -1,33 +1,238 @@
-import { rewards } from '@/data';
-import { Reward, CreateRewardRequest } from '@/lib/types';
-import { AuthService } from './authService';
-import { CommunityService } from './communityService';
+import { prisma } from '../database/client';
+import { Reward, UserReward } from '../../generated/prisma';
 
-// Mock reward storage
-let mockRewards = [...rewards];
+export interface CreateRewardData {
+  name: string;
+  description?: string;
+  price: number;
+  category?: string;
+  imageUrl?: string;
+  isAvailable?: boolean;
+  stock?: number;
+}
+
+export interface UpdateRewardData {
+  name?: string;
+  description?: string;
+  price?: number;
+  category?: string;
+  imageUrl?: string;
+  isAvailable?: boolean;
+  stock?: number;
+}
 
 export class RewardService {
-  // Get rewards with filtering
+  // ========================================
+  // REWARD CREATION & MANAGEMENT
+  // ========================================
+
+  static async createReward(data: CreateRewardData): Promise<Reward> {
+    return await prisma.reward.create({
+      data: {
+        name: data.name,
+        description: data.description,
+        price: data.price,
+        category: data.category,
+        imageUrl: data.imageUrl,
+        isAvailable: data.isAvailable ?? true,
+        stock: data.stock,
+      },
+    });
+  }
+
+  static async findRewardById(id: string): Promise<Reward | null> {
+    return await prisma.reward.findUnique({
+      where: { id },
+    });
+  }
+
+  static async updateReward(id: string, data: UpdateRewardData): Promise<Reward> {
+    return await prisma.reward.update({
+      where: { id },
+      data,
+    });
+  }
+
+  static async deleteReward(id: string): Promise<void> {
+    await prisma.reward.delete({
+      where: { id },
+    });
+  }
+
+  // ========================================
+  // REWARD SEARCH & FILTERING
+  // ========================================
+
+  static async searchRewards(query: string, limit: number = 10): Promise<Reward[]> {
+    return await prisma.reward.findMany({
+      where: {
+        OR: [
+          { name: { contains: query, mode: 'insensitive' } },
+          { description: { contains: query, mode: 'insensitive' } },
+        ],
+        isAvailable: true,
+      },
+      take: limit,
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  static async getRewardsByCategory(category: string, limit: number = 10): Promise<Reward[]> {
+    return await prisma.reward.findMany({
+      where: {
+        category,
+        isAvailable: true,
+      },
+      take: limit,
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  static async getAvailableRewards(limit: number = 20): Promise<Reward[]> {
+    return await prisma.reward.findMany({
+      where: { isAvailable: true },
+      take: limit,
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  static async getPopularRewards(limit: number = 10): Promise<Reward[]> {
+    return await prisma.reward.findMany({
+      where: { isAvailable: true },
+      take: limit,
+      orderBy: { soldCount: 'desc' },
+    });
+  }
+
+  // ========================================
+  // REWARD PURCHASES
+  // ========================================
+
+  static async purchaseReward(userId: string, rewardId: string): Promise<UserReward> {
+    // Check if user has enough smiles
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    const reward = await prisma.reward.findUnique({
+      where: { id: rewardId },
+    });
+
+    if (!user || !reward) {
+      throw new Error('User or reward not found');
+    }
+
+    if (user.smiles < reward.price) {
+      throw new Error('Insufficient smiles');
+    }
+
+    if (!reward.isAvailable) {
+      throw new Error('Reward is not available');
+    }
+
+    if (reward.stock !== null && reward.stock <= 0) {
+      throw new Error('Reward is out of stock');
+    }
+
+    // Create purchase and update user smiles and reward stock
+    const [userReward] = await prisma.$transaction([
+      prisma.userReward.create({
+        data: {
+          userId,
+          rewardId,
+        },
+      }),
+      prisma.user.update({
+        where: { id: userId },
+        data: { smiles: { decrement: reward.price } },
+      }),
+      prisma.reward.update({
+        where: { id: rewardId },
+        data: {
+          soldCount: { increment: 1 },
+          stock: reward.stock !== null ? { decrement: 1 } : undefined,
+        },
+      }),
+    ]);
+
+    return userReward;
+  }
+
+  static async getUserRewards(userId: string): Promise<UserReward[]> {
+    return await prisma.userReward.findMany({
+      where: { userId },
+      include: { reward: true },
+      orderBy: { purchasedAt: 'desc' },
+    });
+  }
+
+  // ========================================
+  // ANALYTICS
+  // ========================================
+
+  static async getRewardStats(rewardId: string): Promise<{
+    purchaseCount: number;
+    totalRevenue: number;
+  }> {
+    const purchaseCount = await prisma.userReward.count({ where: { rewardId } });
+    
+    // Get total revenue by summing up reward prices for all purchases
+    const purchases = await prisma.userReward.findMany({
+      where: { rewardId },
+      include: { reward: true },
+    });
+    
+    const totalRevenue = purchases.reduce((sum, purchase) => {
+      return sum + (purchase.reward?.price || 0);
+    }, 0);
+
+    return {
+      purchaseCount,
+      totalRevenue,
+    };
+  }
+
+  static async getCategoryStats(): Promise<{
+    category: string;
+    count: number;
+    totalRevenue: number;
+  }[]> {
+    const stats = await prisma.reward.groupBy({
+      by: ['category'],
+      where: { isAvailable: true },
+      _count: { id: true },
+      _sum: { soldCount: true },
+    });
+
+    return stats.map(stat => ({
+      category: stat.category || 'Uncategorized',
+      count: stat._count.id,
+      totalRevenue: stat._sum.soldCount || 0,
+    }));
+  }
+
+  // ========================================
+  // API COMPATIBILITY METHODS
+  // ========================================
+
   static async getRewards(query: {
     category?: string;
     provider?: string;
     page?: number;
     pageSize?: number;
-  }): Promise<Reward[]> {
-    let filteredRewards = [...mockRewards];
+  }): Promise<any[]> {
+    let rewards = await this.getAvailableRewards(100);
 
     // Filter by category
     if (query.category && query.category !== 'all') {
-      filteredRewards = filteredRewards.filter(reward => reward.type === query.category);
+      rewards = rewards.filter(reward => reward.category === query.category);
     }
 
-    // Filter by provider
+    // Filter by provider (community)
     if (query.provider && query.provider !== 'all') {
-      filteredRewards = filteredRewards.filter(reward => reward.provider === query.provider);
+      // This would need to be implemented based on your data structure
+      // For now, we'll skip this filter
     }
-
-    // Sort by cost (lowest first)
-    filteredRewards.sort((a, b) => a.cost - b.cost);
 
     // Pagination
     const page = query.page || 1;
@@ -35,235 +240,40 @@ export class RewardService {
     const startIndex = (page - 1) * pageSize;
     const endIndex = startIndex + pageSize;
 
-    return filteredRewards.slice(startIndex, endIndex);
-  }
-
-  // Get reward by ID
-  static async getRewardById(rewardId: string): Promise<Reward | null> {
-    const reward = mockRewards.find(r => r.id === rewardId);
-    return reward || null;
-  }
-
-  // Create new reward
-  static async createReward(rewardData: CreateRewardRequest, userId: string): Promise<Reward> {
-    // Get community info
-    const community = await CommunityService.getCommunityById(rewardData.communityId);
-    if (!community) {
-      throw new Error('Community not found');
-    }
-
-    const newReward: Reward = {
-      id: `reward_${Date.now()}`,
-      type: rewardData.type,
-      title: rewardData.title,
-      description: rewardData.description,
-      validity: rewardData.validity,
-      cost: rewardData.cost,
-      provider: community.name,
+    // Transform the data to match frontend expectations
+    return rewards.slice(startIndex, endIndex).map(reward => ({
+      id: reward.id,
+      type: reward.category as any,
+      title: reward.name,
+      description: reward.description || '',
+      validity: '30 days',
+      cost: reward.price,
+      provider: 'SmileUp',
       owned: false,
-      emoji: rewardData.emoji,
-      imageUrl: rewardData.imageUrl,
+      emoji: '🎁',
+      imageUrl: reward.imageUrl || '',
       community: {
-        id: community.id,
-        name: community.name,
-        logo: community.logo
+        id: 'smileup',
+        name: 'SmileUp',
+        logo: ''
       }
-    };
-
-    mockRewards.push(newReward);
-    return newReward;
+    }));
   }
 
-  // Redeem reward
-  static async redeemReward(rewardId: string, userId: string): Promise<{
-    success: boolean;
-    newBalance: number;
-    reward: Reward;
-  }> {
-    const reward = mockRewards.find(r => r.id === rewardId);
-    if (!reward) {
-      throw new Error('Reward not found');
-    }
-
-    // Check if user has enough Smiles
-    const user = await AuthService.getUserById(userId);
-    if (!user) {
-      throw new Error('User not found');
-    }
-
-    if (user.smiles < reward.cost) {
-      throw new Error('Insufficient Smiles');
-    }
-
-    // Deduct Smiles from user
-    const updatedUser = await AuthService.updateUserSmiles(userId, -reward.cost);
-
-    // Mark reward as owned
-    reward.owned = true;
-
-    // Add activity to user
-    await AuthService.addRecentActivity(userId, `Redeemed reward: "${reward.title}" for ${reward.cost} Smiles`);
+  static async createRewardWithUser(data: any, userId: string): Promise<any> {
+    const reward = await this.createReward({
+      name: data.title,
+      description: data.description,
+      price: data.cost,
+      category: data.type,
+      imageUrl: data.imageUrl,
+      isAvailable: true,
+      stock: data.type === 'digital' || data.type === 'certificate' ? undefined : 100,
+    });
 
     return {
-      success: true,
-      newBalance: updatedUser.smiles,
-      reward
+      id: reward.id,
+      title: reward.name,
     };
-  }
-
-  // Get user's owned rewards
-  static async getUserRewards(userId: string): Promise<Reward[]> {
-    // In real app, you'd track which rewards each user owns
-    // For now, return rewards that are marked as owned
-    return mockRewards.filter(reward => reward.owned);
-  }
-
-  // Get rewards by community
-  static async getRewardsByCommunity(communityId: string): Promise<Reward[]> {
-    return mockRewards.filter(reward => reward.community.id === communityId);
-  }
-
-  // Get rewards by type
-  static async getRewardsByType(type: string): Promise<Reward[]> {
-    return mockRewards.filter(reward => reward.type === type);
-  }
-
-  // Get rewards by provider
-  static async getRewardsByProvider(provider: string): Promise<Reward[]> {
-    return mockRewards.filter(reward => reward.provider === provider);
-  }
-
-  // Get affordable rewards for user
-  static async getAffordableRewards(userId: string): Promise<Reward[]> {
-    const user = await AuthService.getUserById(userId);
-    if (!user) {
-      return [];
-    }
-
-    return mockRewards.filter(reward => reward.cost <= user.smiles);
-  }
-
-  // Get premium rewards (high cost)
-  static async getPremiumRewards(): Promise<Reward[]> {
-    return mockRewards.filter(reward => reward.cost >= 500);
-  }
-
-  // Get limited time rewards
-  static async getLimitedTimeRewards(): Promise<Reward[]> {
-    const now = new Date();
-    return mockRewards.filter(reward => {
-      // Check if reward has expiration date
-      if (reward.validity === 'Never Expires') return false;
-      
-      // Parse validity date (simplified)
-      const validityDate = new Date(reward.validity);
-      return validityDate > now;
-    });
-  }
-
-  // Search rewards
-  static async searchRewards(query: string): Promise<Reward[]> {
-    const searchTerm = query.toLowerCase();
-    return mockRewards.filter(reward => 
-      reward.title.toLowerCase().includes(searchTerm) ||
-      reward.description.toLowerCase().includes(searchTerm) ||
-      reward.provider.toLowerCase().includes(searchTerm)
-    );
-  }
-
-  // Get reward categories
-  static async getRewardCategories(): Promise<string[]> {
-    const categories = new Set(mockRewards.map(reward => reward.type));
-    return Array.from(categories);
-  }
-
-  // Get reward providers
-  static async getRewardProviders(): Promise<string[]> {
-    const providers = new Set(mockRewards.map(reward => reward.provider));
-    return Array.from(providers);
-  }
-
-  // Update reward
-  static async updateReward(rewardId: string, updates: Partial<Reward>, userId: string): Promise<Reward> {
-    const rewardIndex = mockRewards.findIndex(r => r.id === rewardId);
-    if (rewardIndex === -1) {
-      throw new Error('Reward not found');
-    }
-
-    mockRewards[rewardIndex] = {
-      ...mockRewards[rewardIndex],
-      ...updates
-    };
-
-    return mockRewards[rewardIndex];
-  }
-
-  // Delete reward
-  static async deleteReward(rewardId: string, userId: string): Promise<void> {
-    const rewardIndex = mockRewards.findIndex(r => r.id === rewardId);
-    if (rewardIndex === -1) {
-      throw new Error('Reward not found');
-    }
-
-    mockRewards.splice(rewardIndex, 1);
-  }
-
-  // Get trending rewards
-  static async getTrendingRewards(): Promise<Reward[]> {
-    // Sort by cost (higher cost = more trending)
-    const sortedRewards = [...mockRewards].sort((a, b) => b.cost - a.cost);
-    return sortedRewards.slice(0, 10);
-  }
-
-  // Get new rewards
-  static async getNewRewards(): Promise<Reward[]> {
-    // Return rewards created in the last 30 days
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    
-    return mockRewards.filter(reward => {
-      // For mock data, assume newer rewards have higher IDs
-      const rewardId = parseInt(reward.id.split('_')[1]);
-      return rewardId > Date.now() - (30 * 24 * 60 * 60 * 1000);
-    });
-  }
-
-  // Get rewards by price range
-  static async getRewardsByPriceRange(minPrice: number, maxPrice: number): Promise<Reward[]> {
-    return mockRewards.filter(reward => 
-      reward.cost >= minPrice && reward.cost <= maxPrice
-    );
-  }
-
-  // Get free rewards
-  static async getFreeRewards(): Promise<Reward[]> {
-    return mockRewards.filter(reward => reward.cost === 0);
-  }
-
-  // Get digital rewards
-  static async getDigitalRewards(): Promise<Reward[]> {
-    return mockRewards.filter(reward => 
-      reward.type === 'digital' || 
-      reward.type === 'certificate' || 
-      reward.type === 'award'
-    );
-  }
-
-  // Get experience rewards
-  static async getExperienceRewards(): Promise<Reward[]> {
-    return mockRewards.filter(reward => 
-      reward.type === 'experience' || 
-      reward.type === 'event' || 
-      reward.type === 'service'
-    );
-  }
-
-  // Get merchandise rewards
-  static async getMerchandiseRewards(): Promise<Reward[]> {
-    return mockRewards.filter(reward => 
-      reward.type === 'merchandise' || 
-      reward.type === 'voucher' || 
-      reward.type === 'discount'
-    );
   }
 } 

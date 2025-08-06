@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { CommunityService } from '@/lib/services/communityService';
-import { AuthService } from '@/lib/services/authService';
+import { AuthMiddleware } from '@/lib/middleware/auth';
 
 // POST /api/communities/[id]/join
 export async function POST(
@@ -8,25 +8,25 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
-    // In real app, validate JWT token from Authorization header
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    // Validate authentication and extract user ID from JWT token
+    const authResult = await AuthMiddleware.requireAuth(request);
+    
+    if (authResult instanceof NextResponse) {
+      return authResult; // Return error response
+    }
+
+    const userId = AuthMiddleware.getCurrentUserId(authResult);
+    if (!userId) {
       return NextResponse.json(
-        { success: false, error: 'Authorization token required' },
+        { success: false, error: 'User ID not found in token' },
         { status: 401 }
       );
     }
 
     const { id } = params;
 
-    // For mock implementation, use a default user ID
-    const userId = 'user_001';
-
-    // Join community
+    // Join community with authenticated user
     const community = await CommunityService.joinCommunity(id, userId);
-
-    // Update user's communities list
-    await AuthService.joinCommunity(userId, id);
 
     return NextResponse.json({
       success: true,

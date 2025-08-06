@@ -1,8 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { FeedPost } from '@/lib/types';
 import { FeedSidebar } from './FeedSidebar';
+import { motion } from 'framer-motion';
 
 interface ImageCardProps {
   index: number;
@@ -27,12 +28,22 @@ export const ImageCard: React.FC<ImageCardProps> = React.memo(({
   setAiChatOpen,
   lastPostIndex,
 }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
   const handleSmile = () => {
     onSmile(post.id);
   };
 
+  const toggleExpanded = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  // Truncate description for TikTok-style display
+  const shouldTruncate = post.description.length > 100;
+  const displayText = isExpanded ? post.description : post.description.slice(0, 100);
+
   return (
-    <div className="slider-children h-full relative">
+    <div className="h-full w-full relative bg-black">
       {/* Right Sidebar */}
       {!aiChatOpen && (
         <FeedSidebar
@@ -51,43 +62,89 @@ export const ImageCard: React.FC<ImageCardProps> = React.memo(({
           alt={post.title}
           className="w-full h-full object-cover"
         />
-        {/* Content Overlay */}
+        {/* Enhanced Content Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent">
-          {/* Top Section */}
+          {/* Top Section - Clean and Minimal */}
           <div className="absolute top-4 left-4 right-4 z-10">
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <span className="relative flex size-8 shrink-0 overflow-hidden rounded-full w-12 h-12 border-2 border-white">
-                  <img
-                    className="aspect-square size-full"
-                    alt={post.community.name}
-                    src={post.community.logo}
-                  />
-                </span>
-                <div>
-                  <h3 className="text-white font-semibold text-lg">{post.community.name}</h3>
-                  <p className="text-white/80 text-sm">{post.title}</p>
-                </div>
-              </div>
-              <span className="inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 gap-1 border-transparent bg-primary/20 text-primary-foreground">
-                Challenge: {post.challenge}
-              </span>
+              {/* Community Logo */}
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.4 }}
+                className="flex items-center space-x-3"
+              >
+                {post.community ? (
+                  <div className="relative">
+                    <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white/80 shadow-md">
+                      <img
+                        className="w-full h-full object-cover"
+                        alt={post.community.name}
+                        src={post.community.logo}
+                      />
+                    </div>
+                    <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border border-white"></div>
+                  </div>
+                ) : (
+                  <div className="relative">
+                    <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white/80 shadow-md bg-gray-600 flex items-center justify-center">
+                      <span className="text-white text-sm font-semibold">S</span>
+                    </div>
+                  </div>
+                )}
+              </motion.div>
+
+              {/* Image indicator */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.3, duration: 0.4 }}
+                className="w-6 h-6 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center border border-white/20"
+              >
+                <div className="w-3 h-3 bg-white rounded-sm"></div>
+              </motion.div>
             </div>
           </div>
 
-          {/* Bottom Section */}
-          <div className="absolute bottom-4 left-4 right-4 z-10">
-            <div className="flex items-end justify-between">
-              <div className="flex-1">
-                <h2 className="text-white font-bold text-xl mb-2">{post.title}</h2>
-                <p className="text-white/90 text-sm mb-3 line-clamp-2">{post.description}</p>
-                <div className="flex items-center space-x-4 text-white/80 text-sm">
-                  <span>{post.likesCount} Smiles</span>
-                  <span>{post.commentsCount} Comments</span>
-                  <span>{post.createdAt}</span>
+          {/* Bottom Section - Clean and Readable */}
+          <div className="absolute bottom-24 left-4 right-4 z-10">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.4 }}
+              className="flex items-end justify-between"
+            >
+              <div className="flex-1 max-w-[80%]">
+                <h2 className="text-white font-bold text-xl mb-2 drop-shadow-md">
+                  {post.title}
+                </h2>
+                
+                {/* Description */}
+                <div className="mb-3">
+                  <p className="text-white/90 text-sm leading-relaxed">
+                    {displayText}
+                    {shouldTruncate && !isExpanded && (
+                      <span className="text-white/60">...</span>
+                    )}
+                  </p>
+                  {shouldTruncate && (
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      onClick={toggleExpanded}
+                      className="text-white/70 text-xs font-medium hover:text-white transition-colors mt-1"
+                    >
+                      {isExpanded ? 'See Less' : 'See More'}
+                    </motion.button>
+                  )}
+                </div>
+                
+                {/* Date */}
+                <div className="flex items-center space-x-2 text-white/60 text-xs">
+                  <div className="w-1.5 h-1.5 bg-white/40 rounded-full"></div>
+                  <span>{new Date(post.createdAt).toLocaleDateString()}</span>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>
