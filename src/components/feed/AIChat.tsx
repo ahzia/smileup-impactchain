@@ -27,6 +27,7 @@ export function AIChat({ isOpen, onClose, post }: AIChatProps) {
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [hasShownWelcome, setHasShownWelcome] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(false);
 
   useEffect(() => {
     // Get or create session ID
@@ -44,6 +45,7 @@ export function AIChat({ isOpen, onClose, post }: AIChatProps) {
       setMessages([]);
       setHasShownWelcome(false);
       setInputValue('');
+      setIsInitializing(true);
     }
   }, [isOpen]);
 
@@ -81,10 +83,12 @@ export function AIChat({ isOpen, onClose, post }: AIChatProps) {
         // Add welcome message only once
         addAIMessage("Hello! I'm your SmileUp AI assistant. I can help you learn more about this project, answer questions, and guide you on how to get involved. What would you like to know?");
         setHasShownWelcome(true);
+        setIsInitializing(false);
       }).catch(error => {
         console.error('Error sending context to DialogFlow:', error);
         addAIMessage("Hello! I'm your SmileUp AI assistant. How can I help you today?");
         setHasShownWelcome(true);
+        setIsInitializing(false);
       });
     }
   }, [isOpen, post, sessionId, hasShownWelcome]);
@@ -141,9 +145,9 @@ export function AIChat({ isOpen, onClose, post }: AIChatProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-             <DialogContent className="sm:max-w-[500px] h-[600px] p-0 overflow-hidden ai-chat-container border-0 shadow-2xl">
+      <DialogContent className="sm:max-w-[500px] max-h-[90vh] min-h-[400px] h-auto p-0 overflow-hidden ai-chat-container border-0 shadow-2xl mb-20 sm:mb-0">
         {/* Header */}
-                 <DialogHeader className="p-3 pb-2 ai-chat-header-glow border-b border-border/50">
+        <DialogHeader className="p-3 pb-2 ai-chat-header-glow border-b border-border/50 flex-shrink-0">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <motion.div
@@ -171,7 +175,7 @@ export function AIChat({ isOpen, onClose, post }: AIChatProps) {
         </DialogHeader>
 
         {/* Chat Messages */}
-        <div className="flex-1 overflow-y-auto p-3 space-y-3 bg-gradient-to-b from-background/95 to-muted/20 relative">
+        <div className="flex-1 overflow-y-auto p-3 space-y-3 bg-gradient-to-b from-background/95 to-muted/20 relative min-h-0 max-h-[60vh]">
           {/* Floating Particles */}
           <div className="ai-particles">
             {[...Array(6)].map((_, i) => (
@@ -186,6 +190,59 @@ export function AIChat({ isOpen, onClose, post }: AIChatProps) {
               />
             ))}
           </div>
+
+          {/* Initial Loading State */}
+          <AnimatePresence>
+            {isInitializing && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="flex justify-start"
+              >
+                <div className="bg-gradient-to-r from-card/90 to-card/80 border border-border/50 rounded-2xl px-4 py-3 shadow-lg backdrop-blur-sm">
+                  <div className="flex items-center space-x-3">
+                    <motion.div
+                      animate={{ 
+                        rotate: [0, 360],
+                        scale: [1, 1.1, 1]
+                      }}
+                      transition={{ 
+                        duration: 2, 
+                        repeat: Infinity,
+                        ease: "linear"
+                      }}
+                    >
+                      <div className="w-6 h-6 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center">
+                        <Bot className="w-3 h-3 text-primary-foreground" />
+                      </div>
+                    </motion.div>
+                    <div className="flex flex-col space-y-2">
+                      <div className="flex space-x-1">
+                        <motion.div
+                          animate={{ scale: [1, 1.2, 1] }}
+                          transition={{ duration: 0.6, repeat: Infinity, delay: 0 }}
+                          className="w-2 h-2 bg-primary rounded-full"
+                        />
+                        <motion.div
+                          animate={{ scale: [1, 1.2, 1] }}
+                          transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }}
+                          className="w-2 h-2 bg-primary rounded-full"
+                        />
+                        <motion.div
+                          animate={{ scale: [1, 1.2, 1] }}
+                          transition={{ duration: 0.6, repeat: Infinity, delay: 0.4 }}
+                          className="w-2 h-2 bg-primary rounded-full"
+                        />
+                      </div>
+                      <span className="text-xs text-muted-foreground">Initializing AI assistant...</span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           <AnimatePresence>
             {messages.map((message, index) => (
               <motion.div
@@ -262,8 +319,8 @@ export function AIChat({ isOpen, onClose, post }: AIChatProps) {
           </AnimatePresence>
         </div>
 
-                 {/* Input Area */}
-         <div className="p-2 border-t border-border/50 bg-gradient-to-r from-background/95 to-muted/20">
+        {/* Input Area */}
+        <div className="p-2 border-t border-border/50 bg-gradient-to-r from-background/95 to-muted/20 flex-shrink-0">
           <div className="flex items-center space-x-2">
             <div className="flex-1 relative ai-chat-input-glow">
               <Input
@@ -296,8 +353,8 @@ export function AIChat({ isOpen, onClose, post }: AIChatProps) {
             </motion.div>
           </div>
           
-                     {/* Quick Actions */}
-           <div className="flex items-center justify-between mt-1 text-xs text-muted-foreground">
+          {/* Quick Actions */}
+          <div className="flex items-center justify-between mt-1 text-xs text-muted-foreground">
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-1">
                 <Zap className="w-3 h-3" />
