@@ -285,7 +285,7 @@ export class AuthService {
       communitiesCreated: [],
       badges: user.badges!,
       recentActivities: [],
-      createdAt: user.createdAt!.toISOString()
+      createdAt: user.createdAt?.toISOString() || new Date().toISOString()
     }));
   }
 
@@ -308,7 +308,7 @@ export class AuthService {
       communitiesCreated: [],
       badges: user.badges,
       recentActivities: [],
-      createdAt: user.createdAt.toISOString()
+      createdAt: user.createdAt?.toISOString() || new Date().toISOString()
     };
   }
 
@@ -334,7 +334,7 @@ export class AuthService {
       communitiesCreated: [],
       badges: user.badges,
       recentActivities: [],
-      createdAt: user.createdAt.toISOString()
+      createdAt: user.createdAt?.toISOString() || new Date().toISOString()
     };
   }
 
@@ -360,7 +360,7 @@ export class AuthService {
       communitiesCreated: [],
       badges: user.badges,
       recentActivities: [],
-      createdAt: user.createdAt.toISOString()
+      createdAt: user.createdAt?.toISOString() || new Date().toISOString()
     };
   }
 
@@ -386,7 +386,7 @@ export class AuthService {
       communitiesCreated: [],
       badges: user.badges,
       recentActivities: [],
-      createdAt: user.createdAt.toISOString()
+      createdAt: user.createdAt?.toISOString() || new Date().toISOString()
     };
   }
 
@@ -409,7 +409,7 @@ export class AuthService {
       communitiesCreated: [],
       badges: user.badges,
       recentActivities: [],
-      createdAt: user.createdAt.toISOString()
+      createdAt: user.createdAt?.toISOString() || new Date().toISOString()
     };
   }
 } 

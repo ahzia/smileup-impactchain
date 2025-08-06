@@ -32,30 +32,44 @@ import {
 export default function BazaarPage() {
   const [rewards, setRewards] = useState<Reward[]>([]);
   const [loading, setLoading] = useState(true);
-  const [userSmiles, setUserSmiles] = useState(2450);
+  const [userSmiles, setUserSmiles] = useState<number>(0);
   const [filter, setFilter] = useState<FilterState>({
     provider: 'all',
     priceRange: 'all'
   });
 
-  // Load rewards from API
+  // Load rewards and user data from API
   useEffect(() => {
-    const loadRewards = async () => {
+    const loadData = async () => {
       try {
-        const response = await fetch('/api/rewards');
-        const data = await response.json();
+        // Load rewards
+        const rewardsResponse = await fetch('/api/rewards');
+        const rewardsData = await rewardsResponse.json();
         
-        if (data.success && data.data) {
-          setRewards(data.data);
+        if (rewardsData.success && rewardsData.data) {
+          setRewards(rewardsData.data);
+        }
+
+        // Load user profile to get smiles
+        const userResponse = await fetch('/api/user/profile');
+        const userData = await userResponse.json();
+        
+        if (userData.success && userData.data) {
+          setUserSmiles(userData.data.smiles || 0);
+        } else {
+          // User not authenticated or API error, use default value
+          setUserSmiles(1000);
         }
       } catch (error) {
-        console.error('Error loading rewards:', error);
+        console.error('Error loading data:', error);
+        // Set default smiles if API fails
+        setUserSmiles(1000);
       } finally {
         setLoading(false);
       }
     };
 
-    loadRewards();
+    loadData();
   }, []);
 
   // Filter rewards based on current filter

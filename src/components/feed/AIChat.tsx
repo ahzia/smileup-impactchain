@@ -32,7 +32,7 @@ export function AIChat({ isOpen, onClose, post }: AIChatProps) {
         userName: "User",
         projectName: post.title,
         projectDescription: post.description,
-        communityName: post.community.name,
+        communityName: post.community?.name || 'SmileUp',
         challenge: post.challenge || '',
         callToAction: post.callToAction || [],
         links: post.links || []

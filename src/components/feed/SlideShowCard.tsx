@@ -54,20 +54,28 @@ const SlideShowCard: React.FC<SlideShowCardProps> = ({ post }) => {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="relative mb-8"
             >
-              <div className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-full overflow-hidden border-4 border-white/30 shadow-2xl">
-                <img
-                  src={post.community.logo}
-                  alt={`${post.community.name} logo`}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <motion.div
-                animate={{ scale: [1, 1.1, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-2 border-white flex items-center justify-center"
-              >
-                <Sparkles className="w-4 h-4 text-white" />
-              </motion.div>
+              {post.community ? (
+                <>
+                  <div className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-full overflow-hidden border-4 border-white/30 shadow-2xl">
+                    <img
+                      src={post.community.logo}
+                      alt={`${post.community.name} logo`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <motion.div
+                    animate={{ scale: [1, 1.1, 1] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-2 border-white flex items-center justify-center"
+                  >
+                    <Sparkles className="w-4 h-4 text-white" />
+                  </motion.div>
+                </>
+              ) : (
+                <div className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-full overflow-hidden border-4 border-white/30 shadow-2xl bg-gray-600 flex items-center justify-center">
+                  <span className="text-white text-4xl font-bold">S</span>
+                </div>
+              )}
             </motion.div>
             <motion.h3
               initial={{ y: 20, opacity: 0 }}
@@ -75,7 +83,7 @@ const SlideShowCard: React.FC<SlideShowCardProps> = ({ post }) => {
               transition={{ duration: 0.5, delay: 0.4 }}
               className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 drop-shadow-lg"
             >
-              {post.community.name}
+              {post.community ? post.community.name : 'SmileUp'}
             </motion.h3>
             <motion.div
               initial={{ y: 20, opacity: 0 }}

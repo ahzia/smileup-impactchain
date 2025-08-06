@@ -294,18 +294,28 @@ export const MissionCard: React.FC<MissionCardProps> = ({ mission, onAccept, onC
                 {/* Community */}
                 <div className="flex items-center space-x-3 p-3 bg-gradient-to-r from-blue-500/20 via-blue-400/15 to-blue-500/20 border border-blue-500/40 rounded-lg backdrop-blur-sm">
                   <div className="relative">
-                    <img 
-                      src={mission.community.logo} 
-                      alt={mission.community.name}
-                      className="w-6 h-6 rounded-full border-2 border-blue-400 shadow-sm"
-                    />
-                    <motion.div 
-                      className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border border-card"
-                      animate={{ scale: [1, 1.2, 1] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    />
+                    {mission.community ? (
+                      <>
+                        <img 
+                          src={mission.community.logo} 
+                          alt={mission.community.name}
+                          className="w-6 h-6 rounded-full border-2 border-blue-400 shadow-sm"
+                        />
+                        <motion.div 
+                          className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border border-card"
+                          animate={{ scale: [1, 1.2, 1] }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                        />
+                      </>
+                    ) : (
+                      <div className="w-6 h-6 rounded-full border-2 border-blue-400 shadow-sm bg-gray-600 flex items-center justify-center">
+                        <span className="text-white text-xs font-semibold">S</span>
+                      </div>
+                    )}
                   </div>
-                  <span className="text-sm font-medium text-card-foreground">{mission.community.name}</span>
+                  <span className="text-sm font-medium text-card-foreground">
+                    {mission.community ? mission.community.name : 'SmileUp'}
+                  </span>
                 </div>
 
                 {/* Details Grid */}

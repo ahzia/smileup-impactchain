@@ -193,12 +193,12 @@ export const RewardCard: React.FC<RewardCardProps> = ({ reward, userSmiles, onPu
           {/* Provider */}
           <div className="flex items-center space-x-2">
             <Avatar className="w-5 h-5 ring-1 ring-border">
-              <AvatarImage src={reward.community.logo} alt={reward.provider} />
+              <AvatarImage src={reward.community?.logo} alt={reward.provider || 'Provider'} />
               <AvatarFallback className="text-xs bg-gradient-to-br from-primary via-primary/90 to-primary text-primary-foreground">
-                {reward.provider.split(' ').map(n => n[0]).join('')}
+                {reward.provider ? reward.provider.split(' ').map(n => n[0]).join('') : 'P'}
               </AvatarFallback>
             </Avatar>
-            <span className="text-sm text-muted-foreground">{reward.provider}</span>
+            <span className="text-sm text-muted-foreground">{reward.provider || 'Provider'}</span>
           </div>
 
           {/* Validity */}
@@ -263,7 +263,7 @@ export const RewardCard: React.FC<RewardCardProps> = ({ reward, userSmiles, onPu
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
-              Need {reward.cost - userSmiles} more Smiles
+              Need {reward.cost - (userSmiles || 0)} more Smiles
             </motion.div>
           )}
         </CardContent>

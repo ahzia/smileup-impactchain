@@ -74,16 +74,24 @@ export const ImageCard: React.FC<ImageCardProps> = React.memo(({
                 transition={{ delay: 0.2, duration: 0.4 }}
                 className="flex items-center space-x-3"
               >
-                <div className="relative">
-                  <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white/80 shadow-md">
-                    <img
-                      className="w-full h-full object-cover"
-                      alt={post.community.name}
-                      src={post.community.logo}
-                    />
+                {post.community ? (
+                  <div className="relative">
+                    <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white/80 shadow-md">
+                      <img
+                        className="w-full h-full object-cover"
+                        alt={post.community.name}
+                        src={post.community.logo}
+                      />
+                    </div>
+                    <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border border-white"></div>
                   </div>
-                  <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border border-white"></div>
-                </div>
+                ) : (
+                  <div className="relative">
+                    <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white/80 shadow-md bg-gray-600 flex items-center justify-center">
+                      <span className="text-white text-sm font-semibold">S</span>
+                    </div>
+                  </div>
+                )}
               </motion.div>
 
               {/* Image indicator */}

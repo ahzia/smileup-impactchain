@@ -148,7 +148,7 @@ export const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
                 transition={{ duration: 0.2 }}
               >
                 <Avatar className={`h-12 w-12 ${isPodium ? 'ring-2 ring-yellow-400 shadow-lg' : 'ring-1 ring-border'}`}>
-                  <AvatarImage src={user.avatar} alt={user.name} />
+                  <AvatarImage src={user.avatar || ''} alt={user.name} />
                   <AvatarFallback className="bg-gradient-to-br from-primary via-primary/90 to-primary text-primary-foreground">
                     {user.name.split(' ').map(n => n[0]).join('')}
                   </AvatarFallback>

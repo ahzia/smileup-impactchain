@@ -240,7 +240,24 @@ export class RewardService {
     const startIndex = (page - 1) * pageSize;
     const endIndex = startIndex + pageSize;
 
-    return rewards.slice(startIndex, endIndex);
+    // Transform the data to match frontend expectations
+    return rewards.slice(startIndex, endIndex).map(reward => ({
+      id: reward.id,
+      type: reward.category as any,
+      title: reward.name,
+      description: reward.description || '',
+      validity: '30 days',
+      cost: reward.price,
+      provider: 'SmileUp',
+      owned: false,
+      emoji: '🎁',
+      imageUrl: reward.imageUrl || '',
+      community: {
+        id: 'smileup',
+        name: 'SmileUp',
+        logo: ''
+      }
+    }));
   }
 
   static async createRewardWithUser(data: any, userId: string): Promise<any> {

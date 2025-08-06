@@ -228,6 +228,8 @@ export class UserService {
         score: true,
         level: true,
         badges: true,
+        createdAt: true,
+        smiles: true,
       },
     });
   }

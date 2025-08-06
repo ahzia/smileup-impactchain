@@ -31,10 +31,13 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
     lg: 'w-16 h-16'
   };
 
+  // Client-side check for window object
+  const isClient = typeof window !== 'undefined';
+
   return (
     <div className={classNames("min-h-screen bg-background relative overflow-hidden", className)}>
       {/* Animated background particles */}
-      {showParticles && (
+      {showParticles && isClient && (
         <div className="absolute inset-0 overflow-hidden">
           {[...Array(particlesCount)].map((_, i) => (
             <motion.div
@@ -44,8 +47,8 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
                 particlesClassName
               )}
               animate={{
-                x: [0, Math.random() * window.innerWidth],
-                y: [0, Math.random() * window.innerHeight],
+                x: [0, Math.random() * (window?.innerWidth || 1000)],
+                y: [0, Math.random() * (window?.innerHeight || 1000)],
                 opacity: [0, 1, 0],
               }}
               transition={{
