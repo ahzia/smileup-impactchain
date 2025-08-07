@@ -137,9 +137,9 @@ export const MissionCard: React.FC<MissionCardProps> = ({ mission, onAccept, onC
       whileHover={{ y: -4, scale: 1.02 }}
       className="group relative"
     >
-      {/* Animated background glow */}
+      {/* Desktop-only enhanced background glow */}
       <motion.div
-        className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-primary/20 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+        className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-primary/20 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 lg:group-hover:blur-2xl lg:group-hover:from-primary/30 lg:group-hover:to-primary/30"
         animate={{ 
           scale: [1, 1.1, 1],
           rotate: [0, 1, -1, 0]
@@ -151,37 +151,41 @@ export const MissionCard: React.FC<MissionCardProps> = ({ mission, onAccept, onC
         }}
       />
       
-      <Card className="relative border border-border/50 bg-gradient-to-br from-card via-card/95 to-card overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer backdrop-blur-sm"
+      {/* Desktop-only corner accents */}
+      <div className="hidden lg:block absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-primary/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      <div className="hidden lg:block absolute bottom-0 left-0 w-12 h-12 bg-gradient-to-tr from-secondary/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200"></div>
+      
+      <Card className="relative border border-border/50 bg-gradient-to-br from-card via-card/95 to-card overflow-hidden shadow-lg hover:shadow-2xl lg:group-hover:shadow-3xl transition-all duration-500 cursor-pointer backdrop-blur-sm lg:group-hover:backdrop-blur-md"
             onClick={() => setIsExpanded(!isExpanded)}>
         
         {/* Simple gradient overlay */}
-        <div className={`absolute inset-0 bg-gradient-to-br ${getCardGradient(mission.status)} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+        <div className={`absolute inset-0 bg-gradient-to-br ${getCardGradient(mission.status)} opacity-0 group-hover:opacity-100 lg:group-hover:opacity-150 transition-opacity duration-500`} />
         
         {/* Compact View */}
-        <div className="relative p-4 z-10">
+        <div className="relative p-4 lg:p-6 z-10">
           <div className="flex items-start justify-between">
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-3 lg:space-x-4">
               <motion.div 
-                className="relative p-3 rounded-xl bg-gradient-to-br from-primary/20 via-primary/10 to-primary/20 border border-primary/30 shadow-lg backdrop-blur-sm"
+                className="relative p-3 lg:p-4 rounded-xl bg-gradient-to-br from-primary/20 via-primary/10 to-primary/20 border border-primary/30 shadow-lg backdrop-blur-sm lg:group-hover:shadow-xl lg:group-hover:border-primary/50 transition-all duration-300"
                 whileHover={{ scale: 1.1, rotate: 5 }}
                 transition={{ duration: 0.2 }}
               >
-                <div className="flex items-center justify-center">
+                <div className="flex items-center justify-center lg:group-hover:scale-110 transition-transform duration-300">
                   {getMissionIcon(mission.icon)}
                 </div>
                 <motion.div
-                  className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-primary to-primary/80 rounded-full flex items-center justify-center shadow-lg"
+                  className="absolute -top-1 -right-1 w-4 h-4 lg:w-5 lg:h-5 bg-gradient-to-r from-primary to-primary/80 rounded-full flex items-center justify-center shadow-lg lg:group-hover:shadow-xl transition-all duration-300"
                   animate={{ 
                     scale: [1, 1.2, 1]
                   }}
                   transition={{ duration: 3, repeat: Infinity }}
                 >
-                  <Sparkles className="h-2 w-2 text-primary-foreground" />
+                  <Sparkles className="h-2 w-2 lg:h-3 lg:w-3 text-primary-foreground" />
                 </motion.div>
                 
-                {/* Floating particles */}
+                {/* Desktop-only enhanced floating particles */}
                 <motion.div
-                  className="absolute -top-2 -left-2 w-2 h-2 bg-yellow-400 rounded-full opacity-60"
+                  className="absolute -top-2 -left-2 w-2 h-2 lg:w-3 lg:h-3 bg-yellow-400 rounded-full opacity-60 lg:group-hover:opacity-80 transition-opacity duration-300"
                   animate={{ 
                     y: [0, -10, 0],
                     opacity: [0.6, 1, 0.6]
@@ -189,28 +193,36 @@ export const MissionCard: React.FC<MissionCardProps> = ({ mission, onAccept, onC
                   transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
                 />
                 <motion.div
-                  className="absolute -bottom-1 -right-2 w-1.5 h-1.5 bg-blue-400 rounded-full opacity-60"
+                  className="absolute -bottom-1 -right-2 w-1.5 h-1.5 lg:w-2 lg:h-2 bg-blue-400 rounded-full opacity-60 lg:group-hover:opacity-80 transition-opacity duration-300"
                   animate={{ 
                     y: [0, -8, 0],
                     opacity: [0.6, 1, 0.6]
                   }}
                   transition={{ duration: 2.5, repeat: Infinity, delay: 1 }}
                 />
+                <motion.div
+                  className="hidden lg:block absolute top-1 -right-3 w-1 h-1 bg-green-400 rounded-full opacity-60 group-hover:opacity-80 transition-opacity duration-300"
+                  animate={{ 
+                    y: [0, -6, 0],
+                    opacity: [0.6, 1, 0.6]
+                  }}
+                  transition={{ duration: 1.8, repeat: Infinity, delay: 1.5 }}
+                />
               </motion.div>
               <div className="flex-1 min-w-0">
-                <h3 className="font-bold text-lg text-card-foreground line-clamp-1 group-hover:text-primary transition-colors duration-300">
+                <h3 className="font-bold text-lg lg:text-xl text-card-foreground line-clamp-1 group-hover:text-primary lg:group-hover:text-primary/90 transition-colors duration-300">
                   {mission.title}
                 </h3>
-                <div className="flex items-center space-x-2 mt-1">
+                <div className="flex items-center space-x-2 lg:space-x-3 mt-1 lg:mt-2">
                   <Badge 
                     variant="outline" 
-                    className={`text-xs font-semibold px-2 py-0.5 ${getStatusColor(mission.status)} backdrop-blur-sm`}
+                    className={`text-xs lg:text-sm font-semibold px-2 py-0.5 lg:px-3 lg:py-1 ${getStatusColor(mission.status)} backdrop-blur-sm lg:group-hover:shadow-md transition-all duration-300`}
                   >
                     {mission.status}
                   </Badge>
                   <Badge 
                     variant="outline" 
-                    className={`text-xs font-semibold px-2 py-0.5 ${getEffortLevelColor(mission.effortLevel)} backdrop-blur-sm`}
+                    className={`text-xs lg:text-sm font-semibold px-2 py-0.5 lg:px-3 lg:py-1 ${getEffortLevelColor(mission.effortLevel)} backdrop-blur-sm lg:group-hover:shadow-md transition-all duration-300`}
                   >
                     {getEffortIcon(mission.effortLevel)}
                     <span className="ml-1">{mission.effortLevel}</span>
@@ -218,46 +230,47 @@ export const MissionCard: React.FC<MissionCardProps> = ({ mission, onAccept, onC
                 </div>
               </div>
             </div>
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-3 lg:space-x-4">
               <motion.div 
-                className="flex items-center space-x-1 text-yellow-400 bg-gradient-to-r from-yellow-500/20 via-yellow-400/15 to-yellow-500/20 border border-yellow-500/40 px-3 py-1 rounded-lg backdrop-blur-sm"
+                className="flex items-center space-x-1 text-yellow-400 bg-gradient-to-r from-yellow-500/20 via-yellow-400/15 to-yellow-500/20 border border-yellow-500/40 px-3 py-1 lg:px-4 lg:py-2 rounded-lg backdrop-blur-sm lg:group-hover:shadow-lg lg:group-hover:border-yellow-400/60 transition-all duration-300"
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.2 }}
               >
                 <motion.div
                   animate={{ scale: [1, 1.1, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
+                  className="lg:group-hover:scale-110 transition-transform duration-300"
                 >
-                  <Trophy className="h-4 w-4" />
+                  <Trophy className="h-4 w-4 lg:h-5 lg:w-5" />
                 </motion.div>
-                <span className="font-bold text-sm">{mission.reward}</span>
+                <span className="font-bold text-sm lg:text-base">{mission.reward}</span>
               </motion.div>
               <motion.div
                 animate={{ rotate: isExpanded ? 180 : 0 }}
                 transition={{ duration: 0.3 }}
-                className="text-muted-foreground"
+                className="text-muted-foreground lg:group-hover:text-primary transition-colors duration-300"
               >
-                {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                {isExpanded ? <ChevronUp className="h-4 w-4 lg:h-5 lg:w-5" /> : <ChevronDown className="h-4 w-4 lg:h-5 lg:w-5" />}
               </motion.div>
             </div>
           </div>
 
           {/* Progress Bar (always visible) */}
           {mission.steps && (
-            <div className="mt-3">
-              <div className="flex items-center justify-between text-xs mb-1">
-                <span className="text-muted-foreground">Progress</span>
-                <span className="font-semibold text-primary">
+            <div className="mt-3 lg:mt-4">
+              <div className="flex items-center justify-between text-xs lg:text-sm mb-1 lg:mb-2">
+                <span className="text-muted-foreground lg:group-hover:text-muted-foreground/80 transition-colors duration-300">Progress</span>
+                <span className="font-semibold text-primary lg:group-hover:text-primary/90 transition-colors duration-300">
                   {mission.currentStep || 0} / {mission.steps}
                 </span>
               </div>
               <div className="relative">
-                <Progress value={getProgressPercentage()} className="h-2 bg-muted/50 backdrop-blur-sm" />
-                <div className="absolute inset-0 bg-gradient-to-r from-primary/30 via-primary/20 to-primary/30 rounded-full"></div>
+                <Progress value={getProgressPercentage()} className="h-2 lg:h-3 bg-muted/50 backdrop-blur-sm lg:group-hover:bg-muted/70 transition-colors duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-r from-primary/30 via-primary/20 to-primary/30 rounded-full lg:group-hover:from-primary/40 lg:group-hover:to-primary/40 transition-all duration-300"></div>
                 
                 {/* Animated progress glow */}
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-primary/40 to-transparent rounded-full"
+                  className="absolute inset-0 bg-gradient-to-r from-primary/40 to-transparent rounded-full lg:group-hover:from-primary/50 lg:group-hover:to-transparent transition-all duration-300"
                   animate={{ 
                     opacity: [0.4, 0.8, 0.4],
                     scaleX: [0, 1, 0]
@@ -283,187 +296,78 @@ export const MissionCard: React.FC<MissionCardProps> = ({ mission, onAccept, onC
               transition={{ duration: 0.3 }}
               className="border-t border-border/50 relative z-10"
             >
-              <CardContent className="p-4 space-y-4">
+              <CardContent className="p-4 lg:p-6 space-y-4 lg:space-y-6">
                 {/* Description */}
-                <div className="p-3 bg-gradient-to-r from-muted/30 via-muted/20 to-muted/30 rounded-lg border border-border/50 backdrop-blur-sm">
-                  <p className="text-sm text-muted-foreground leading-relaxed">
+                <div className="p-3 lg:p-4 bg-gradient-to-r from-muted/30 via-muted/20 to-muted/30 rounded-lg lg:rounded-xl border border-border/50 backdrop-blur-sm lg:group-hover:shadow-md lg:group-hover:border-border/70 transition-all duration-300">
+                  <p className="text-sm lg:text-base text-muted-foreground leading-relaxed lg:group-hover:text-muted-foreground/90 transition-colors duration-300">
                     {mission.description}
                   </p>
                 </div>
 
                 {/* Community */}
-                <div className="flex items-center space-x-3 p-3 bg-gradient-to-r from-blue-500/20 via-blue-400/15 to-blue-500/20 border border-blue-500/40 rounded-lg backdrop-blur-sm">
+                <div className="flex items-center space-x-3 lg:space-x-4 p-3 lg:p-4 bg-gradient-to-r from-blue-500/20 via-blue-400/15 to-blue-500/20 border border-blue-500/40 rounded-lg lg:rounded-xl backdrop-blur-sm lg:group-hover:shadow-md lg:group-hover:border-blue-400/60 lg:group-hover:from-blue-500/25 lg:group-hover:to-blue-500/25 transition-all duration-300">
                   <div className="relative">
                     {mission.community ? (
                       <>
                         <img 
                           src={mission.community.logo} 
                           alt={mission.community.name}
-                          className="w-6 h-6 rounded-full border-2 border-blue-400 shadow-sm"
+                          className="w-8 h-8 lg:w-10 lg:h-10 rounded-full border-2 border-white/50 shadow-md lg:group-hover:shadow-lg lg:group-hover:border-white/70 transition-all duration-300"
                         />
-                        <motion.div 
-                          className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border border-card"
-                          animate={{ scale: [1, 1.2, 1] }}
-                          transition={{ duration: 2, repeat: Infinity }}
-                        />
+                        <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 lg:w-4 lg:h-4 bg-green-500 rounded-full border border-white lg:group-hover:bg-green-400 transition-colors duration-300"></div>
                       </>
                     ) : (
-                      <div className="w-6 h-6 rounded-full border-2 border-blue-400 shadow-sm bg-gray-600 flex items-center justify-center">
-                        <span className="text-white text-xs font-semibold">S</span>
+                      <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-muted border-2 border-white/50 shadow-md lg:group-hover:shadow-lg lg:group-hover:border-white/70 transition-all duration-300 flex items-center justify-center">
+                        <span className="text-xs lg:text-sm font-semibold text-muted-foreground">C</span>
                       </div>
                     )}
                   </div>
-                  <span className="text-sm font-medium text-card-foreground">
-                    {mission.community ? mission.community.name : 'SmileUp'}
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-sm lg:text-base text-blue-600 lg:group-hover:text-blue-500 transition-colors duration-300">
+                      {mission.community?.name || 'Community Mission'}
+                    </h4>
+                    <p className="text-xs lg:text-sm text-blue-600/70 lg:group-hover:text-blue-500/80 transition-colors duration-300">
+                      {mission.category} • {mission.requiredTime}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Deadline */}
+                <div className="flex items-center space-x-2 lg:space-x-3 p-2 lg:p-3 bg-gradient-to-r from-orange-500/10 via-orange-400/5 to-orange-500/10 border border-orange-500/30 rounded-lg lg:rounded-xl backdrop-blur-sm lg:group-hover:shadow-md lg:group-hover:border-orange-400/50 lg:group-hover:from-orange-500/15 lg:group-hover:to-orange-500/15 transition-all duration-300">
+                  <Clock className="h-4 w-4 lg:h-5 lg:w-5 text-orange-600 lg:group-hover:text-orange-500 transition-colors duration-300" />
+                  <span className="text-xs lg:text-sm text-orange-600 lg:group-hover:text-orange-500 transition-colors duration-300">
+                    Deadline: {formatDeadline(mission.deadline)}
                   </span>
                 </div>
 
-                {/* Details Grid */}
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="flex items-center space-x-2 p-2 bg-gradient-to-r from-blue-500/20 via-blue-400/15 to-blue-500/20 border border-blue-500/40 rounded-lg backdrop-blur-sm">
-                    <motion.div
-                      animate={{ scale: [1, 1.1, 1] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    >
-                      <Clock className="h-4 w-4 text-blue-400" />
-                    </motion.div>
-                    <div>
-                      <p className="text-xs text-muted-foreground">Time</p>
-                      <p className="text-sm font-semibold text-card-foreground">{mission.requiredTime}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2 p-2 bg-gradient-to-r from-orange-500/20 via-orange-400/15 to-orange-500/20 border border-orange-500/40 rounded-lg backdrop-blur-sm">
-                    <motion.div
-                      animate={{ scale: [1, 1.1, 1] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    >
-                      <Calendar className="h-4 w-4 text-orange-400" />
-                    </motion.div>
-                    <div>
-                      <p className="text-xs text-muted-foreground">Deadline</p>
-                      <p className="text-sm font-semibold text-card-foreground">{formatDeadline(mission.deadline)}</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Proof Required */}
-                {mission.proofRequired && (
-                  <div className="flex items-center space-x-2 p-2 bg-gradient-to-r from-orange-500/20 via-orange-400/15 to-orange-500/20 border border-orange-500/40 rounded-lg backdrop-blur-sm">
-                    <motion.div
-                      animate={{ scale: [1, 1.1, 1] }}
-                      transition={{ duration: 1.5, repeat: Infinity }}
-                    >
-                      <AlertCircle className="h-4 w-4 text-orange-400" />
-                    </motion.div>
-                    <div>
-                      <p className="text-sm font-semibold text-orange-400">Proof Required</p>
-                      <p className="text-xs text-orange-300">Submit evidence to complete</p>
-                    </div>
-                  </div>
-                )}
-
                 {/* Action Buttons */}
-                <div className="pt-2">
-                  <AnimatePresence>
-                    {mission.status === 'available' && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        <Button 
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onAccept(mission.id);
-                          }}
-                          className="w-full bg-gradient-to-r from-primary via-primary/90 to-primary hover:from-primary/90 hover:via-primary hover:to-primary/90 text-primary-foreground font-semibold py-2 shadow-lg backdrop-blur-sm"
-                          size="sm"
-                        >
-                          <motion.div
-                            animate={{ scale: [1, 1.1, 1] }}
-                            transition={{ duration: 1.5, repeat: Infinity }}
-                          >
-                            <PlayCircle className="h-4 w-4 mr-2" />
-                          </motion.div>
-                          Accept Mission
-                        </Button>
-                      </motion.div>
-                    )}
-                    
-                    {mission.status === 'accepted' && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        <Button 
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onComplete(mission.id);
-                          }}
-                          className="w-full bg-gradient-to-r from-green-500 via-emerald-400 to-green-600 hover:from-green-600 hover:via-emerald-500 hover:to-green-700 text-white font-semibold py-2 shadow-lg backdrop-blur-sm"
-                          size="sm"
-                        >
-                          <motion.div
-                            animate={{ scale: [1, 1.2, 1] }}
-                            transition={{ duration: 1.5, repeat: Infinity }}
-                          >
-                            <CheckCircle className="h-4 w-4 mr-2" />
-                          </motion.div>
-                          Complete Mission
-                        </Button>
-                      </motion.div>
-                    )}
-                    
-                    {mission.status === 'completed' && (
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="w-full bg-gradient-to-r from-green-500/20 via-emerald-400/15 to-green-500/20 border border-green-500/40 rounded-lg p-3 text-center backdrop-blur-sm"
-                      >
-                        <motion.div
-                          animate={{ 
-                            scale: [1, 1.1, 1],
-                            rotate: [0, 5, -5, 0]
-                          }}
-                          transition={{ duration: 2, repeat: Infinity }}
-                        >
-                          <CheckCircle className="h-5 w-5 text-green-400 mx-auto mb-1" />
-                        </motion.div>
-                        <p className="text-sm font-semibold text-green-400 mb-1">Completed!</p>
-                        <p className="text-xs text-green-300">+{mission.reward} Smiles earned</p>
-                        
-                        {/* Celebration particles */}
-                        <motion.div
-                          className="absolute inset-0 pointer-events-none"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                        >
-                          {[...Array(6)].map((_, i) => (
-                            <motion.div
-                              key={i}
-                              className="absolute w-1 h-1 bg-yellow-400 rounded-full"
-                              initial={{ 
-                                x: '50%', 
-                                y: '50%', 
-                                opacity: 1 
-                              }}
-                              animate={{ 
-                                x: `${50 + (Math.cos(i * 60 * Math.PI / 180) * 100)}%`,
-                                y: `${50 + (Math.sin(i * 60 * Math.PI / 180) * 100)}%`,
-                                opacity: 0
-                              }}
-                              transition={{ duration: 1, delay: i * 0.1 }}
-                            />
-                          ))}
-                        </motion.div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                <div className="flex space-x-2 lg:space-x-3">
+                  {mission.status === 'available' && (
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onAccept(mission.id);
+                      }}
+                      className="flex-1 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground py-2 lg:py-3 px-4 lg:px-6 rounded-lg lg:rounded-xl font-semibold text-sm lg:text-base shadow-lg lg:shadow-xl lg:group-hover:shadow-2xl transition-all duration-300"
+                    >
+                      Accept Mission
+                    </motion.button>
+                  )}
+                  {mission.status === 'accepted' && (
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onComplete(mission.id);
+                      }}
+                      className="flex-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-2 lg:py-3 px-4 lg:px-6 rounded-lg lg:rounded-xl font-semibold text-sm lg:text-base shadow-lg lg:shadow-xl lg:group-hover:shadow-2xl transition-all duration-300"
+                    >
+                      Complete Mission
+                    </motion.button>
+                  )}
                 </div>
               </CardContent>
             </motion.div>
