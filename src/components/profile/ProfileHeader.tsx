@@ -128,7 +128,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user }) => {
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.2 }}
               >
-                <Avatar className="h-28 w-28 ring-4 ring-white/50 shadow-2xl">
+                <Avatar className="h-28 w-28 ring-4 ring-primary/30 dark:ring-primary/50 shadow-2xl">
                   <AvatarImage src={user.avatar} alt={user.name} />
                   <AvatarFallback className="text-2xl font-bold bg-gradient-to-br from-primary to-secondary text-white">
                     {user.name.split(' ').map(n => n[0]).join('')}

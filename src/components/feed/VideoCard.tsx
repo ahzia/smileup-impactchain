@@ -86,7 +86,7 @@ export const VideoCard: React.FC<VideoCardProps> = React.memo(({
   const displayText = isExpanded ? post.description : post.description.slice(0, 100);
 
   return (
-    <div ref={containerRef} className="h-full w-full relative bg-black">
+    <div ref={containerRef} className="h-full w-full relative bg-background">
       {/* Video Content */}
       <video
         muted={isMuted}
@@ -126,8 +126,8 @@ export const VideoCard: React.FC<VideoCardProps> = React.memo(({
                 </div>
               ) : (
                 <div className="relative">
-                  <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white/80 shadow-md bg-gray-600 flex items-center justify-center">
-                    <span className="text-white text-sm font-semibold">S</span>
+                  <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white/80 shadow-md bg-muted flex items-center justify-center">
+                    <span className="text-foreground text-sm font-semibold">S</span>
                   </div>
                 </div>
               )}

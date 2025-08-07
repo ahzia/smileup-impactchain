@@ -44,7 +44,7 @@ export function FeedSidebar({ post, onSmile, onSave, onAIChat, onShare }: FeedSi
           <Button
             variant="ghost"
             size="icon"
-            className="w-12 h-12 rounded-full bg-black/25 backdrop-blur-md hover:bg-black/35 border border-white/25 transition-all duration-200 shadow-lg"
+            className="w-12 h-12 rounded-full bg-black/25 dark:bg-black/40 backdrop-blur-md hover:bg-black/35 dark:hover:bg-black/50 border border-white/25 dark:border-white/30 transition-all duration-200 shadow-lg"
             onClick={handleSmile}
           >
             <AnimatePresence>
@@ -85,7 +85,7 @@ export function FeedSidebar({ post, onSmile, onSave, onAIChat, onShare }: FeedSi
         <Button
           variant="ghost"
           size="icon"
-          className="w-12 h-12 rounded-full bg-black/25 backdrop-blur-md hover:bg-black/35 border border-white/25 transition-all duration-200 shadow-lg"
+          className="w-12 h-12 rounded-full bg-black/25 dark:bg-black/40 backdrop-blur-md hover:bg-black/35 dark:hover:bg-black/50 border border-white/25 dark:border-white/30 transition-all duration-200 shadow-lg"
           onClick={onAIChat}
         >
           <Bot className="text-xl text-white" />
@@ -104,7 +104,7 @@ export function FeedSidebar({ post, onSmile, onSave, onAIChat, onShare }: FeedSi
         <Button
           variant="ghost"
           size="icon"
-          className="w-12 h-12 rounded-full bg-black/25 backdrop-blur-md hover:bg-black/35 border border-white/25 transition-all duration-200 shadow-lg"
+          className="w-12 h-12 rounded-full bg-black/25 dark:bg-black/40 backdrop-blur-md hover:bg-black/35 dark:hover:bg-black/50 border border-white/25 dark:border-white/30 transition-all duration-200 shadow-lg"
         >
           <MessageCircle className="text-xl text-white" />
         </Button>
@@ -123,7 +123,7 @@ export function FeedSidebar({ post, onSmile, onSave, onAIChat, onShare }: FeedSi
         <Button
           variant="ghost"
           size="icon"
-          className="w-12 h-12 rounded-full bg-black/25 backdrop-blur-md hover:bg-black/35 border border-white/25 transition-all duration-200 shadow-lg"
+          className="w-12 h-12 rounded-full bg-black/25 dark:bg-black/40 backdrop-blur-md hover:bg-black/35 dark:hover:bg-black/50 border border-white/25 dark:border-white/30 transition-all duration-200 shadow-lg"
           onClick={onShare}
         >
           <Share className="text-xl text-white" />
@@ -146,7 +146,7 @@ export function FeedSidebar({ post, onSmile, onSave, onAIChat, onShare }: FeedSi
           <Button
             variant="ghost"
             size="icon"
-            className="w-12 h-12 rounded-full bg-black/25 backdrop-blur-md hover:bg-black/35 border border-white/25 transition-all duration-200 shadow-lg"
+            className="w-12 h-12 rounded-full bg-black/25 dark:bg-black/40 backdrop-blur-md hover:bg-black/35 dark:hover:bg-black/50 border border-white/25 dark:border-white/30 transition-all duration-200 shadow-lg"
             onClick={handleSave}
           >
             <Bookmark 
