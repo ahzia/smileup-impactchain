@@ -109,21 +109,12 @@ export class RewardService {
   // ========================================
 
   static async purchaseReward(userId: string, rewardId: string): Promise<UserReward> {
-    // Check if user has enough smiles
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-    });
-
     const reward = await prisma.reward.findUnique({
       where: { id: rewardId },
     });
 
-    if (!user || !reward) {
-      throw new Error('User or reward not found');
-    }
-
-    if (user.smiles < reward.price) {
-      throw new Error('Insufficient smiles');
+    if (!reward) {
+      throw new Error('Reward not found');
     }
 
     if (!reward.isAvailable) {
@@ -134,8 +125,14 @@ export class RewardService {
       throw new Error('Reward is out of stock');
     }
 
-    // Import blockchain service
+    // Import blockchain service for real-time balance checking
     const { BlockchainService } = await import('./blockchainService');
+
+    // Check if user has enough smiles using real-time balance
+    const userBalance = await BlockchainService.getUserBalance(userId);
+    if (userBalance < reward.price) {
+      throw new Error('Insufficient smiles');
+    }
 
     try {
       // Purchase reward with blockchain integration
@@ -144,7 +141,7 @@ export class RewardService {
         rewardId
       });
 
-      // Create purchase and update user smiles and reward stock
+      // Create purchase and update reward stock
       const [userReward] = await prisma.$transaction([
         prisma.userReward.create({
           data: {

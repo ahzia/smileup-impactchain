@@ -117,24 +117,15 @@ export class BlockchainService {
       proofHash = hcsResult;
       console.log(`📝 Logged mission proof to HCS. Message ID: ${proofHash}`);
 
-      // Update user's smiles balance in database
-      await prisma.user.update({
-        where: { id: userId },
-        data: { smiles: { increment: mission.reward } }
-      });
-
-      // Update user wallet balance
-      await this.custodialWalletService.updateWalletBalance(userWallet.id, {
-        hbar: userWallet.balance.hbar,
-        smiles: userWallet.balance.smiles + mission.reward
-      });
+      // Get real-time balance after transaction
+      const realTimeBalance = await this.getUserBalance(userId);
 
       return {
         success: true,
         blockchainTransactionId,
         proofHash,
         reward: mission.reward,
-        newBalance: (await prisma.user.findUnique({ where: { id: userId } }))?.smiles || 0
+        newBalance: realTimeBalance
       };
 
     } catch (error) {
@@ -205,36 +196,32 @@ export class BlockchainService {
       }
 
       // Log purchase to HCS (using donation proof for now)
-      const purchaseData = {
-        donationId: `reward-${rewardId}-${userId}`,
-        fromUserId: userId,
-        toCommunityId: reward.communityId || 'platform',
-        amount: reward.price,
-        donationDate: new Date().toISOString(),
-        message: `Purchased reward: ${reward.name}`,
-        proofHash: blockchainTransactionId || 'pending'
-      };
+      try {
+        const purchaseData = {
+          donationId: `reward-${rewardId}-${userId}`,
+          fromUserId: userId,
+          toCommunityId: reward.communityId || 'platform',
+          amount: reward.price,
+          donationDate: new Date().toISOString(),
+          message: `Purchased reward: ${reward.name}`,
+          proofHash: blockchainTransactionId || 'pending'
+        };
 
-      await this.hcsService.logDonation(purchaseData);
-      console.log(`📝 Logged reward purchase to HCS`);
+        await this.hcsService.logDonation(purchaseData);
+        console.log(`📝 Logged reward purchase to HCS`);
+      } catch (hcsError) {
+        console.warn('⚠️ HCS logging failed, but reward purchase transaction succeeded:', hcsError);
+        // Don't fail the entire transaction if HCS logging fails
+      }
 
-      // Update user's smiles balance in database
-      await prisma.user.update({
-        where: { id: userId },
-        data: { smiles: { decrement: reward.price } }
-      });
-
-      // Update user wallet balance
-      await this.custodialWalletService.updateWalletBalance(userWallet.id, {
-        hbar: userWallet.balance.hbar,
-        smiles: userWallet.balance.smiles - reward.price
-      });
+      // Get real-time balance after transaction
+      const realTimeBalance = await this.getUserBalance(userId);
 
       return {
         success: true,
         blockchainTransactionId,
         price: reward.price,
-        newBalance: (await prisma.user.findUnique({ where: { id: userId } }))?.smiles || 0
+        newBalance: realTimeBalance
       };
 
     } catch (error) {
@@ -244,17 +231,119 @@ export class BlockchainService {
   }
 
   // ========================================
+  // DONATION TRANSFERS
+  // ========================================
+
+  static async transferDonation(data: {
+    userId: string;
+    communityId?: string;
+    amount: number;
+    postId: string;
+  }) {
+    this.initializeServices();
+    const { userId, communityId, amount, postId } = data;
+
+    // Get user's custodial wallet
+    const userWallet = await this.custodialWalletService.getWalletForUser(userId);
+    if (!userWallet) {
+      throw new Error('User wallet not found');
+    }
+
+    // Check if user has enough smiles
+    const userBalance = await this.getUserBalance(userId);
+    if (userBalance < amount) {
+      throw new Error('Insufficient smiles balance');
+    }
+
+    let blockchainTransactionId: string | undefined;
+
+    try {
+      // If donation is to a community, transfer from user to community wallet
+      if (communityId) {
+        console.log(`💝 Donation to community ${communityId}. Transferring ${amount} Smiles from user to community.`);
+        
+        // Get community wallet
+        const communityWallet = await this.communityWalletService.getWalletForCommunity(communityId);
+        if (!communityWallet) {
+          throw new Error('Community wallet not found');
+        }
+
+        // Transfer tokens from user to community
+        const transferResult = await this.tokenService.transferTokens(
+          amount,
+          communityWallet.accountId
+        );
+
+        blockchainTransactionId = transferResult.transactionId;
+        console.log(`✅ Transferred ${amount} Smiles from user ${userId} to community ${communityId}. Transaction: ${blockchainTransactionId}`);
+
+      } else {
+        // If donation is to platform post, burn tokens from user
+        console.log(`💝 Donation to platform post. Burning ${amount} Smiles from user.`);
+        
+        const burnResult = await this.tokenService.burnTokens(amount);
+        blockchainTransactionId = burnResult.transactionId;
+        console.log(`✅ Burned ${amount} Smiles from user ${userId}. Transaction: ${blockchainTransactionId}`);
+      }
+
+      // Log donation to HCS
+      try {
+        const donationData = {
+          donationId: `donation-${postId}-${userId}`,
+          fromUserId: userId,
+          toCommunityId: communityId || 'platform',
+          amount: amount,
+          donationDate: new Date().toISOString(),
+          message: `Donation to post: ${postId}`,
+          proofHash: blockchainTransactionId || 'pending'
+        };
+
+        await this.hcsService.logDonation(donationData);
+        console.log(`📝 Logged donation to HCS`);
+      } catch (hcsError) {
+        console.warn('⚠️ HCS logging failed, but donation transaction succeeded:', hcsError);
+        // Don't fail the entire transaction if HCS logging fails
+      }
+
+      // Get real-time balance after transaction
+      const realTimeBalance = await this.getUserBalance(userId);
+
+      return {
+        success: true,
+        blockchainTransactionId,
+        amount: amount,
+        newBalance: realTimeBalance
+      };
+
+    } catch (error) {
+      console.error('❌ Blockchain donation transfer failed:', error);
+      throw new Error(`Blockchain operation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+
+  // ========================================
   // UTILITY METHODS
   // ========================================
 
   static async getUserBalance(userId: string): Promise<number> {
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    return user?.smiles || 0;
+    try {
+      this.initializeServices();
+      const walletBalance = await this.custodialWalletService.getUserBalance(userId);
+      return walletBalance.smiles;
+    } catch (error) {
+      console.error('❌ Error getting user balance:', error);
+      return 0;
+    }
   }
 
   static async getCommunityBalance(communityId: string): Promise<number> {
-    const communityWallet = await this.communityWalletService.getWalletForCommunity(communityId);
-    return communityWallet?.balance.smiles || 0;
+    try {
+      const walletBalance = await this.communityWalletService.getCommunityBalance(communityId);
+      return walletBalance.smiles;
+    } catch (error) {
+      console.error('❌ Error getting community balance:', error);
+      return 0;
+    }
   }
 
   static async validateBlockchainConnection(): Promise<boolean> {

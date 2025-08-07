@@ -1,20 +1,60 @@
 import { UserService } from './userService';
-import { JWTService, TokenPair } from './jwtService';
+import { JWTService } from './jwtService';
 import { CustodialWalletService } from '../wallet/custodialWalletService';
-import { User, LoginRequest, RegisterRequest, LoginResponse, UpdateProfileRequest } from '@/lib/types';
+import { User } from '../../generated/prisma';
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface RegisterRequest {
+  name: string;
+  email: string;
+  password: string;
+  bio?: string;
+  interests?: string[];
+}
+
+export interface LoginResponse {
+  accessToken: string;
+  refreshToken: string;
+  expiresIn: number;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    avatar: string;
+    smiles: number;
+    level: number;
+    score: number;
+    bio: string;
+    interests: string[];
+    friends: number;
+    communitiesJoined: string[];
+    communitiesCreated: string[];
+    badges: string[];
+    recentActivities: { activity: string; time: string }[];
+    createdAt: string;
+  };
+}
+
+export interface UpdateProfileRequest {
+  name?: string;
+  bio?: string;
+  interests?: string[];
+  avatarUrl?: string;
+}
 
 export class AuthService {
-  // ========================================
-  // AUTHENTICATION
-  // ========================================
+  private static custodialWalletService = new CustodialWalletService();
 
   // Login user
   static async login(credentials: LoginRequest): Promise<LoginResponse> {
     const user = await UserService.authenticateUser(credentials.email, credentials.password);
     
-    if (!user) {
-      throw new Error('Invalid credentials');
-    }
+    // Get real-time balance from wallet
+    const walletBalance = await this.custodialWalletService.getUserBalance(user.id);
     
     // Generate token pair
     const tokenPair = JWTService.generateUserTokens(user);
@@ -28,7 +68,7 @@ export class AuthService {
         name: user.name,
         email: user.email,
         avatar: user.avatarUrl || '',
-        smiles: user.smiles,
+        smiles: walletBalance.smiles, // Real-time balance from wallet
         level: user.level,
         score: user.score,
         bio: user.bio || '',
@@ -64,9 +104,21 @@ export class AuthService {
     // Automatically create custodial wallet for new user
     try {
       console.log('🔐 Starting automatic wallet creation for user:', newUser.id);
-      const custodialWalletService = new CustodialWalletService();
-      const wallet = await custodialWalletService.createWalletForUser(newUser.id);
+      const wallet = await this.custodialWalletService.createWalletForUser(newUser.id);
       console.log('✅ Successfully created custodial wallet for new user:', newUser.id, 'Account ID:', wallet.accountId);
+      
+      // Automatically mint 1000 Smiles tokens for new user
+      console.log('🪙 Minting initial 1000 Smiles tokens for new user...');
+      const mintResult = await this.custodialWalletService.mintTokensToUser(newUser.id, 1000);
+      
+      if (mintResult.success) {
+        console.log('✅ Successfully minted initial tokens for new user!');
+        console.log('💰 Initial balance:', mintResult.newBalance, 'Smiles');
+      } else {
+        console.error('❌ Failed to mint initial tokens:', mintResult.error);
+        // Continue with registration even if minting fails
+      }
+      
     } catch (walletError) {
       console.error('❌ Failed to create custodial wallet for user:', newUser.id, 'Error:', walletError);
       console.error('❌ Wallet creation error details:', {
@@ -77,6 +129,9 @@ export class AuthService {
       // The user can create the wallet later from the profile page
     }
 
+    // Get real-time balance from wallet (should be 1000 for new user)
+    const walletBalance = await this.custodialWalletService.getUserBalance(newUser.id);
+    
     // Generate token pair
     const tokenPair = JWTService.generateUserTokens(newUser);
     
@@ -89,7 +144,7 @@ export class AuthService {
         name: newUser.name,
         email: newUser.email,
         avatar: newUser.avatarUrl || '',
-        smiles: newUser.smiles,
+        smiles: walletBalance.smiles, // Real-time balance from wallet
         level: newUser.level,
         score: newUser.score,
         bio: newUser.bio || '',
@@ -117,6 +172,9 @@ export class AuthService {
         throw new Error('User not found');
       }
 
+      // Get real-time balance from wallet
+      const walletBalance = await this.custodialWalletService.getUserBalance(user.id);
+
       return {
         accessToken: tokenPair.accessToken,
         refreshToken: tokenPair.refreshToken,
@@ -126,7 +184,7 @@ export class AuthService {
           name: user.name,
           email: user.email,
           avatar: user.avatarUrl || '',
-          smiles: user.smiles,
+          smiles: walletBalance.smiles, // Real-time balance from wallet
           level: user.level,
           score: user.score,
           bio: user.bio || '',
@@ -154,19 +212,38 @@ export class AuthService {
   // USER MANAGEMENT
   // ========================================
 
-  // Get current user profile
-  static async getCurrentUser(userId: string): Promise<User> {
+  // Get current user with real-time balance
+  static async getCurrentUser(userId: string): Promise<{
+    id: string;
+    name: string;
+    email: string;
+    avatar: string;
+    smiles: number;
+    level: number;
+    score: number;
+    bio: string;
+    interests: string[];
+    friends: number;
+    communitiesJoined: string[];
+    communitiesCreated: string[];
+    badges: string[];
+    recentActivities: { activity: string; time: string }[];
+    createdAt: string;
+  }> {
     const user = await UserService.findUserById(userId);
     if (!user) {
       throw new Error('User not found');
     }
+
+    // Get real-time balance from wallet
+    const walletBalance = await this.custodialWalletService.getUserBalance(userId);
 
     return {
       id: user.id,
       name: user.name,
       email: user.email,
       avatar: user.avatarUrl || '',
-      smiles: user.smiles,
+      smiles: walletBalance.smiles, // Real-time balance from wallet
       level: user.level,
       score: user.score,
       bio: user.bio || '',
@@ -181,22 +258,34 @@ export class AuthService {
   }
 
   // Update user profile
-  static async updateProfile(userId: string, updates: UpdateProfileRequest): Promise<User> {
-    const updateData: any = {};
+  static async updateProfile(userId: string, updates: UpdateProfileRequest): Promise<{
+    id: string;
+    name: string;
+    email: string;
+    avatar: string;
+    smiles: number;
+    level: number;
+    score: number;
+    bio: string;
+    interests: string[];
+    friends: number;
+    communitiesJoined: string[];
+    communitiesCreated: string[];
+    badges: string[];
+    recentActivities: { activity: string; time: string }[];
+    createdAt: string;
+  }> {
+    const updatedUser = await UserService.updateUser(userId, updates);
     
-    if (updates.name) updateData.name = updates.name;
-    if (updates.bio) updateData.bio = updates.bio;
-    if (updates.interests) updateData.interests = updates.interests;
-    if (updates.avatar) updateData.avatarUrl = updates.avatar;
+    // Get real-time balance from wallet
+    const walletBalance = await this.custodialWalletService.getUserBalance(userId);
 
-    const updatedUser = await UserService.updateUser(userId, updateData);
-    
     return {
       id: updatedUser.id,
       name: updatedUser.name,
       email: updatedUser.email,
       avatar: updatedUser.avatarUrl || '',
-      smiles: updatedUser.smiles,
+      smiles: walletBalance.smiles, // Real-time balance from wallet
       level: updatedUser.level,
       score: updatedUser.score,
       bio: updatedUser.bio || '',
@@ -210,37 +299,41 @@ export class AuthService {
     };
   }
 
-  // Validate token
-  static async validateToken(token: string): Promise<User | null> {
+  // Validate token and return user
+  static async validateToken(token: string): Promise<{
+    id: string;
+    name: string;
+    email: string;
+    avatar: string;
+    smiles: number;
+    level: number;
+    score: number;
+    bio: string;
+    interests: string[];
+    friends: number;
+    communitiesJoined: string[];
+    communitiesCreated: string[];
+    badges: string[];
+    recentActivities: { activity: string; time: string }[];
+    createdAt: string;
+  } | null> {
     try {
-      // Check if token is blacklisted
-      if (JWTService.isTokenBlacklisted(token)) {
-        return null;
-      }
-
-      // Simple token validation for development
-      if (!token.startsWith('jwt_')) {
-        return null;
-      }
-
-      const parts = token.split('_');
-      if (parts.length < 2) {
-        return null;
-      }
-
-      const userId = parts[1];
-      const user = await UserService.findUserById(userId);
+      const decoded = JWTService.verifyAccessToken(token);
+      const user = await UserService.findUserById(decoded.userId);
       
       if (!user) {
         return null;
       }
+
+      // Get real-time balance from wallet
+      const walletBalance = await this.custodialWalletService.getUserBalance(user.id);
 
       return {
         id: user.id,
         name: user.name,
         email: user.email,
         avatar: user.avatarUrl || '',
-        smiles: user.smiles,
+        smiles: walletBalance.smiles, // Real-time balance from wallet
         level: user.level,
         score: user.score,
         bio: user.bio || '',
@@ -257,19 +350,38 @@ export class AuthService {
     }
   }
 
-  // Get user by ID
-  static async getUserById(userId: string): Promise<User | null> {
+  // Get user by ID with real-time balance
+  static async getUserById(userId: string): Promise<{
+    id: string;
+    name: string;
+    email: string;
+    avatar: string;
+    smiles: number;
+    level: number;
+    score: number;
+    bio: string;
+    interests: string[];
+    friends: number;
+    communitiesJoined: string[];
+    communitiesCreated: string[];
+    badges: string[];
+    recentActivities: { activity: string; time: string }[];
+    createdAt: string;
+  } | null> {
     const user = await UserService.findUserById(userId);
     if (!user) {
       return null;
     }
+
+    // Get real-time balance from wallet
+    const walletBalance = await this.custodialWalletService.getUserBalance(userId);
 
     return {
       id: user.id,
       name: user.name,
       email: user.email,
       avatar: user.avatarUrl || '',
-      smiles: user.smiles,
+      smiles: walletBalance.smiles, // Real-time balance from wallet
       level: user.level,
       score: user.score,
       bio: user.bio || '',
@@ -283,39 +395,88 @@ export class AuthService {
     };
   }
 
-  // Get all users
-  static async getAllUsers(): Promise<User[]> {
-    const users = await UserService.getTopUsers(50);
+  // Get all users with real-time balances
+  static async getAllUsers(): Promise<{
+    id: string;
+    name: string;
+    email: string;
+    avatar: string;
+    smiles: number;
+    level: number;
+    score: number;
+    bio: string;
+    interests: string[];
+    friends: number;
+    communitiesJoined: string[];
+    communitiesCreated: string[];
+    badges: string[];
+    recentActivities: { activity: string; time: string }[];
+    createdAt: string;
+  }[]> {
+    const users = await UserService.getAllUsers();
     
-    return users.map(user => ({
-      id: user.id!,
-      name: user.name!,
-      email: user.email!,
-      avatar: user.avatarUrl || '',
-      smiles: user.smiles!,
-      level: user.level!,
-      score: user.score!,
-      bio: user.bio || '',
-      interests: user.interests!,
-      friends: 0,
-      communitiesJoined: [],
-      communitiesCreated: [],
-      badges: user.badges!,
-      recentActivities: [],
-      createdAt: user.createdAt?.toISOString() || new Date().toISOString()
-    }));
+    // Get real-time balances for all users
+    const usersWithBalances = await Promise.all(
+      users.map(async (user) => {
+        const walletBalance = await this.custodialWalletService.getUserBalance(user.id);
+        
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          avatar: user.avatarUrl || '',
+          smiles: walletBalance.smiles, // Real-time balance from wallet
+          level: user.level,
+          score: user.score,
+          bio: user.bio || '',
+          interests: user.interests,
+          friends: 0,
+          communitiesJoined: [],
+          communitiesCreated: [],
+          badges: user.badges,
+          recentActivities: [],
+          createdAt: user.createdAt.toISOString()
+        };
+      })
+    );
+
+    return usersWithBalances;
   }
 
-  // Update user smiles
-  static async updateUserSmiles(userId: string, amount: number): Promise<User> {
-    const user = await UserService.updateUserSmiles(userId, amount);
-    
+  // Update user smiles (now using real-time balance)
+  static async updateUserSmiles(userId: string, amount: number): Promise<{
+    id: string;
+    name: string;
+    email: string;
+    avatar: string;
+    smiles: number;
+    level: number;
+    score: number;
+    bio: string;
+    interests: string[];
+    friends: number;
+    communitiesJoined: string[];
+    communitiesCreated: string[];
+    badges: string[];
+    recentActivities: { activity: string; time: string }[];
+    createdAt: string;
+  }> {
+    // Since we're using real-time balances, we don't update the database
+    // The balance will be updated on the blockchain and reflected in real-time queries
+    const user = await UserService.findUserById(userId);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    // Get real-time balance from wallet
+    const walletBalance = await this.custodialWalletService.getUserBalance(userId);
+
     return {
       id: user.id,
       name: user.name,
       email: user.email,
       avatar: user.avatarUrl || '',
-      smiles: user.smiles,
+      smiles: walletBalance.smiles, // Real-time balance from wallet
       level: user.level,
       score: user.score,
       bio: user.bio || '',
@@ -325,7 +486,7 @@ export class AuthService {
       communitiesCreated: [],
       badges: user.badges,
       recentActivities: [],
-      createdAt: user.createdAt?.toISOString() || new Date().toISOString()
+      createdAt: user.createdAt.toISOString()
     };
   }
 
@@ -336,12 +497,15 @@ export class AuthService {
       throw new Error('User not found');
     }
 
+    // Get real-time balance from wallet
+    const walletBalance = await this.custodialWalletService.getUserBalance(userId);
+
     return {
       id: user.id,
       name: user.name,
       email: user.email,
       avatar: user.avatarUrl || '',
-      smiles: user.smiles,
+      smiles: walletBalance.smiles, // Real-time balance from wallet
       level: user.level,
       score: user.score,
       bio: user.bio || '',
@@ -362,12 +526,15 @@ export class AuthService {
       throw new Error('User not found');
     }
 
+    // Get real-time balance from wallet
+    const walletBalance = await this.custodialWalletService.getUserBalance(userId);
+
     return {
       id: user.id,
       name: user.name,
       email: user.email,
       avatar: user.avatarUrl || '',
-      smiles: user.smiles,
+      smiles: walletBalance.smiles, // Real-time balance from wallet
       level: user.level,
       score: user.score,
       bio: user.bio || '',

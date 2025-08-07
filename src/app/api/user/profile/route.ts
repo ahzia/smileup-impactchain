@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { AuthService } from '@/lib/services/authService';
+import { UserService } from '@/lib/services/userService';
 import { AuthMiddleware } from '@/lib/middleware/auth';
-import { JWTService } from '@/lib/services/jwtService';
-import { UpdateProfileRequest } from '@/lib/types';
 
 // GET /api/user/profile
 export async function GET(request: NextRequest) {
@@ -22,20 +20,20 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Get current user profile
-    const user = await AuthService.getCurrentUser(userId);
+    // Get user profile with real-time balance
+    const userProfile = await UserService.getUserProfile(userId);
 
     return NextResponse.json({
       success: true,
-      data: user
+      data: userProfile
     });
 
   } catch (error) {
-    console.error('Get profile error:', error);
+    console.error('Get user profile error:', error);
     return NextResponse.json(
       { 
         success: false, 
-        error: error instanceof Error ? error.message : 'Failed to get profile' 
+        error: error instanceof Error ? error.message : 'Failed to get user profile' 
       },
       { status: 500 }
     );

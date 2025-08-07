@@ -21,6 +21,7 @@ export interface UpdateFeedPostData {
   challenge?: string;
   callToAction?: string[];
   links?: string[];
+  smiles?: number | { increment: number };
 }
 
 export class FeedService {
@@ -369,6 +370,136 @@ export class FeedService {
       },
     });
     return !!like;
+  }
+
+  // ========================================
+  // DONATIONS
+  // ========================================
+
+  static async donateToPost(postId: string, userId: string, amount: number, message?: string): Promise<{
+    success: boolean;
+    newBalance: number;
+    newCommunitySmiles?: number;
+    donationId?: string;
+    error?: string;
+  }> {
+    try {
+      // Get the feed post
+      const post = await this.findFeedPostById(postId);
+      if (!post) {
+        throw new Error('Feed post not found');
+      }
+
+      // Import blockchain service for donation
+      const { BlockchainService } = await import('./blockchainService');
+
+      // Check if user has enough smiles (real-time balance)
+      const userBalance = await BlockchainService.getUserBalance(userId);
+      if (userBalance < amount) {
+        throw new Error('Insufficient smiles balance');
+      }
+
+      let newCommunitySmiles: number | undefined;
+      let blockchainTransactionId: string | undefined;
+
+      // Transfer tokens using the new donation transfer method
+      const transferResult = await BlockchainService.transferDonation({
+        userId,
+        communityId: post.communityId || undefined,
+        amount,
+        postId
+      });
+
+      if (!transferResult.success) {
+        throw new Error('Failed to transfer tokens');
+      }
+
+      blockchainTransactionId = transferResult.blockchainTransactionId;
+
+      // If post has a community, get community balance
+      if (post.communityId) {
+        newCommunitySmiles = await BlockchainService.getCommunityBalance(post.communityId);
+      }
+
+      // Create donation record in database
+      const donation = await prisma.donation.create({
+        data: {
+          userId,
+          postId,
+          amount,
+          message,
+          blockchainTransactionId
+        }
+      });
+
+      // Update post smiles count
+      await this.updateFeedPost(postId, {
+        smiles: { increment: amount }
+      });
+
+      // Get updated user balance
+      const newBalance = await BlockchainService.getUserBalance(userId);
+
+      return {
+        success: true,
+        newBalance,
+        newCommunitySmiles,
+        donationId: donation.id
+      };
+
+    } catch (error) {
+      console.error('❌ Donation failed:', error);
+      return {
+        success: false,
+        newBalance: 0,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      };
+    }
+  }
+
+  // Get donations for a specific post
+  static async getPostDonations(postId: string): Promise<{
+    id: string;
+    userId: string;
+    userName: string;
+    userAvatar: string;
+    amount: number;
+    message?: string;
+    createdAt: string;
+  }[]> {
+    const donations = await prisma.donation.findMany({
+      where: { postId },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            avatarUrl: true
+          }
+        }
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+
+    return donations.map(donation => ({
+      id: donation.id,
+      userId: donation.userId,
+      userName: donation.user.name,
+      userAvatar: donation.user.avatarUrl || '',
+      amount: donation.amount,
+      message: donation.message || undefined,
+      createdAt: donation.createdAt.toISOString()
+    }));
+  }
+
+  // Get total donations for a post
+  static async getPostTotalDonations(postId: string): Promise<number> {
+    const result = await prisma.donation.aggregate({
+      where: { postId },
+      _sum: { amount: true }
+    });
+
+    return result._sum.amount || 0;
   }
 
   // ========================================

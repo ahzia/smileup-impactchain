@@ -43,6 +43,7 @@ model User {
   feedPosts       FeedPost[]
   comments        Comment[]
   likes           Like[]
+  donations       Donation[]
   missionProofs   MissionProof[]
   blockchainWallets BlockchainWallet[]
   custodialWallets CustodialWallet[]
@@ -242,6 +243,7 @@ model FeedPost {
   communityId String?
   comments    Comment[]
   likes       Like[]
+  donations   Donation[]
   
   user        User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
   community   Community? @relation(fields: [communityId], references: [id], onDelete: SetNull)
@@ -280,6 +282,24 @@ model Like {
   
   @@unique([userId, postId])
   @@map("likes")
+}
+
+model Donation {
+  id          String   @id @default(cuid())
+  userId      String
+  postId      String
+  amount      Int
+  message     String?
+  blockchainTransactionId String?
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  
+  // Relationships
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post        FeedPost  @relation(fields: [postId], references: [id], onDelete: Cascade)
+  
+  @@map("donations")
 }
 
 // ========================================

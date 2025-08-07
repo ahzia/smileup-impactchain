@@ -166,7 +166,7 @@ export class TokenService {
   }
 
   /**
-   * Get Smiles token balance for the operator account
+   * Get current token balance for operator account
    */
   async getTokenBalance(): Promise<number> {
     try {
@@ -176,8 +176,13 @@ export class TokenService {
       const balance = await balanceQuery.execute(this.client);
       
       // Check if we have the Smiles token
-      if (balance.tokens && balance.tokens.has(this.tokenId)) {
-        return balance.tokens.get(this.tokenId)!.toNumber();
+      if (balance.tokens) {
+        // Iterate through tokens to find our Smiles token
+        for (const [tokenId, tokenBalance] of balance.tokens) {
+          if (tokenId.toString() === this.tokenId.toString()) {
+            return tokenBalance.toNumber();
+          }
+        }
       }
       
       return 0;
@@ -199,8 +204,13 @@ export class TokenService {
       const balance = await balanceQuery.execute(this.client);
       
       // Check if we have the Smiles token
-      if (balance.tokens && balance.tokens.has(this.tokenId)) {
-        return balance.tokens.get(this.tokenId)!.toNumber();
+      if (balance.tokens) {
+        // Iterate through tokens to find our Smiles token
+        for (const [tokenId, tokenBalance] of balance.tokens) {
+          if (tokenId.toString() === this.tokenId.toString()) {
+            return tokenBalance.toNumber();
+          }
+        }
       }
       
       return 0;

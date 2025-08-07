@@ -1,355 +1,265 @@
-import { PrismaClient } from '../src/generated/prisma';
+import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
-import { users } from '../src/data/users';
-import { communities } from '../src/data/communities';
-import { missions } from '../src/data/missions';
-import { rewards } from '../src/data/rewards';
 
 const prisma = new PrismaClient();
 
-async function main() {
-  console.log('🌱 Starting database seed with SmileUp data...');
+const userData = [
+  {
+    name: 'John Doe',
+    email: 'john@example.com',
+    password: 'password123',
+    bio: 'Passionate about community service',
+    interests: ['environment', 'education', 'healthcare'],
+    level: 5,
+    score: 850,
+    badges: ['first-mission', 'community-leader', 'environmental-champion']
+  },
+  {
+    name: 'Jane Smith',
+    email: 'jane@example.com',
+    password: 'password123',
+    bio: 'Dedicated to making a difference',
+    interests: ['education', 'technology', 'social-impact'],
+    level: 3,
+    score: 650,
+    badges: ['first-mission', 'education-advocate']
+  },
+  {
+    name: 'Mike Johnson',
+    email: 'mike@example.com',
+    password: 'password123',
+    bio: 'Tech enthusiast helping communities',
+    interests: ['technology', 'innovation', 'community'],
+    level: 4,
+    score: 720,
+    badges: ['first-mission', 'tech-innovator']
+  }
+];
 
-  // ========================================
-  // CLEAN DATABASE
-  // ========================================
-  console.log('🧹 Cleaning database...');
+const communityData = [
+  {
+    name: 'Green Earth Initiative',
+    description: 'Environmental conservation and sustainability projects',
+    category: 'environment',
+    logoUrl: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=150&h=150&fit=crop',
+    location: 'San Francisco, CA',
+    website: 'https://greenearth.org',
+    status: 'active',
+    isVerified: true
+  },
+  {
+    name: 'Tech for Good',
+    description: 'Using technology to solve social problems',
+    category: 'technology',
+    logoUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=150&h=150&fit=crop',
+    location: 'New York, NY',
+    website: 'https://techforgood.org',
+    status: 'active',
+    isVerified: true
+  },
+  {
+    name: 'Education First',
+    description: 'Improving access to quality education',
+    category: 'education',
+    logoUrl: 'https://images.unsplash.com/photo-1523050854058-8df90110c9a1?w=150&h=150&fit=crop',
+    location: 'Chicago, IL',
+    website: 'https://educationfirst.org',
+    status: 'active',
+    isVerified: true
+  }
+];
+
+async function main() {
+  console.log('🌱 Starting database seed...');
+
+  // Clear existing data
   await prisma.userReward.deleteMany();
-  await prisma.reward.deleteMany();
-  await prisma.missionProof.deleteMany();
   await prisma.userMission.deleteMany();
+  await prisma.reward.deleteMany();
   await prisma.mission.deleteMany();
   await prisma.communityMember.deleteMany();
   await prisma.community.deleteMany();
-  await prisma.userAnalytics.deleteMany();
   await prisma.user.deleteMany();
 
-  // ========================================
-  // CREATE USERS FROM DATA
-  // ========================================
-  console.log('👥 Creating users from data...');
-  
-  const hashedPassword = await bcrypt.hash('password123', 12);
-  
-  const createdUsers = await Promise.all(
-    users.map(async (userData) => {
-      return await prisma.user.create({
-        data: {
-          id: userData.id,
-          email: userData.email,
-          passwordHash: hashedPassword,
-          name: userData.name,
-          avatarUrl: userData.avatar,
-          bio: userData.bio,
-          interests: userData.interests,
-          smiles: userData.smiles,
-          level: userData.level,
-          score: userData.score,
-          badges: userData.badges,
-          isVerified: true,
-          isActive: true,
-          createdAt: new Date(userData.createdAt),
-        },
-      });
-    })
-  );
-
-  // Create user analytics for each user
-  await Promise.all(
-    createdUsers.map(user => {
-      const userData = users.find(u => u.id === user.id);
-      return prisma.userAnalytics.create({
-        data: {
-          userId: user.id,
-          totalMissions: Math.floor(Math.random() * 30) + 10,
-          completedMissions: Math.floor(Math.random() * 20) + 5,
-          totalSmiles: user.smiles,
-          totalRewards: Math.floor(Math.random() * 15) + 2,
-          impactScore: user.score,
-          lastActiveAt: new Date(),
-        },
-      });
-    })
-  );
-
-  // ========================================
-  // CREATE COMMUNITIES FROM DATA
-  // ========================================
-  console.log('🏘️ Creating communities from data...');
-  
-  const createdCommunities = await Promise.all(
-    communities.map(async (communityData) => {
-      return await prisma.community.create({
-        data: {
-          id: communityData.id,
-          name: communityData.name,
-          description: communityData.description,
-          category: communityData.category,
-          logoUrl: communityData.logo,
-          bannerUrl: communityData.banner,
-          location: communityData.location,
-          website: communityData.website,
-          status: communityData.status,
-          isVerified: true,
-          createdAt: new Date(communityData.createdAt),
-          createdBy: communityData.createdBy,
-        },
-      });
-    })
-  );
-
-  // ========================================
-  // CREATE COMMUNITY MEMBERSHIPS
-  // ========================================
-  console.log('👥 Creating community memberships...');
-  
-  const membershipPromises: Promise<any>[] = [];
-  
-  // Create memberships based on user data
-  users.forEach(user => {
-    user.communitiesJoined.forEach(communityId => {
-      membershipPromises.push(
-        prisma.communityMember.create({
-          data: {
-            userId: user.id,
-            communityId: communityId,
-            role: 'member',
-          },
-        })
-      );
-    });
-    
-    // Add creators as admins
-    user.communitiesCreated.forEach(communityId => {
-      membershipPromises.push(
-        prisma.communityMember.create({
-          data: {
-            userId: user.id,
-            communityId: communityId,
-            role: 'admin',
-          },
-        })
-      );
-    });
-  });
-  
-  await Promise.all(membershipPromises);
-
-  // ========================================
-  // CREATE MISSIONS FROM DATA
-  // ========================================
-  console.log('🎯 Creating missions from data...');
-  
-  const createdMissions = await Promise.all(
-    missions.map(async (missionData) => {
-      return await prisma.mission.create({
-        data: {
-          id: missionData.id,
-          title: missionData.title,
-          description: missionData.description,
-          reward: missionData.reward,
-          status: missionData.status === 'available' ? 'available' : 'completed',
-          proofRequired: missionData.proofRequired,
-          deadline: new Date(missionData.deadline),
-          maxParticipants: missionData.effortLevel === 'High' ? 50 : missionData.effortLevel === 'Medium' ? 100 : 200,
-          currentParticipants: Math.floor(Math.random() * 50) + 5,
-          category: missionData.category,
-          difficulty: missionData.effortLevel === 'High' ? 'hard' : missionData.effortLevel === 'Medium' ? 'medium' : 'easy',
-          tags: [missionData.category, missionData.effortLevel.toLowerCase()],
-          createdAt: new Date(),
-          createdBy: missionData.community.id === 'system' ? null : missionData.community.id,
-        },
-      });
-    })
-  );
-
-  // ========================================
-  // CREATE USER MISSION PARTICIPATIONS
-  // ========================================
-  console.log('🎯 Creating mission participations...');
-  
-  const participationPromises: Promise<any>[] = [];
-  
-  // Create some realistic mission participations
-  createdUsers.forEach(user => {
-    const userData = users.find(u => u.id === user.id);
-    if (!userData) return;
-    
-    // Each user participates in 2-4 random missions
-    const randomMissions = createdMissions
-      .sort(() => 0.5 - Math.random())
-      .slice(0, Math.floor(Math.random() * 3) + 2);
-    
-    randomMissions.forEach(mission => {
-      const isCompleted = Math.random() > 0.6; // 40% chance of completion
-      
-      participationPromises.push(
-        prisma.userMission.create({
-          data: {
-            userId: user.id,
-            missionId: mission.id,
-            status: isCompleted ? 'completed' : 'in_progress',
-            completedAt: isCompleted ? new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000) : null,
-            proofText: isCompleted ? `Completed ${mission.title} successfully!` : null,
-            proofImages: isCompleted ? ['https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=300&fit=crop'] : [],
-          },
-        })
-      );
-    });
-  });
-  
-  await Promise.all(participationPromises);
-
-  // ========================================
-  // CREATE REWARDS FROM DATA
-  // ========================================
-  console.log('🎁 Creating rewards from data...');
-  
-  const createdRewards = await Promise.all(
-    rewards.map(async (rewardData) => {
-      return await prisma.reward.create({
-        data: {
-          id: rewardData.id,
-          name: rewardData.title,
-          description: rewardData.description,
-          price: rewardData.cost,
-          category: rewardData.type,
-          imageUrl: rewardData.imageUrl,
-          isAvailable: true,
-          stock: rewardData.type === 'digital' || rewardData.type === 'certificate' ? null : Math.floor(Math.random() * 50) + 10,
-          soldCount: Math.floor(Math.random() * 20),
-        },
-      });
-    })
-  );
-
-  // ========================================
-  // CREATE USER REWARD PURCHASES
-  // ========================================
-  console.log('🛒 Creating reward purchases...');
-  
-  const purchasePromises: Promise<any>[] = [];
-  
-  // Create some realistic reward purchases
-  createdUsers.forEach(user => {
-    const userData = users.find(u => u.id === user.id);
-    if (!userData) return;
-    
-    // Each user purchases 1-3 random rewards
-    const randomRewards = createdRewards
-      .sort(() => 0.5 - Math.random())
-      .slice(0, Math.floor(Math.random() * 3) + 1);
-    
-    randomRewards.forEach(reward => {
-      if (user.smiles >= reward.price) {
-        purchasePromises.push(
-          prisma.userReward.create({
-            data: {
-              userId: user.id,
-              rewardId: reward.id,
-              purchasedAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000), // Random date within last 30 days
-            },
-          })
-        );
+  // Create users
+  console.log('👥 Creating users...');
+  const users = [];
+  for (const userData of userData) {
+    const hashedPassword = await bcrypt.hash(userData.password, 12);
+    const user = await prisma.user.create({
+      data: {
+        name: userData.name,
+        email: userData.email,
+        passwordHash: hashedPassword,
+        bio: userData.bio,
+        interests: userData.interests,
+        level: userData.level,
+        score: userData.score,
+        badges: userData.badges,
+        avatarUrl: `https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face&${Math.random()}`
       }
     });
-  });
-  
-  await Promise.all(purchasePromises);
+    users.push(user);
+    console.log(`✅ Created user: ${user.name}`);
+  }
 
-  // ========================================
-  // CREATE FEED POSTS
-  // ========================================
-  console.log('📝 Creating feed posts...');
-  
-  const feedPosts = [
+  // Create communities
+  console.log('🏘️ Creating communities...');
+  const communities = [];
+  for (const communityData of communityData) {
+    const community = await prisma.community.create({
+      data: {
+        ...communityData,
+        createdBy: users[0].id // First user creates all communities
+      }
+    });
+    communities.push(community);
+    console.log(`✅ Created community: ${community.name}`);
+  }
+
+  // Create community memberships
+  console.log('👥 Adding users to communities...');
+  for (const user of users) {
+    for (const community of communities) {
+      await prisma.communityMember.create({
+        data: {
+          userId: user.id,
+          communityId: community.id,
+          role: 'member'
+        }
+      });
+    }
+  }
+  console.log('✅ Added users to communities');
+
+  // Create missions
+  console.log('🎯 Creating missions...');
+  const missions = [
     {
-      title: 'Amazing Beach Cleanup Success!',
-      description: 'Yesterday we collected over 500kg of waste from our local beach. The community came together and it was incredible to see everyone working for a cleaner environment.',
-      mediaType: 'image',
-      mediaUrl: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=600&h=400&fit=crop',
-      challenge: 'Join us next month for another cleanup event!',
-      callToAction: ['Sign up for next event', 'Share your cleanup story'],
-      links: ['https://greenearthinitiative.org/events'],
-      smiles: 45,
-      commentsCount: 8,
-      likesCount: 23,
-      userId: createdUsers[0].id, // Sarah Chen
-      communityId: createdCommunities[0].id, // Green Earth Initiative
+      title: 'Clean Up Local Park',
+      description: 'Help clean up litter and maintain the local park',
+      reward: 50,
+      category: 'environment',
+      difficulty: 'easy',
+      tags: ['environment', 'community', 'outdoors'],
+      communityId: communities[0].id
     },
     {
-      title: 'Hackathon Results - 15 New Apps for Nonprofits',
-      description: 'Our weekend hackathon was a huge success! We developed 15 new applications to help local nonprofits with their digital needs.',
-      mediaType: 'image',
-      mediaUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=600&h=400&fit=crop',
-      challenge: 'Help us implement these solutions in your community',
-      callToAction: ['Learn about the apps', 'Volunteer for implementation'],
-      links: ['https://techforsocialimpact.org/hackathon'],
-      smiles: 67,
-      commentsCount: 12,
-      likesCount: 34,
-      userId: createdUsers[1].id, // Marcus Johnson
-      communityId: createdCommunities[1].id, // Tech for Social Impact
+      title: 'Teach Basic Computer Skills',
+      description: 'Help seniors learn basic computer and internet skills',
+      reward: 75,
+      category: 'education',
+      difficulty: 'medium',
+      tags: ['education', 'technology', 'seniors'],
+      communityId: communities[1].id
     },
     {
-      title: 'Mental Health Workshop Success',
-      description: 'Our community health workshop reached 25 people today. We covered stress management, mindfulness, and building healthy habits.',
-      mediaType: 'image',
-      mediaUrl: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=600&h=400&fit=crop',
-      challenge: 'Organize a health workshop in your community',
-      callToAction: ['Learn about organizing workshops', 'Share your health tips'],
-      links: ['https://communityhealth.org/workshops'],
-      smiles: 89,
-      commentsCount: 15,
-      likesCount: 42,
-      userId: createdUsers[2].id, // Aisha Patel
-      communityId: createdCommunities[2].id, // Community Health Network
-    },
-    {
-      title: 'Digital Literacy Program Launch',
-      description: 'We\'re excited to launch our digital literacy program for seniors. Teaching basic computer skills to help them stay connected.',
-      mediaType: 'text',
-      challenge: 'Help someone learn something new this week',
-      callToAction: ['Volunteer to teach', 'Share your teaching story'],
-      links: ['https://techforsocialimpact.org/digital-literacy'],
-      smiles: 32,
-      commentsCount: 5,
-      likesCount: 18,
-      userId: createdUsers[1].id, // Marcus Johnson
-      communityId: createdCommunities[1].id, // Tech for Social Impact
-    },
-    {
-      title: 'Tree Planting Initiative - 100 Trees Planted',
-      description: 'Our community planted 100 trees this weekend! Each tree will help combat climate change and provide habitat for local wildlife.',
-      mediaType: 'image',
-      mediaUrl: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600&h=400&fit=crop',
-      challenge: 'Plant a tree in your neighborhood',
-      callToAction: ['Join next planting event', 'Share your tree story'],
-      links: ['https://greenearthinitiative.org/tree-planting'],
-      smiles: 56,
-      commentsCount: 9,
-      likesCount: 28,
-      userId: createdUsers[0].id, // Sarah Chen
-      communityId: createdCommunities[0].id, // Green Earth Initiative
-    },
+      title: 'Plant Community Garden',
+      description: 'Help establish a community garden for fresh produce',
+      reward: 100,
+      category: 'environment',
+      difficulty: 'hard',
+      tags: ['environment', 'food', 'community'],
+      communityId: communities[0].id
+    }
   ];
 
-  await Promise.all(
-    feedPosts.map(post =>
-      prisma.feedPost.create({
-        data: post,
-      })
-    )
-  );
+  for (const missionData of missions) {
+    const mission = await prisma.mission.create({
+      data: {
+        ...missionData,
+        createdBy: users[0].id
+      }
+    });
+    console.log(`✅ Created mission: ${mission.title}`);
+  }
+
+  // Create rewards
+  console.log('🎁 Creating rewards...');
+  const rewards = [
+    {
+      name: 'Eco-Friendly Water Bottle',
+      description: 'Reusable water bottle made from recycled materials',
+      price: 25,
+      category: 'sustainability',
+      imageUrl: 'https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=300&h=300&fit=crop',
+      isAvailable: true,
+      stock: 50,
+      communityId: communities[0].id
+    },
+    {
+      name: 'Tech Workshop Voucher',
+      description: 'Free workshop on digital skills and technology',
+      price: 50,
+      category: 'education',
+      imageUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=300&h=300&fit=crop',
+      isAvailable: true,
+      stock: 20,
+      communityId: communities[1].id
+    },
+    {
+      name: 'Community Event Ticket',
+      description: 'Access to exclusive community events and meetups',
+      price: 30,
+      category: 'community',
+      imageUrl: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=300&h=300&fit=crop',
+      isAvailable: true,
+      stock: 100
+    }
+  ];
+
+  for (const rewardData of rewards) {
+    const reward = await prisma.reward.create({
+      data: {
+        ...rewardData,
+        createdBy: users[0].id
+      }
+    });
+    console.log(`✅ Created reward: ${reward.name}`);
+  }
+
+  // Create feed posts
+  console.log('📝 Creating feed posts...');
+  const feedPosts = [
+    {
+      title: 'Amazing Community Cleanup Success!',
+      description: 'We successfully cleaned up the local park and collected over 50 bags of litter. Thank you to everyone who participated!',
+      mediaType: 'image',
+      mediaUrl: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&h=400&fit=crop',
+      challenge: 'Join our next cleanup event',
+      callToAction: ['Sign up', 'Share photos'],
+      links: ['https://greenearth.org/events'],
+      communityId: communities[0].id
+    },
+    {
+      title: 'Digital Skills Workshop Results',
+      description: 'Our latest workshop helped 25 seniors learn basic computer skills. The impact was incredible!',
+      mediaType: 'image',
+      mediaUrl: 'https://images.unsplash.com/photo-1523050854058-8df90110c9a1?w=600&h=400&fit=crop',
+      challenge: 'Volunteer for our next workshop',
+      callToAction: ['Volunteer', 'Donate'],
+      links: ['https://techforgood.org/volunteer'],
+      communityId: communities[1].id
+    }
+  ];
+
+  for (const postData of feedPosts) {
+    const post = await prisma.feedPost.create({
+      data: {
+        ...postData,
+        createdBy: users[0].id
+      }
+    });
+    console.log(`✅ Created feed post: ${post.title}`);
+  }
 
   console.log('✅ Database seeding completed successfully!');
-  console.log(`📊 Created ${createdUsers.length} users, ${createdCommunities.length} communities, ${createdMissions.length} missions, and ${createdRewards.length} rewards`);
-  console.log('🎉 SmileUp ImpactChain database is ready with realistic data!');
+  console.log(`📊 Created ${users.length} users, ${communities.length} communities, and various missions and rewards`);
 }
 
 main()
   .catch((e) => {
-    console.error('❌ Error seeding database:', e);
+    console.error('❌ Seeding failed:', e);
     process.exit(1);
   })
   .finally(async () => {

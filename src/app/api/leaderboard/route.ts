@@ -1,32 +1,58 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { AuthService } from '@/lib/services/authService';
+import { AuthMiddleware } from '@/lib/middleware/auth';
+import { CustodialWalletService } from '@/lib/wallet/custodialWalletService';
+import { prisma } from '@/lib/database/client';
 
-// GET /api/leaderboard
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const period = searchParams.get('period') || 'all';
-    const limit = parseInt(searchParams.get('limit') || '10');
+    // Get all users
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        avatarUrl: true,
+        level: true,
+        score: true,
+        bio: true,
+        interests: true,
+        badges: true,
+        createdAt: true,
+      },
+      orderBy: {
+        score: 'desc'
+      },
+      take: 50
+    });
 
-    // Get all users and sort by Smiles
-    const users = await AuthService.getAllUsers();
-    
-    // Sort by Smiles (descending)
-    const sortedUsers = users
-      .sort((a, b) => b.smiles - a.smiles)
-      .slice(0, limit)
-      .map(user => ({
-        id: user.id,
-        name: user.name,
-        avatar: user.avatarUrl || '',
-        smiles: user.smiles,
-        level: user.level,
-        score: user.score
-      }));
+    // Get real-time balances for all users
+    const custodialWalletService = new CustodialWalletService();
+    const leaderboard = await Promise.all(
+      users.map(async (user) => {
+        const walletBalance = await custodialWalletService.getUserBalance(user.id);
+        
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          avatar: user.avatarUrl || '',
+          smiles: walletBalance.smiles, // Real-time balance from wallet
+          level: user.level,
+          score: user.score,
+          bio: user.bio || '',
+          interests: user.interests,
+          badges: user.badges,
+          createdAt: user.createdAt.toISOString()
+        };
+      })
+    );
+
+    // Sort by real-time smiles balance
+    leaderboard.sort((a, b) => b.smiles - a.smiles);
 
     return NextResponse.json({
       success: true,
-      data: sortedUsers
+      data: leaderboard
     });
 
   } catch (error) {

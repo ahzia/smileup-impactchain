@@ -1,69 +1,59 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/database/client';
+import { CustodialWalletService } from '@/lib/wallet/custodialWalletService';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    // Test database connection
-    await prisma.$queryRaw`SELECT 1`;
-
-    // Get some sample data
-    const [userCount, communityCount, missionCount, rewardCount] = await Promise.all([
-      prisma.user.count(),
-      prisma.community.count(),
-      prisma.mission.count(),
-      prisma.reward.count(),
-    ]);
-
-    // Get a sample user with their data
+    // Get a sample user
     const sampleUser = await prisma.user.findFirst({
-      include: {
-        communities: {
-          include: {
-            community: true,
-          },
-        },
-        missions: {
-          include: {
-            mission: true,
-          },
-        },
-      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        avatarUrl: true,
+        level: true,
+        score: true,
+        bio: true,
+        interests: true,
+        badges: true,
+        createdAt: true,
+      }
     });
 
-    // Get user analytics separately
-    const userAnalytics = sampleUser ? await prisma.userAnalytics.findUnique({
-      where: { userId: sampleUser.id },
-    }) : null;
+    if (!sampleUser) {
+      return NextResponse.json({
+        success: false,
+        error: 'No users found'
+      });
+    }
+
+    // Get real-time balance from wallet
+    const custodialWalletService = new CustodialWalletService();
+    const walletBalance = await custodialWalletService.getUserBalance(sampleUser.id);
 
     return NextResponse.json({
       success: true,
-      message: 'Database connection successful!',
-      stats: {
-        users: userCount,
-        communities: communityCount,
-        missions: missionCount,
-        rewards: rewardCount,
-      },
-      sampleUser: sampleUser ? {
+      data: {
         id: sampleUser.id,
         name: sampleUser.name,
         email: sampleUser.email,
-        smiles: sampleUser.smiles,
+        avatar: sampleUser.avatarUrl || '',
+        smiles: walletBalance.smiles, // Real-time balance from wallet
         level: sampleUser.level,
         score: sampleUser.score,
+        bio: sampleUser.bio || '',
+        interests: sampleUser.interests,
         badges: sampleUser.badges,
-        communities: sampleUser.communities.length,
-        missions: sampleUser.missions.length,
-        analytics: userAnalytics,
-      } : null,
+        createdAt: sampleUser.createdAt.toISOString()
+      }
     });
+
   } catch (error) {
-    console.error('Database test failed:', error);
+    console.error('Test DB error:', error);
     return NextResponse.json(
-      {
-        success: false,
-        message: 'Database connection failed',
-        error: error instanceof Error ? error.message : 'Unknown error',
+      { 
+        success: false, 
+        error: error instanceof Error ? error.message : 'Database test failed' 
       },
       { status: 500 }
     );

@@ -1,106 +1,81 @@
 import { prisma } from '../database/client';
-import { User, UserAnalytics } from '../../generated/prisma';
+import { User } from '../../generated/prisma';
 import bcrypt from 'bcryptjs';
+import { CustodialWalletService } from '../wallet/custodialWalletService';
 
 export interface CreateUserData {
   email: string;
   password: string;
   name: string;
-  avatarUrl?: string;
   bio?: string;
   interests?: string[];
+  avatarUrl?: string;
 }
 
 export interface UpdateUserData {
   name?: string;
-  avatarUrl?: string;
   bio?: string;
   interests?: string[];
-  smiles?: number;
-  level?: number;
-  score?: number;
-  badges?: string[];
+  avatarUrl?: string;
 }
 
 export class UserService {
-  // ========================================
-  // USER CREATION & AUTHENTICATION
-  // ========================================
+  private static custodialWalletService = new CustodialWalletService();
 
+  // Create a new user
   static async createUser(data: CreateUserData): Promise<User> {
     const hashedPassword = await bcrypt.hash(data.password, 12);
-    
-    const user = await prisma.user.create({
+
+    return await prisma.user.create({
       data: {
         email: data.email,
         passwordHash: hashedPassword,
         name: data.name,
-        avatarUrl: data.avatarUrl,
         bio: data.bio,
         interests: data.interests || [],
-      },
-    });
-
-    // Create user analytics record
-    await prisma.userAnalytics.create({
-      data: {
-        userId: user.id,
-      },
-    });
-
-    return user;
-  }
-
-  static async authenticateUser(email: string, password: string): Promise<User | null> {
-    const user = await prisma.user.findUnique({
-      where: { email },
-    });
-
-    if (!user || !user.passwordHash) {
-      return null;
-    }
-
-    const isValidPassword = await bcrypt.compare(password, user.passwordHash);
-    if (!isValidPassword) {
-      return null;
-    }
-
-    return user;
-  }
-
-  static async findUserById(id: string): Promise<User | null> {
-    return await prisma.user.findUnique({
-      where: { id },
-      include: {
-        communities: {
-          include: {
-            community: true,
-          },
-        },
-        missions: {
-          include: {
-            mission: true,
-          },
-        },
-        rewards: {
-          include: {
-            reward: true,
-          },
-        },
+        avatarUrl: data.avatarUrl,
+        smiles: 0, // We'll get this from wallet
+        level: 1,
+        score: 100,
+        badges: [],
       },
     });
   }
 
+  // Find user by email
   static async findUserByEmail(email: string): Promise<User | null> {
     return await prisma.user.findUnique({
       where: { email },
     });
   }
 
-  // ========================================
-  // USER UPDATES
-  // ========================================
+  // Find user by ID
+  static async findUserById(id: string): Promise<User | null> {
+    return await prisma.user.findUnique({
+      where: { id },
+    });
+  }
 
+  // Authenticate user
+  static async authenticateUser(email: string, password: string): Promise<User> {
+    const user = await this.findUserByEmail(email);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    if (!user.passwordHash) {
+      throw new Error('Invalid authentication method');
+    }
+
+    const isValidPassword = await bcrypt.compare(password, user.passwordHash);
+    if (!isValidPassword) {
+      throw new Error('Invalid password');
+    }
+
+    return user;
+  }
+
+  // Update user
   static async updateUser(id: string, data: UpdateUserData): Promise<User> {
     return await prisma.user.update({
       where: { id },
@@ -108,165 +83,48 @@ export class UserService {
     });
   }
 
-  static async updateUserSmiles(id: string, smiles: number): Promise<User> {
-    return await prisma.user.update({
-      where: { id },
-      data: { smiles },
-    });
-  }
-
-  static async updateUserScore(id: string, score: number): Promise<User> {
-    return await prisma.user.update({
-      where: { id },
-      data: { score },
-    });
-  }
-
-  static async addBadge(id: string, badge: string): Promise<User> {
-    const user = await prisma.user.findUnique({
-      where: { id },
-    });
-
+  // Get user with real-time balance
+  static async getUserWithBalance(id: string): Promise<User & { realTimeBalance: number }> {
+    const user = await this.findUserById(id);
     if (!user) {
       throw new Error('User not found');
     }
 
-    const badges = user.badges || [];
-    if (!badges.includes(badge)) {
-      badges.push(badge);
+    // Get real-time balance from wallet
+    const walletBalance = await this.custodialWalletService.getUserBalance(id);
+    
+    return {
+      ...user,
+      realTimeBalance: walletBalance.smiles
+    };
+  }
+
+  // Get user profile with real-time data
+  static async getUserProfile(id: string) {
+    const user = await this.findUserById(id);
+    if (!user) {
+      throw new Error('User not found');
     }
 
-    return await prisma.user.update({
-      where: { id },
-      data: { badges },
-    });
-  }
+    // Get real-time balance from wallet
+    const walletBalance = await this.custodialWalletService.getUserBalance(id);
 
-  // ========================================
-  // USER ANALYTICS
-  // ========================================
-
-  static async getUserAnalytics(userId: string): Promise<UserAnalytics | null> {
-    return await prisma.userAnalytics.findUnique({
-      where: { userId },
-    });
-  }
-
-  static async updateUserAnalytics(userId: string, data: Partial<UserAnalytics>): Promise<UserAnalytics> {
-    return await prisma.userAnalytics.update({
-      where: { userId },
-      data,
-    });
-  }
-
-  static async incrementMissionCount(userId: string): Promise<void> {
-    await prisma.userAnalytics.update({
-      where: { userId },
-      data: {
-        totalMissions: {
-          increment: 1,
-        },
-      },
-    });
-  }
-
-  static async incrementCompletedMissions(userId: string): Promise<void> {
-    await prisma.userAnalytics.update({
-      where: { userId },
-      data: {
-        completedMissions: {
-          increment: 1,
-        },
-      },
-    });
-  }
-
-  // ========================================
-  // USER SEARCH & FILTERING
-  // ========================================
-
-  static async searchUsers(query: string, limit: number = 10): Promise<User[]> {
-    return await prisma.user.findMany({
-      where: {
-        OR: [
-          { name: { contains: query, mode: 'insensitive' } },
-          { email: { contains: query, mode: 'insensitive' } },
-        ],
-        isActive: true,
-      },
-      take: limit,
-      orderBy: { createdAt: 'desc' },
-    });
-  }
-
-  static async getUsersByInterests(interests: string[], limit: number = 10): Promise<User[]> {
-    return await prisma.user.findMany({
-      where: {
-        interests: {
-          hasSome: interests,
-        },
-        isActive: true,
-      },
-      take: limit,
-      orderBy: { score: 'desc' },
-    });
-  }
-
-  // ========================================
-  // LEADERBOARD
-  // ========================================
-
-  static async getTopUsers(limit: number = 10): Promise<Partial<User>[]> {
-    return await prisma.user.findMany({
-      where: { isActive: true },
-      take: limit,
-      orderBy: { score: 'desc' },
-      select: {
-        id: true,
-        name: true,
-        avatarUrl: true,
-        score: true,
-        level: true,
-        badges: true,
-        createdAt: true,
-        smiles: true,
-      },
-    });
-  }
-
-  static async getUsersByLevel(level: number, limit: number = 10): Promise<User[]> {
-    return await prisma.user.findMany({
-      where: {
-        level,
-        isActive: true,
-      },
-      take: limit,
-      orderBy: { score: 'desc' },
-    });
-  }
-
-  // ========================================
-  // BULK OPERATIONS
-  // ========================================
-
-  static async getUsersByIds(ids: string[]): Promise<User[]> {
-    return await prisma.user.findMany({
-      where: {
-        id: { in: ids },
-      },
-    });
-  }
-
-  static async deleteUser(id: string): Promise<void> {
-    await prisma.user.delete({
-      where: { id },
-    });
-  }
-
-  static async deactivateUser(id: string): Promise<User> {
-    return await prisma.user.update({
-      where: { id },
-      data: { isActive: false },
-    });
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      avatar: user.avatarUrl || '',
+      smiles: walletBalance.smiles, // Real-time balance
+      level: user.level,
+      score: user.score,
+      bio: user.bio || '',
+      interests: user.interests,
+      friends: 0, // TODO: Implement friend count
+      communitiesJoined: [], // TODO: Implement community memberships
+      communitiesCreated: [], // TODO: Implement created communities
+      badges: user.badges,
+      recentActivities: [], // TODO: Implement activity tracking
+      createdAt: user.createdAt.toISOString()
+    };
   }
 } 
