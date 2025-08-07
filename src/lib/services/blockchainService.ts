@@ -240,79 +240,72 @@ export class BlockchainService {
     amount: number;
     postId: string;
   }) {
-    this.initializeServices();
-    const { userId, communityId, amount, postId } = data;
-
-    // Get user's custodial wallet
-    const userWallet = await this.custodialWalletService.getWalletForUser(userId);
-    if (!userWallet) {
-      throw new Error('User wallet not found');
-    }
-
-    // Check if user has enough smiles
-    const userBalance = await this.getUserBalance(userId);
-    if (userBalance < amount) {
-      throw new Error('Insufficient smiles balance');
-    }
-
-    let blockchainTransactionId: string | undefined;
-
     try {
-      // If donation is to a community, transfer from user to community wallet
-      if (communityId) {
-        console.log(`💝 Donation to community ${communityId}. Transferring ${amount} Smiles from user to community.`);
+      // Check if user has enough smiles (real-time balance)
+      const userBalance = await this.getUserBalance(data.userId);
+      if (userBalance < data.amount) {
+        throw new Error('Insufficient smiles balance');
+      }
+
+      let newCommunitySmiles: number | undefined;
+      let blockchainTransactionId: string | undefined;
+
+      if (data.communityId) {
+        // Get or create community wallet
+        let communityWallet = await this.communityWalletService.getWalletForCommunity(data.communityId);
         
-        // Get community wallet
-        const communityWallet = await this.communityWalletService.getWalletForCommunity(communityId);
         if (!communityWallet) {
-          throw new Error('Community wallet not found');
+          console.log(`🔄 Community wallet not found for ${data.communityId}, creating one...`);
+          communityWallet = await this.communityWalletService.createWalletForCommunity(data.communityId);
+          
+          if (!communityWallet) {
+            throw new Error('Failed to create community wallet');
+          }
+          
+          console.log(`✅ Successfully created community wallet: ${communityWallet.accountId}`);
         }
 
         // Transfer tokens from user to community
         const transferResult = await this.tokenService.transferTokens(
-          amount,
-          communityWallet.accountId
+          data.amount, communityWallet.accountId
         );
 
+        if (!transferResult.success) {
+          throw new Error('Failed to transfer tokens to community');
+        }
+
         blockchainTransactionId = transferResult.transactionId;
-        console.log(`✅ Transferred ${amount} Smiles from user ${userId} to community ${communityId}. Transaction: ${blockchainTransactionId}`);
+        newCommunitySmiles = await this.getCommunityBalance(data.communityId);
 
       } else {
-        // If donation is to platform post, burn tokens from user
-        console.log(`💝 Donation to platform post. Burning ${amount} Smiles from user.`);
+        // Burn tokens from user for platform donations
+        const burnResult = await this.tokenService.burnTokens(data.amount);
         
-        const burnResult = await this.tokenService.burnTokens(amount);
+        if (!burnResult.success) {
+          throw new Error('Failed to burn tokens');
+        }
+
         blockchainTransactionId = burnResult.transactionId;
-        console.log(`✅ Burned ${amount} Smiles from user ${userId}. Transaction: ${blockchainTransactionId}`);
       }
 
-      // Log donation to HCS
+      // Log to HCS with error handling
       try {
-        const donationData = {
-          donationId: `donation-${postId}-${userId}`,
-          fromUserId: userId,
-          toCommunityId: communityId || 'platform',
-          amount: amount,
-          donationDate: new Date().toISOString(),
-          message: `Donation to post: ${postId}`,
-          proofHash: blockchainTransactionId || 'pending'
-        };
-
-        await this.hcsService.logDonation(donationData);
+        await this.hcsService.logDonation({
+          userId: data.userId,
+          postId: data.postId,
+          amount: data.amount,
+          communityId: data.communityId,
+          blockchainTransactionId
+        });
         console.log(`📝 Logged donation to HCS`);
       } catch (hcsError) {
-        console.warn('⚠️ HCS logging failed, but donation transaction succeeded:', hcsError);
-        // Don't fail the entire transaction if HCS logging fails
+        console.warn('⚠️ HCS logging failed, but transaction succeeded:', hcsError);
       }
-
-      // Get real-time balance after transaction
-      const realTimeBalance = await this.getUserBalance(userId);
 
       return {
         success: true,
         blockchainTransactionId,
-        amount: amount,
-        newBalance: realTimeBalance
+        newCommunitySmiles
       };
 
     } catch (error) {

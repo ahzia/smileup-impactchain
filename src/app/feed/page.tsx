@@ -9,6 +9,7 @@ import { FeedPost } from '@/lib/types';
 import { useInView } from 'react-intersection-observer';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 // Loading skeleton component
 const FeedSkeleton = () => (
@@ -27,11 +28,12 @@ const FeedSkeleton = () => (
 );
 
 export default function FeedPage() {
+  const { isAuthenticated } = useAuth();
   const [posts, setPosts] = useState<FeedPost[]>([]);
   const [postsLoaded, setPostsLoaded] = useState(false);
-  const [smiles, setSmiles] = useState(2000);
   const [aiChatOpen, setAiChatOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState<FeedPost | null>(null);
+  const [donatingPostId, setDonatingPostId] = useState<string | null>(null);
 
   // Intersection observer for infinite scroll
   const { ref: loadMoreRef, inView } = useInView({
@@ -39,16 +41,50 @@ export default function FeedPage() {
     triggerOnce: false,
   });
 
-  const handleSmile = (postId: string) => {
-    setPosts(prevPosts =>
-      prevPosts.map(post =>
-        post.id === postId
-          ? { ...post, likesCount: post.likesCount + 1 }
-          : post
-      )
-    );
-    setSmiles(prev => prev + 1);
-    console.log('Smiled on post:', postId);
+  const handleSmile = async (postId: string) => {
+    if (!isAuthenticated) {
+      console.log('User not authenticated, cannot donate');
+      return;
+    }
+
+    try {
+      setDonatingPostId(postId);
+      
+      const token = localStorage.getItem('smileup_token');
+      const response = await fetch(`/api/feed/${postId}/donate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          amount: 1, // Default to 1 smile
+          message: 'Smile donation'
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Update the post's smile count in local state
+        setPosts(prevPosts =>
+          prevPosts.map(post =>
+            post.id === postId
+              ? { ...post, smiles: (post.smiles || 0) + 1 }
+              : post
+          )
+        );
+        
+        console.log('✅ Donation successful:', data.data.message);
+      } else {
+        console.error('❌ Donation failed:', data.error);
+        // You could show a toast notification here
+      }
+    } catch (error) {
+      console.error('❌ Donation error:', error);
+    } finally {
+      setDonatingPostId(null);
+    }
   };
 
   const handleSave = (postId: string) => {
@@ -80,10 +116,11 @@ export default function FeedPage() {
           const data = await response.json();
           
           if (data.success && data.data) {
-            // Add saved property to each post
+            // Add saved property to each post and ensure smiles field exists
             const postsWithSaved = data.data.map((post: FeedPost) => ({
               ...post,
-              saved: false
+              saved: false,
+              smiles: post.smiles || 0 // Ensure smiles field exists
             }));
             setPosts(postsWithSaved);
             setPostsLoaded(true);
@@ -141,6 +178,7 @@ export default function FeedPage() {
                 aiChatOpen={aiChatOpen}
                 setAiChatOpen={setAiChatOpen}
                 lastPostIndex={posts.length - 1}
+                isDonating={donatingPostId === post.id}
               />
             </motion.div>
           ))}
@@ -165,6 +203,7 @@ export default function FeedPage() {
                 aiChatOpen={aiChatOpen}
                 setAiChatOpen={setAiChatOpen}
                 lastPostIndex={posts.length - 1}
+                isDonating={donatingPostId === post.id}
               />
             </motion.div>
           ))}
@@ -189,6 +228,7 @@ export default function FeedPage() {
                 aiChatOpen={aiChatOpen}
                 setAiChatOpen={setAiChatOpen}
                 lastPostIndex={posts.length - 1}
+                isDonating={donatingPostId === post.id}
               />
             </motion.div>
           ))}

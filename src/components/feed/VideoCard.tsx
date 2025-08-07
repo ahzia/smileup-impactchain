@@ -17,6 +17,7 @@ interface VideoCardProps {
   aiChatOpen: boolean;
   setAiChatOpen: (open: boolean) => void;
   lastPostIndex: number;
+  isDonating?: boolean;
 }
 
 export const VideoCard: React.FC<VideoCardProps> = React.memo(({
@@ -29,6 +30,7 @@ export const VideoCard: React.FC<VideoCardProps> = React.memo(({
   aiChatOpen,
   setAiChatOpen,
   lastPostIndex,
+  isDonating = false,
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -225,6 +227,7 @@ export const VideoCard: React.FC<VideoCardProps> = React.memo(({
           onSave={() => onSave(post.id)}
           onAIChat={() => onAIChat(post)}
           onShare={() => onShare(post)}
+          isDonating={isDonating}
         />
       )}
     </div>

@@ -135,6 +135,26 @@ export class CustodialWalletService {
 
       console.log('✅ Stored wallet in database:', wallet.id);
 
+      // Automatically associate with Smiles token
+      try {
+        console.log('🔄 Associating wallet with Smiles token...');
+        const tokenId = process.env.HEDERA_SMILES_TOKEN_ID;
+        
+        if (tokenId) {
+          const isAssociated = await this.associateTokenWithWallet(userId, tokenId);
+          if (isAssociated) {
+            console.log('✅ Successfully associated wallet with Smiles token');
+          } else {
+            console.log('⚠️ Failed to associate wallet with Smiles token (will be retried later)');
+          }
+        } else {
+          console.log('⚠️ HEDERA_SMILES_TOKEN_ID not found in environment');
+        }
+      } catch (associationError) {
+        console.log('⚠️ Error during token association:', associationError instanceof Error ? associationError.message : 'Unknown error');
+        // Don't fail wallet creation if association fails
+      }
+
       return {
         id: wallet.id,
         userId: wallet.userId,

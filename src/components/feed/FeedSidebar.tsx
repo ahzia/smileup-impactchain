@@ -1,6 +1,6 @@
 'use client';
 
-import { Smile, Bot, Share, Bookmark, MessageCircle } from 'lucide-react';
+import { Smile, Bot, Share, Bookmark, MessageCircle, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { FeedPost } from '@/lib/types';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -12,13 +12,16 @@ interface FeedSidebarProps {
   onSave: () => void;
   onAIChat: () => void;
   onShare: () => void;
+  isDonating?: boolean;
 }
 
-export function FeedSidebar({ post, onSmile, onSave, onAIChat, onShare }: FeedSidebarProps) {
+export function FeedSidebar({ post, onSmile, onSave, onAIChat, onShare, isDonating = false }: FeedSidebarProps) {
   const [isSmiling, setIsSmiling] = useState(false);
   const [isSaved, setIsSaved] = useState(post.saved || false);
 
   const handleSmile = () => {
+    if (isDonating) return; // Prevent multiple clicks while donating
+    
     setIsSmiling(true);
     onSmile();
     setTimeout(() => setIsSmiling(false), 800);
@@ -37,8 +40,8 @@ export function FeedSidebar({ post, onSmile, onSave, onAIChat, onShare }: FeedSi
       
       {/* Smile Button */}
       <motion.div
-        whileHover={{ scale: 1.08 }}
-        whileTap={{ scale: 0.95 }}
+        whileHover={{ scale: isDonating ? 1 : 1.08 }}
+        whileTap={{ scale: isDonating ? 1 : 0.95 }}
         className="flex flex-col items-center relative group"
       >
         {/* Desktop hover glow effect */}
@@ -51,11 +54,24 @@ export function FeedSidebar({ post, onSmile, onSave, onAIChat, onShare }: FeedSi
           <Button
             variant="ghost"
             size="icon"
-            className="w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 xl:w-18 xl:h-18 rounded-full bg-black/25 dark:bg-black/40 backdrop-blur-md hover:bg-black/35 dark:hover:bg-black/50 border border-white/25 dark:border-white/30 transition-all duration-200 shadow-lg lg:shadow-2xl lg:hover:shadow-yellow-400/25 lg:group-hover:border-yellow-400/50"
+            disabled={isDonating}
+            className={`w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 xl:w-18 xl:h-18 rounded-full bg-black/25 dark:bg-black/40 backdrop-blur-md hover:bg-black/35 dark:hover:bg-black/50 border border-white/25 dark:border-white/30 transition-all duration-200 shadow-lg lg:shadow-2xl lg:hover:shadow-yellow-400/25 lg:group-hover:border-yellow-400/50 ${
+              isDonating ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
             onClick={handleSmile}
           >
             <AnimatePresence>
-              {isSmiling ? (
+              {isDonating ? (
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="absolute inset-0 flex items-center justify-center"
+                >
+                  <Loader2 className="h-6 w-6 md:h-7 md:w-7 lg:h-8 lg:w-8 xl:h-9 xl:w-9 text-yellow-300 animate-spin" />
+                </motion.div>
+              ) : isSmiling ? (
                 <motion.div
                   initial={{ scale: 0, rotate: -180 }}
                   animate={{ scale: 1, rotate: 0 }}
@@ -77,9 +93,11 @@ export function FeedSidebar({ post, onSmile, onSave, onAIChat, onShare }: FeedSi
             animate={isSmiling ? { scale: [1, 1.15, 1] } : {}}
             transition={{ duration: 0.4 }}
           >
-            {post.likesCount || 0}
+            {post.smiles || 0}
           </motion.div>
-          <div className="text-white/70 text-xs md:text-sm lg:text-base lg:group-hover:text-yellow-300/70 transition-colors duration-300">Smiles</div>
+          <div className="text-white/70 text-xs md:text-sm lg:text-base lg:group-hover:text-yellow-300/70 transition-colors duration-300">
+            {isDonating ? 'Donating...' : 'Smiles'}
+          </div>
         </div>
       </motion.div>
 
