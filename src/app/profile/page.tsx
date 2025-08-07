@@ -33,7 +33,9 @@ import {
   Sparkles,
   Heart,
   Lock,
-  User
+  Zap,
+  Globe,
+  Star
 } from 'lucide-react';
 import { 
   LoadingSpinner, 
@@ -132,7 +134,7 @@ function ProfilePageContent() {
                     variant="outline"
                     className="border-green-500 text-green-600 hover:bg-green-50 hover:text-green-700 font-semibold"
                   >
-                    <User className="h-5 w-5 mr-2" />
+                    <UserIcon className="h-5 w-5 mr-2" />
                     Create Account
                   </Button>
                 </div>
@@ -167,33 +169,60 @@ function ProfilePageContent() {
     <div className="min-h-screen bg-background relative overflow-hidden pb-20">
       <AnimatedBackground />
       
-      <div className="container mx-auto px-4 py-4 relative z-10">
+      <div className="container mx-auto px-4 py-6 relative z-10">
         {/* Profile Header */}
         <ProfileHeader user={user} />
 
-        {/* Wallet Section */}
-        <div className="mt-6">
-          <h2 className="text-xl font-semibold mb-4 flex items-center">
-            <Wallet className="h-5 w-5 mr-2" />
-            Blockchain Wallets
-          </h2>
+        {/* Wallet Section - Enhanced */}
+        <div className="mb-8 md:mb-10">
+          <div className="flex items-center justify-between mb-4 md:mb-6">
+            <h2 className="text-xl md:text-2xl font-bold flex items-center bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+              <Wallet className="h-5 w-5 md:h-7 md:w-7 mr-2 md:mr-3 text-primary" />
+              Digital Wallets
+            </h2>
+            <Badge variant="outline" className="text-xs md:text-sm font-semibold bg-primary/10 border-primary/30 text-primary">
+              Secure & Fast
+            </Badge>
+          </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
             {/* Option 1: Custodial Wallet */}
-            <div>
-              <h3 className="text-lg font-medium mb-3 text-blue-600">Option 1: In-App Wallet</h3>
+            <div className="bg-gradient-to-br from-card via-card/95 to-card border border-border/50 rounded-2xl md:rounded-3xl p-6 md:p-8 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
+              <div className="flex items-center justify-between mb-4 md:mb-6">
+                <h3 className="text-lg md:text-xl font-bold text-blue-600 flex items-center">
+                  <Zap className="h-5 w-5 md:h-6 md:w-6 mr-2 md:mr-3" />
+                  In-App Wallet
+                </h3>
+                <Badge variant="outline" className="text-xs font-semibold bg-blue-500/10 border-blue-500/30 text-blue-600">
+                  Recommended
+                </Badge>
+              </div>
+              <p className="text-muted-foreground mb-4 md:mb-6 text-sm leading-relaxed">
+                Quick and secure wallet built into the app. Perfect for beginners and daily use.
+              </p>
               <CustodialWalletConnect />
             </div>
             
             {/* Option 2: WalletConnect */}
-            <div>
-              <h3 className="text-lg font-medium mb-3 text-green-600">Option 2: External Wallet</h3>
+            <div className="bg-gradient-to-br from-card via-card/95 to-card border border-border/50 rounded-2xl md:rounded-3xl p-6 md:p-8 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
+              <div className="flex items-center justify-between mb-4 md:mb-6">
+                <h3 className="text-lg md:text-xl font-bold text-green-600 flex items-center">
+                  <Globe className="h-5 w-5 md:h-6 md:w-6 mr-2 md:mr-3" />
+                  External Wallet
+                </h3>
+                <Badge variant="outline" className="text-xs font-semibold bg-green-500/10 border-green-500/30 text-green-600">
+                  Advanced
+                </Badge>
+              </div>
+              <p className="text-muted-foreground mb-4 md:mb-6 text-sm leading-relaxed">
+                Connect your existing wallet for full control and advanced features.
+              </p>
               <WalletConnect />
             </div>
           </div>
           
-          {/* Balance Display */}
-          <div className="mt-6">
+          {/* Balance Display - Enhanced */}
+          <div className="mt-6 md:mt-8">
             <BalanceDisplay />
           </div>
         </div>
@@ -201,31 +230,63 @@ function ProfilePageContent() {
         {/* Stats Cards */}
         <ProfileStats user={user} />
 
-        {/* Profile Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="badges">Badges</TabsTrigger>
-            <TabsTrigger value="activities">Activities</TabsTrigger>
-            <TabsTrigger value="settings">Settings</TabsTrigger>
+        {/* Profile Tabs - Enhanced */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8 md:mt-10">
+          <TabsList className="grid w-full grid-cols-4 bg-gradient-to-r from-card/80 to-card/60 backdrop-blur-sm border border-border/50 rounded-xl md:rounded-2xl p-1 h-12 md:h-14">
+            <TabsTrigger 
+              value="overview" 
+              className="data-[state=active]:bg-primary/20 data-[state=active]:text-primary data-[state=active]:shadow-lg rounded-lg md:rounded-xl font-semibold transition-all duration-300 text-sm"
+            >
+              Overview
+            </TabsTrigger>
+            <TabsTrigger 
+              value="badges" 
+              className="data-[state=active]:bg-primary/20 data-[state=active]:text-primary data-[state=active]:shadow-lg rounded-lg md:rounded-xl font-semibold transition-all duration-300 text-sm"
+            >
+              Badges
+            </TabsTrigger>
+            <TabsTrigger 
+              value="activities" 
+              className="data-[state=active]:bg-primary/20 data-[state=active]:text-primary data-[state=active]:shadow-lg rounded-lg md:rounded-xl font-semibold transition-all duration-300 text-sm"
+            >
+              Activities
+            </TabsTrigger>
+            <TabsTrigger 
+              value="settings" 
+              className="data-[state=active]:bg-primary/20 data-[state=active]:text-primary data-[state=active]:shadow-lg rounded-lg md:rounded-xl font-semibold transition-all duration-300 text-sm"
+            >
+              Settings
+            </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="overview" className="mt-6">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Bio Section */}
-              <div className="lg:col-span-2 space-y-6">
-                <div className="bg-gradient-to-br from-card via-card/95 to-card border border-border/50 rounded-xl p-6 backdrop-blur-sm">
-                  <h3 className="text-lg font-semibold mb-4 flex items-center">
-                    <UserIcon className="h-5 w-5 mr-2" />
-                    About Me
-                  </h3>
-                  <p className="text-muted-foreground mb-4">{user.bio}</p>
+          <TabsContent value="overview" className="mt-6 md:mt-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+              {/* Bio Section - Enhanced */}
+              <div className="lg:col-span-2 space-y-6 md:space-y-8">
+                <div className="bg-gradient-to-br from-card via-card/95 to-card border border-border/50 rounded-2xl md:rounded-3xl p-6 md:p-8 backdrop-blur-sm">
+                  <div className="flex items-center justify-between mb-4 md:mb-6">
+                    <h3 className="text-xl md:text-2xl font-bold flex items-center bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                      <UserIcon className="h-5 w-5 md:h-7 md:w-7 mr-2 md:mr-3 text-primary" />
+                      About Me
+                    </h3>
+                    <Badge variant="outline" className="text-xs md:text-sm font-semibold bg-primary/10 border-primary/30 text-primary">
+                      Profile
+                    </Badge>
+                  </div>
+                  <p className="text-muted-foreground mb-4 md:mb-6 text-sm md:text-base leading-relaxed">{user.bio}</p>
                   
-                  <div className="space-y-3">
-                    <h4 className="font-medium">Interests</h4>
-                    <div className="flex flex-wrap gap-2">
+                  <div className="space-y-3 md:space-y-4">
+                    <h4 className="font-bold text-base md:text-lg flex items-center text-foreground">
+                      <Star className="h-4 w-4 md:h-6 md:w-6 mr-2 md:mr-3 text-yellow-500" />
+                      Interests & Skills
+                    </h4>
+                    <div className="flex flex-wrap gap-2 md:gap-3">
                       {user.interests.map((interest, index) => (
-                        <Badge key={index} variant="secondary">
+                        <Badge 
+                          key={index} 
+                          variant="secondary" 
+                          className="text-xs md:text-sm px-3 md:px-4 py-1 md:py-2 bg-gradient-to-r from-primary/10 to-secondary/10 text-primary border-primary/20 dark:bg-primary/20 dark:text-primary dark:border-primary/30 font-semibold hover:scale-105 transition-transform duration-200"
+                        >
                           {interest}
                         </Badge>
                       ))}
@@ -233,81 +294,54 @@ function ProfilePageContent() {
                   </div>
                 </div>
 
-                {/* Communities */}
-                <div className="bg-gradient-to-br from-card via-card/95 to-card border border-border/50 rounded-xl p-6 backdrop-blur-sm">
-                  <h3 className="text-lg font-semibold mb-4 flex items-center">
-                    <Users className="h-5 w-5 mr-2" />
-                    Communities
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <h4 className="font-medium text-sm text-muted-foreground mb-2">Joined</h4>
-                      <div className="text-2xl font-bold">{user.communitiesJoined.length}</div>
-                      <p className="text-sm text-muted-foreground">Communities</p>
+                {/* Communities - Enhanced */}
+                <div className="bg-gradient-to-br from-card via-card/95 to-card border border-border/50 rounded-2xl md:rounded-3xl p-6 md:p-8 backdrop-blur-sm">
+                  <div className="flex items-center justify-between mb-4 md:mb-6">
+                    <h3 className="text-xl md:text-2xl font-bold flex items-center bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                      <Users className="h-5 w-5 md:h-7 md:w-7 mr-2 md:mr-3 text-primary" />
+                      Communities
+                    </h3>
+                    <Badge variant="outline" className="text-xs md:text-sm font-semibold bg-primary/10 border-primary/30 text-primary">
+                      {user.communitiesJoined.length + user.communitiesCreated.length} Total
+                    </Badge>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                    <div className="text-center p-4 md:p-6 bg-gradient-to-br from-green-50 to-green-100/50 dark:from-green-900/20 dark:to-green-800/20 rounded-xl md:rounded-2xl border border-green-200/50 dark:border-green-700/30 hover:shadow-lg transition-all duration-300">
+                      <div className="flex items-center justify-center mb-2 md:mb-3">
+                        <Users className="h-4 w-4 md:h-5 md:w-5 mr-1 md:mr-2 text-green-600 dark:text-green-400" />
+                        <h4 className="font-bold text-sm md:text-base text-green-700 dark:text-green-300">Joined</h4>
+                      </div>
+                      <div className="text-2xl md:text-3xl font-bold text-green-600 dark:text-green-400 mb-1 md:mb-2">{user.communitiesJoined.length}</div>
+                      <p className="text-xs md:text-sm text-green-600 dark:text-green-400 font-medium">Communities</p>
                     </div>
-                    <div>
-                      <h4 className="font-medium text-sm text-muted-foreground mb-2">Created</h4>
-                      <div className="text-2xl font-bold">{user.communitiesCreated.length}</div>
-                      <p className="text-sm text-muted-foreground">Communities</p>
+                    <div className="text-center p-4 md:p-6 bg-gradient-to-br from-blue-50 to-blue-100/50 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl md:rounded-2xl border border-blue-200/50 dark:border-blue-700/30 hover:shadow-lg transition-all duration-300">
+                      <div className="flex items-center justify-center mb-2 md:mb-3">
+                        <Target className="h-4 w-4 md:h-5 md:w-5 mr-1 md:mr-2 text-blue-600 dark:text-blue-400" />
+                        <h4 className="font-bold text-sm md:text-base text-blue-700 dark:text-blue-300">Created</h4>
+                      </div>
+                      <div className="text-2xl md:text-3xl font-bold text-blue-600 dark:text-blue-400 mb-1 md:mb-2">{user.communitiesCreated.length}</div>
+                      <p className="text-xs md:text-sm text-blue-600 dark:text-blue-400 font-medium">Communities</p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Quick Stats */}
-              <div className="space-y-6">
-                <div className="bg-gradient-to-br from-card via-card/95 to-card border border-border/50 rounded-xl p-6 backdrop-blur-sm">
-                  <h3 className="text-lg font-semibold mb-4 flex items-center">
-                    <Trophy className="h-5 w-5 mr-2" />
-                    Achievements
-                  </h3>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">Level</span>
-                      <span className="font-bold">{user.level}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">Score</span>
-                      <span className="font-bold">{user.score.toLocaleString()}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">Friends</span>
-                      <span className="font-bold">{user.friends}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">Badges</span>
-                      <span className="font-bold">{user.badges.length}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-gradient-to-br from-card via-card/95 to-card border border-border/50 rounded-xl p-6 backdrop-blur-sm">
-                  <h3 className="text-lg font-semibold mb-4 flex items-center">
-                    <Calendar className="h-5 w-5 mr-2" />
-                    Member Since
-                  </h3>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold">
-                      {new Date(user.createdAt).toLocaleDateString()}
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      {Math.floor((Date.now() - new Date(user.createdAt).getTime()) / (1000 * 60 * 60 * 24))} days
-                    </p>
-                  </div>
-                </div>
+              {/* Quick Stats - Enhanced */}
+              <div className="space-y-6 md:space-y-8">
+                {/* Removed Quick Stats and Member Since sections as they're already displayed above */}
               </div>
             </div>
           </TabsContent>
 
-          <TabsContent value="badges" className="mt-6">
+          <TabsContent value="badges" className="mt-8">
             <ProfileBadges badges={user.badges} />
           </TabsContent>
 
-          <TabsContent value="activities" className="mt-6">
+          <TabsContent value="activities" className="mt-8">
             <ProfileActivities activities={user.recentActivities} />
           </TabsContent>
 
-          <TabsContent value="settings" className="mt-6">
+          <TabsContent value="settings" className="mt-8">
             <ProfileSettings user={user} />
           </TabsContent>
         </Tabs>
