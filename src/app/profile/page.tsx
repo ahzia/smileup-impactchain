@@ -11,7 +11,6 @@ import { LoginModal } from '@/components/auth/LoginModal';
 import { RegisterModal } from '@/components/auth/RegisterModal';
 import { WalletConnect } from '@/components/wallet/WalletConnect';
 import { CustodialWalletConnect } from '@/components/wallet/CustodialWalletConnect';
-import { BalanceDisplay } from '@/components/wallet/BalanceDisplay';
 import { WalletProvider } from '@/contexts/WalletContext';
 import { AuthProvider, useAuth } from '@/contexts/AuthContext';
 import { Badge } from '@/components/ui/badge';
@@ -219,11 +218,6 @@ function ProfilePageContent() {
               </p>
               <WalletConnect />
             </div>
-          </div>
-          
-          {/* Balance Display - Enhanced */}
-          <div className="mt-6 md:mt-8">
-            <BalanceDisplay />
           </div>
         </div>
 

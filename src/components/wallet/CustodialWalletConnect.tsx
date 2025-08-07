@@ -3,30 +3,32 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Wallet, RefreshCw, Copy, ExternalLink, Shield, Coins } from 'lucide-react';
+import { Wallet, RefreshCw, Copy, ExternalLink, Shield, Coins, TrendingUp } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useAuth, getAuthHeaders } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/AuthContext';
 
-interface CustodialWallet {
-  id: string;
-  userId: string;
-  accountId: string;
-  publicKey: string;
+interface WalletInfo {
+  wallet: {
+    id: string;
+    accountId: string;
+    publicKey: string;
+    isActive: boolean;
+    createdAt: string;
+    updatedAt: string;
+  };
   balance: {
     hbar: number;
     smiles: number;
   };
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export function CustodialWalletConnect() {
-  const { token, isAuthenticated } = useAuth();
-  const [wallet, setWallet] = useState<CustodialWallet | null>(null);
+  const { isAuthenticated } = useAuth();
+  const [walletInfo, setWalletInfo] = useState<WalletInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Load user's custodial wallet
   useEffect(() => {
@@ -40,19 +42,28 @@ export function CustodialWalletConnect() {
   const loadWallet = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/wallet/custodial', {
-        headers: getAuthHeaders(token),
+      setError(null);
+      
+      const token = localStorage.getItem('smileup_token');
+      const response = await fetch('/api/user/wallet-info', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
+      
       const data = await response.json();
       
-      if (data.success && data.data) {
-        setWallet(data.data);
+      if (data.success) {
+        setWalletInfo(data.data);
       } else if (response.status === 404) {
         // Wallet doesn't exist yet
-        setWallet(null);
+        setWalletInfo(null);
+      } else {
+        setError(data.error || 'Failed to load wallet');
       }
     } catch (error) {
       console.error('Error loading wallet:', error);
+      setError('Failed to connect to wallet service');
     } finally {
       setLoading(false);
     }
@@ -61,21 +72,28 @@ export function CustodialWalletConnect() {
   const createWallet = async () => {
     try {
       setCreating(true);
+      const token = localStorage.getItem('smileup_token');
       const response = await fetch('/api/wallet/custodial', {
         method: 'POST',
-        headers: getAuthHeaders(token),
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
       });
       
       const data = await response.json();
       
       if (data.success && data.data) {
-        setWallet(data.data);
+        // Reload wallet info after creation
+        await loadWallet();
         console.log('✅ Custodial wallet created:', data.data.accountId);
       } else {
         console.error('Failed to create wallet:', data.error);
+        setError(data.error || 'Failed to create wallet');
       }
     } catch (error) {
       console.error('Error creating wallet:', error);
+      setError('Failed to create wallet');
     } finally {
       setCreating(false);
     }
@@ -84,25 +102,25 @@ export function CustodialWalletConnect() {
   const refreshBalance = async () => {
     try {
       setRefreshing(true);
-      // TODO: Implement balance refresh API
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+      setError(null);
       await loadWallet();
     } catch (error) {
       console.error('Error refreshing balance:', error);
+      setError('Failed to refresh balance');
     } finally {
       setRefreshing(false);
     }
   };
 
   const copyAddress = () => {
-    if (wallet?.accountId) {
-      navigator.clipboard.writeText(wallet.accountId);
+    if (walletInfo?.wallet.accountId) {
+      navigator.clipboard.writeText(walletInfo.wallet.accountId);
     }
   };
 
   const openExplorer = () => {
-    if (wallet?.accountId) {
-      const explorerUrl = `https://hashscan.io/testnet/account/${wallet.accountId}`;
+    if (walletInfo?.wallet.accountId) {
+      const explorerUrl = `https://hashscan.io/testnet/account/${walletInfo.wallet.accountId}`;
       window.open(explorerUrl, '_blank');
     }
   };
@@ -122,7 +140,38 @@ export function CustodialWalletConnect() {
     );
   }
 
-  if (!wallet) {
+  if (error && !walletInfo) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-gradient-to-br from-card via-card/95 to-card border border-border/50 rounded-xl p-6 backdrop-blur-sm"
+      >
+        <div className="text-center space-y-4">
+          <div className="w-16 h-16 bg-gradient-to-br from-red-500/20 via-red-400/15 to-red-500/20 rounded-full flex items-center justify-center mx-auto">
+            <Shield className="h-8 w-8 text-red-400" />
+          </div>
+          
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Wallet Error</h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              {error}
+            </p>
+          </div>
+
+          <Button
+            onClick={loadWallet}
+            className="bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:from-blue-600 hover:via-blue-700 hover:to-blue-800 text-white font-semibold"
+          >
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Retry
+          </Button>
+        </div>
+      </motion.div>
+    );
+  }
+
+  if (!walletInfo) {
     return (
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -202,7 +251,7 @@ export function CustodialWalletConnect() {
           <span className="text-sm text-muted-foreground">Account</span>
           <div className="flex items-center space-x-1">
             <span className="text-sm font-mono">
-              {wallet.accountId.slice(0, 8)}...{wallet.accountId.slice(-8)}
+              {walletInfo.wallet.accountId.slice(0, 8)}...{walletInfo.wallet.accountId.slice(-8)}
             </span>
             <Button
               variant="ghost"
@@ -225,12 +274,21 @@ export function CustodialWalletConnect() {
         
         <div className="flex items-center justify-between">
           <span className="text-sm text-muted-foreground">Smiles</span>
-          <span className="font-semibold">{wallet.balance.smiles.toLocaleString()}</span>
+          <div className="flex items-center space-x-2">
+            <span className="font-semibold">{walletInfo.balance.smiles.toLocaleString()}</span>
+            <TrendingUp className="h-4 w-4 text-green-500" />
+          </div>
         </div>
         
         <div className="flex items-center justify-between">
           <span className="text-sm text-muted-foreground">HBAR</span>
-          <span className="font-semibold">{wallet.balance.hbar.toFixed(2)}</span>
+          <span className="font-semibold">{walletInfo.balance.hbar.toFixed(2)}</span>
+        </div>
+        
+        <div className="pt-2 border-t border-border/50">
+          <div className="text-xs text-muted-foreground">
+            Status: {walletInfo.wallet.isActive ? 'Active' : 'Inactive'}
+          </div>
         </div>
       </div>
     </motion.div>
