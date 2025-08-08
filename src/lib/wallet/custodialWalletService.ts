@@ -284,7 +284,7 @@ export class CustodialWalletService {
       }
       
       return {
-        hbar: accountBalance.hbars.toTinybars() / 100000000, // Convert to HBAR
+        hbar: Number(accountBalance.hbars.toTinybars()) / 100000000, // Convert to HBAR
         smiles: smilesBalance
       };
 

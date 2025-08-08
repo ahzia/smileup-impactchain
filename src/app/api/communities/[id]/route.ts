@@ -4,12 +4,12 @@ import { CommunityService } from '@/lib/services/communityService';
 // GET /api/communities/[id]
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
-    const community = await CommunityService.getCommunityById(id);
+    const community = await CommunityService.findCommunityById(id);
 
     if (!community) {
       return NextResponse.json(

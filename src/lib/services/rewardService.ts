@@ -1,5 +1,5 @@
+import { Reward, UserReward } from '@prisma/client';
 import { prisma } from '../database/client';
-import { Reward, UserReward } from '../../generated/prisma';
 
 export interface CreateRewardData {
   name: string;

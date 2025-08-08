@@ -256,12 +256,16 @@ export class HCSService {
       // Use a different approach to iterate through messages
       let count = 0;
       const messageStream = topicMessageQuery.subscribe(this.client, (message) => {
-        messages.push(message);
-        count++;
-        if (count >= limit) {
-          return false; // Stop subscription
+        if (message) {
+          messages.push(message);
+          count++;
+          if (count >= limit) {
+            return false; // Stop subscription
+          }
         }
         return true; // Continue subscription
+      }, (error) => {
+        console.error("❌ Error in topic message subscription:", error);
       });
 
       // Wait for messages to be collected

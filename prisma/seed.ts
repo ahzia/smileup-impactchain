@@ -118,10 +118,10 @@ async function main() {
   // Create communities
   console.log('🏘️ Creating communities...');
   const communities = [];
-  for (const communityData of communityData) {
+  for (const communityItem of communityData) {
     const community = await prisma.community.create({
       data: {
-        ...communityData,
+        ...communityItem,
         createdBy: users[0].id // First user creates all communities
       }
     });
@@ -222,10 +222,7 @@ async function main() {
 
   for (const rewardData of rewards) {
     const reward = await prisma.reward.create({
-      data: {
-        ...rewardData,
-        createdBy: users[0].id
-      }
+      data: rewardData
     });
     console.log(`✅ Created reward: ${reward.name}`);
   }
@@ -257,10 +254,7 @@ async function main() {
 
   for (const postData of feedPosts) {
     const post = await prisma.feedPost.create({
-      data: {
-        ...postData,
-        createdBy: users[0].id
-      }
+      data: postData
     });
     console.log(`✅ Created feed post: ${post.title}`);
   }

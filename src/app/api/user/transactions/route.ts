@@ -140,7 +140,11 @@ export async function GET(request: NextRequest) {
     ];
 
     // Sort by timestamp (most recent first)
-    transactions.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    transactions.sort((a, b) => {
+      const aTime = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+      const bTime = b.timestamp ? new Date(b.timestamp).getTime() : 0;
+      return bTime - aTime;
+    });
 
     // Get total counts for pagination
     const [totalDonations, totalRewards, totalMissions] = await Promise.all([

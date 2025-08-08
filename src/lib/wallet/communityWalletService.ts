@@ -247,7 +247,7 @@ export class CommunityWalletService {
       const response = await transaction.execute(this.client);
       const receipt = await response.getReceipt(this.client);
       
-      return receipt.transactionId.toString();
+      return response.transactionId.toString();
     } catch (error) {
       console.error('❌ Failed to transfer HBAR from community wallet:', error);
       throw error;
@@ -275,7 +275,7 @@ export class CommunityWalletService {
       }
       
       return {
-        hbar: accountBalance.hbars.toTinybars() / 100000000, // Convert to HBAR
+        hbar: Number(accountBalance.hbars.toTinybars()) / 100000000, // Convert to HBAR
         smiles: smilesBalance
       };
 

@@ -1,4 +1,4 @@
-import { PrismaClient } from '../../generated/prisma';
+import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';   // ← import PrismaPg
 
 // Create a PG adapter pointing at your DATABASE_URL

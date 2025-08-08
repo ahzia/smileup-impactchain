@@ -1,5 +1,5 @@
+import { FeedPost, Comment, Like } from '@prisma/client';
 import { prisma } from '../database/client';
-import { FeedPost, Comment, Like } from '../../generated/prisma';
 
 export interface CreateFeedPostData {
   title?: string;
@@ -101,7 +101,7 @@ export class FeedService {
         name: feedPost.community.name,
         logo: feedPost.community.logoUrl, // Map logoUrl to logo
       } : null,
-    };
+    } as FeedPost;
   }
 
   static async updateFeedPost(id: string, data: UpdateFeedPostData): Promise<FeedPost> {
@@ -442,7 +442,6 @@ export class FeedService {
       }
 
       let newCommunitySmiles: number | undefined;
-      let blockchainTransactionId: string | undefined;
 
       // Transfer tokens using the new donation transfer method
       const transferResult = await BlockchainService.transferDonation({
@@ -456,7 +455,7 @@ export class FeedService {
         throw new Error('Failed to transfer tokens');
       }
 
-      blockchainTransactionId = transferResult.blockchainTransactionId;
+      const blockchainTransactionId: string | undefined = transferResult.blockchainTransactionId;
 
       // If post has a community, get community balance
       if (post.communityId) {
@@ -575,7 +574,7 @@ export class FeedService {
   // API COMPATIBILITY METHODS
   // ========================================
 
-  static async createFeedPostWithUser(data: any, userId: string): Promise<any> {
+  static async createFeedPostWithUser(data: CreateFeedPostData, userId: string): Promise<{ id: string; title: string | null }> {
     const post = await this.createFeedPost({
       title: data.title,
       description: data.description,

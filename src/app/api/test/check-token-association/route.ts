@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
 
     const tokenIdObj = TokenId.fromString(tokenId);
     const isAssociated = accountBalance.tokens && accountBalance.tokens.get(tokenIdObj);
-    const tokenBalance = isAssociated ? accountBalance.tokens.get(tokenIdObj)?.toNumber() || 0 : 0;
+    const tokenBalance = isAssociated && accountBalance.tokens ? accountBalance.tokens.get(tokenIdObj)?.toNumber() || 0 : 0;
 
     console.log('📊 Account balance check results:');
     console.log('- HBAR Balance:', accountBalance.hbars.toString());
@@ -75,7 +75,7 @@ export async function GET(request: NextRequest) {
         hbarBalance: accountBalance.hbars.toString(),
         allTokens: accountBalance.tokens ? Object.keys(accountBalance.tokens).map(tokenKey => ({
           token: tokenKey,
-          balance: accountBalance.tokens.get(tokenKey)?.toNumber() || 0
+          balance: accountBalance.tokens!.get(tokenKey)?.toNumber() || 0
         })) : []
       }
     });

@@ -1,5 +1,5 @@
+import { Community, CommunityMember, FeedPost } from '@prisma/client';
 import { prisma } from '../database/client';
-import { Community, CommunityMember, FeedPost } from '../../generated/prisma';
 import { CommunityWalletService } from '../wallet/communityWalletService';
 
 export interface CreateCommunityData {

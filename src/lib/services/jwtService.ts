@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { User } from '../../generated/prisma';
+import { User } from '@prisma/client';
 
 // JWT Configuration
 const JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET || 'your-access-secret-key-development';
@@ -33,19 +33,25 @@ export class JWTService {
   // ========================================
 
   static generateAccessToken(payload: TokenPayload): string {
-    return jwt.sign(payload, JWT_ACCESS_SECRET as string, {
+    if (!JWT_ACCESS_SECRET) {
+      throw new Error('JWT_ACCESS_SECRET is not configured');
+    }
+    return jwt.sign(payload, JWT_ACCESS_SECRET, {
       expiresIn: JWT_ACCESS_EXPIRES_IN,
       issuer: 'smileup-impactchain',
       audience: 'smileup-users',
-    });
+    } as any);
   }
 
   static generateRefreshToken(payload: TokenPayload): string {
-    return jwt.sign(payload, JWT_REFRESH_SECRET as string, {
+    if (!JWT_REFRESH_SECRET) {
+      throw new Error('JWT_REFRESH_SECRET is not configured');
+    }
+    return jwt.sign(payload, JWT_REFRESH_SECRET, {
       expiresIn: JWT_REFRESH_EXPIRES_IN,
       issuer: 'smileup-impactchain',
       audience: 'smileup-users',
-    });
+    } as any);
   }
 
   static generateTokenPair(payload: TokenPayload): TokenPair {
@@ -68,10 +74,13 @@ export class JWTService {
 
   static verifyAccessToken(token: string): DecodedToken {
     try {
-      return jwt.verify(token, JWT_ACCESS_SECRET as string, {
+      if (!JWT_ACCESS_SECRET) {
+        throw new Error('JWT_ACCESS_SECRET is not configured');
+      }
+      return jwt.verify(token, JWT_ACCESS_SECRET, {
         issuer: 'smileup-impactchain',
         audience: 'smileup-users',
-      }) as DecodedToken;
+      } as any) as unknown as DecodedToken;
     } catch (error) {
       throw new Error('Invalid access token');
     }
@@ -79,10 +88,13 @@ export class JWTService {
 
   static verifyRefreshToken(token: string): DecodedToken {
     try {
-      return jwt.verify(token, JWT_REFRESH_SECRET as string, {
+      if (!JWT_REFRESH_SECRET) {
+        throw new Error('JWT_REFRESH_SECRET is not configured');
+      }
+      return jwt.verify(token, JWT_REFRESH_SECRET, {
         issuer: 'smileup-impactchain',
         audience: 'smileup-users',
-      }) as DecodedToken;
+      } as any) as unknown as DecodedToken;
     } catch (error) {
       throw new Error('Invalid refresh token');
     }

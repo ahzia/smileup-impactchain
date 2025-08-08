@@ -2,6 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { UserService } from '@/lib/services/userService';
 import { AuthMiddleware } from '@/lib/middleware/auth';
 
+interface UpdateProfileRequest {
+  name?: string;
+  bio?: string;
+  interests?: string[];
+  avatar?: string;
+}
+
 // GET /api/user/profile
 export async function GET(request: NextRequest) {
   try {
@@ -70,11 +77,11 @@ export async function PUT(request: NextRequest) {
     }
 
     // Update profile
-    const updatedUser = await AuthService.updateProfile(userId, {
+    const updatedUser = await UserService.updateUser(userId, {
       name,
       bio,
       interests,
-      avatar
+      avatarUrl: avatar
     });
 
     return NextResponse.json({
@@ -85,7 +92,7 @@ export async function PUT(request: NextRequest) {
           name: updatedUser.name,
           bio: updatedUser.bio,
           interests: updatedUser.interests,
-          avatar: updatedUser.avatar
+          avatar: updatedUser.avatarUrl
         }
       }
     });

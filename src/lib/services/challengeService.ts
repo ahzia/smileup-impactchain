@@ -3,7 +3,7 @@ import { Challenge } from '@/lib/types';
 import { AuthService } from './authService';
 
 // Mock challenge storage
-let mockChallenges = [...challenges];
+const mockChallenges = [...challenges];
 
 export class ChallengeService {
   // Get challenges with filtering
