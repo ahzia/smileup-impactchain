@@ -4,14 +4,21 @@ declare global {
   var __prisma: PrismaClient | undefined;
 }
 
+console.log('🔧 Initializing Prisma Client...');
+console.log('📊 Environment:', process.env.NODE_ENV);
+console.log('🌐 DATABASE_URL exists:', !!process.env.DATABASE_URL);
+console.log('🔗 DATABASE_URL starts with postgresql:', process.env.DATABASE_URL?.startsWith('postgresql://'));
+
 export const prisma = globalThis.__prisma || new PrismaClient({
-  log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+  log: ['query', 'error', 'info', 'warn'],
   datasources: {
     db: {
       url: process.env.DATABASE_URL,
     },
   },
 });
+
+console.log('✅ Prisma Client initialized successfully');
 
 if (process.env.NODE_ENV !== 'production') {
   globalThis.__prisma = prisma;
