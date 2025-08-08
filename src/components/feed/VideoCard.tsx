@@ -193,24 +193,25 @@ export const VideoCard: React.FC<VideoCardProps> = React.memo(({
                 {post.title}
               </h2>
               
-              {/* Description */}
-              <div className="mb-3 md:mb-4 lg:mb-5">
-                <p className="text-white/90 text-sm md:text-base lg:text-lg xl:text-xl leading-relaxed lg:group-hover:text-white transition-colors duration-300">
-                  {displayText}
-                  {shouldTruncate && !isExpanded && (
-                    <span className="text-white/60">...</span>
-                  )}
-                </p>
-                {shouldTruncate && (
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    onClick={toggleExpanded}
-                    className="text-white/70 text-xs md:text-sm lg:text-base font-medium hover:text-white transition-colors mt-1 md:mt-2 lg:mt-3 lg:group-hover:text-white/90"
-                  >
-                    {isExpanded ? 'See Less' : 'See More'}
-                  </motion.button>
-                )}
-              </div>
+              {/* Description - Only show when expanded */}
+              {isExpanded && (
+                <div className="mb-3 md:mb-4 lg:mb-5">
+                  <p className="text-white/90 text-sm md:text-base lg:text-lg xl:text-xl leading-relaxed lg:group-hover:text-white transition-colors duration-300">
+                    {post.description}
+                  </p>
+                </div>
+              )}
+              
+              {/* See More/Less Button - Always show if there's a description */}
+              {post.description && (
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  onClick={toggleExpanded}
+                  className="text-white/70 text-xs md:text-sm lg:text-base font-medium hover:text-white transition-colors mt-1 md:mt-2 lg:mt-3 lg:group-hover:text-white/90"
+                >
+                  {isExpanded ? 'See Less' : 'See More'}
+                </motion.button>
+              )}
               
               {/* Date */}
               <div className="flex items-center space-x-2 text-white/60 text-xs md:text-sm lg:text-base xl:text-lg lg:group-hover:text-white/80 transition-colors duration-300">
