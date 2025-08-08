@@ -5,7 +5,7 @@ import { AuthMiddleware } from '@/lib/middleware/auth';
 // POST /api/communities/[id]/join
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Validate authentication and extract user ID from JWT token
@@ -23,7 +23,7 @@ export async function POST(
       );
     }
 
-    const { id } = params;
+    const { id } = await params;
 
     // Join community with authenticated user
     const community = await CommunityService.joinCommunity(id, userId);

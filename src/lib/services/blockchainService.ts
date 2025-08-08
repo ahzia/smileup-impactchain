@@ -291,11 +291,13 @@ export class BlockchainService {
       // Log to HCS with error handling
       try {
         await this.hcsService.logDonation({
-          userId: data.userId,
-          postId: data.postId,
+          donationId: `donation_${Date.now()}`,
+          fromUserId: data.userId,
+          toCommunityId: data.communityId || 'platform',
           amount: data.amount,
-          communityId: data.communityId,
-          blockchainTransactionId
+          donationDate: new Date().toISOString(),
+          message: `Donation to ${data.communityId ? 'community' : 'platform'}`,
+          proofHash: blockchainTransactionId || `donation_${Date.now()}`
         });
         console.log(`📝 Logged donation to HCS`);
       } catch (hcsError) {

@@ -15,6 +15,7 @@ interface TextCardProps {
   aiChatOpen: boolean;
   setAiChatOpen: (open: boolean) => void;
   lastPostIndex: number;
+  isDonating?: boolean;
 }
 
 export const TextCard: React.FC<TextCardProps> = React.memo(({
@@ -27,6 +28,7 @@ export const TextCard: React.FC<TextCardProps> = React.memo(({
   aiChatOpen,
   setAiChatOpen,
   lastPostIndex,
+  isDonating = false,
 }) => {
   const handleSmile = () => {
     onSmile(post.id);

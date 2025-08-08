@@ -5,7 +5,7 @@ import { AuthMiddleware } from '@/lib/middleware/auth';
 // POST /api/challenges/[id]/claim
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Validate authentication and extract user ID from JWT token
@@ -23,7 +23,7 @@ export async function POST(
       );
     }
 
-    const { id } = params;
+    const { id } = await params;
 
     // Claim challenge reward with authenticated user
     const result = await ChallengeService.claimChallengeReward(id, userId);

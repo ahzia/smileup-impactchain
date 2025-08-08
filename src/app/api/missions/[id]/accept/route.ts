@@ -5,7 +5,7 @@ import { AuthMiddleware } from '@/lib/middleware/auth';
 // POST /api/missions/[id]/accept
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Validate authentication and extract user ID from JWT token
@@ -23,7 +23,7 @@ export async function POST(
       );
     }
 
-    const missionId = params.id;
+    const { id: missionId } = await params;
 
     // Accept mission with authenticated user
     const mission = await MissionService.joinMission(userId, missionId);

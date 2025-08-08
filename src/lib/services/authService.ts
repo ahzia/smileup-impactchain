@@ -491,7 +491,23 @@ export class AuthService {
   }
 
   // Join community
-  static async joinCommunity(userId: string, communityId: string): Promise<User> {
+  static async joinCommunity(userId: string, communityId: string): Promise<{
+    id: string;
+    name: string;
+    email: string;
+    avatar: string;
+    smiles: number;
+    level: number;
+    score: number;
+    bio: string;
+    interests: string[];
+    friends: number;
+    communitiesJoined: string[];
+    communitiesCreated: string[];
+    badges: string[];
+    recentActivities: { activity: string; time: string }[];
+    createdAt: string;
+  }> {
     const user = await UserService.findUserById(userId);
     if (!user) {
       throw new Error('User not found');
@@ -520,7 +536,23 @@ export class AuthService {
   }
 
   // Leave community
-  static async leaveCommunity(userId: string, communityId: string): Promise<User> {
+  static async leaveCommunity(userId: string, communityId: string): Promise<{
+    id: string;
+    name: string;
+    email: string;
+    avatar: string;
+    smiles: number;
+    level: number;
+    score: number;
+    bio: string;
+    interests: string[];
+    friends: number;
+    communitiesJoined: string[];
+    communitiesCreated: string[];
+    badges: string[];
+    recentActivities: { activity: string; time: string }[];
+    createdAt: string;
+  }> {
     const user = await UserService.findUserById(userId);
     if (!user) {
       throw new Error('User not found');
@@ -549,7 +581,23 @@ export class AuthService {
   }
 
   // Add recent activity
-  static async addRecentActivity(userId: string, activity: string): Promise<User> {
+  static async addRecentActivity(userId: string, activity: string): Promise<{
+    id: string;
+    name: string;
+    email: string;
+    avatar: string;
+    smiles: number;
+    level: number;
+    score: number;
+    bio: string;
+    interests: string[];
+    friends: number;
+    communitiesJoined: string[];
+    communitiesCreated: string[];
+    badges: string[];
+    recentActivities: { activity: string; time: string }[];
+    createdAt: string;
+  }> {
     const user = await UserService.findUserById(userId);
     if (!user) {
       throw new Error('User not found');
@@ -575,7 +623,23 @@ export class AuthService {
   }
 
   // Add badge
-  static async addBadge(userId: string, badge: string): Promise<User> {
+  static async addBadge(userId: string, badge: string): Promise<{
+    id: string;
+    name: string;
+    email: string;
+    avatar: string;
+    smiles: number;
+    level: number;
+    score: number;
+    bio: string;
+    interests: string[];
+    friends: number;
+    communitiesJoined: string[];
+    communitiesCreated: string[];
+    badges: string[];
+    recentActivities: { activity: string; time: string }[];
+    createdAt: string;
+  }> {
     const user = await UserService.addBadge(userId, badge);
     
     return {

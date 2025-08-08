@@ -118,10 +118,10 @@ async function main() {
   // Create communities
   console.log('🏘️ Creating communities...');
   const communities = [];
-  for (const communityData of communityData) {
+  for (const communityItem of communityData) {
     const community = await prisma.community.create({
       data: {
-        ...communityData,
+        ...communityItem,
         createdBy: users[0].id // First user creates all communities
       }
     });

@@ -127,4 +127,26 @@ export class UserService {
       createdAt: user.createdAt.toISOString()
     };
   }
+
+  // Get all users
+  static async getAllUsers(): Promise<User[]> {
+    return await prisma.user.findMany({
+      orderBy: { createdAt: 'desc' }
+    });
+  }
+
+  // Add badge to user
+  static async addBadge(userId: string, badge: string): Promise<User> {
+    const user = await this.findUserById(userId);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const updatedBadges = [...user.badges, badge];
+    
+    return await prisma.user.update({
+      where: { id: userId },
+      data: { badges: updatedBadges }
+    });
+  }
 } 

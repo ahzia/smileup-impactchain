@@ -15,6 +15,7 @@ interface ImageCardProps {
   aiChatOpen: boolean;
   setAiChatOpen: (open: boolean) => void;
   lastPostIndex: number;
+  isDonating?: boolean;
 }
 
 export const ImageCard: React.FC<ImageCardProps> = React.memo(({
@@ -27,6 +28,7 @@ export const ImageCard: React.FC<ImageCardProps> = React.memo(({
   aiChatOpen,
   setAiChatOpen,
   lastPostIndex,
+  isDonating = false,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 

@@ -111,27 +111,45 @@ export default function FeedContainer() {
           <div ref={ref} className="h-full">
             {posts[currentIndex].mediaType === 'video' && (
               <VideoCard
+                index={currentIndex}
                 post={posts[currentIndex]}
                 onSmile={handleSmile}
+                onSave={() => {}} // Placeholder for save functionality
                 onAIChat={handleAIChat}
                 onShare={handleShare}
+                aiChatOpen={aiChatOpen}
+                setAiChatOpen={setAiChatOpen}
+                lastPostIndex={posts.length - 1}
+                isDonating={false}
               />
             )}
             {posts[currentIndex].mediaType === 'image' && (
               <ImageCard
+                index={currentIndex}
                 post={posts[currentIndex]}
                 onSmile={handleSmile}
+                onSave={() => {}} // Placeholder for save functionality
                 onAIChat={handleAIChat}
                 onShare={handleShare}
+                aiChatOpen={aiChatOpen}
+                setAiChatOpen={setAiChatOpen}
+                lastPostIndex={posts.length - 1}
+                isDonating={false}
               />
             )}
             {/* For text posts, we'll use ImageCard with a placeholder image */}
             {!posts[currentIndex].mediaType && (
               <TextCard
+                index={currentIndex}
                 post={posts[currentIndex]}
                 onSmile={handleSmile}
+                onSave={() => {}} // Placeholder for save functionality
                 onAIChat={handleAIChat}
                 onShare={handleShare}
+                aiChatOpen={aiChatOpen}
+                setAiChatOpen={setAiChatOpen}
+                lastPostIndex={posts.length - 1}
+                isDonating={false}
               />
             )}
           </div>
@@ -156,7 +174,7 @@ export default function FeedContainer() {
       <AIChat
         isOpen={aiChatOpen}
         onClose={() => setAiChatOpen(false)}
-        post={selectedPost}
+        post={selectedPost || undefined}
       />
 
       {/* Loading indicator for next page */}

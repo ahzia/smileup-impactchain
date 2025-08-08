@@ -101,7 +101,7 @@ export class FeedService {
         name: feedPost.community.name,
         logo: feedPost.community.logoUrl, // Map logoUrl to logo
       } : null,
-    };
+    } as FeedPost;
   }
 
   static async updateFeedPost(id: string, data: UpdateFeedPostData): Promise<FeedPost> {

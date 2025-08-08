@@ -480,19 +480,7 @@ export function AIChat({ isOpen, onClose, post }: AIChatProps) {
           </div>
         </div>
 
-        {/* Hidden DialogFlow Messenger for context */}
-        <div style={{ display: 'none' }}>
-          <df-messenger
-            ref={dfMessengerRef}
-            project-id="hey-buddy-425118"
-            agent-id="565449f1-c5bd-40c2-8457-295ce6ae892d"
-            language-code="en"
-            max-query-length="-1"
-            allow-feedback="all"
-          >
-            <df-messenger-chat chat-title="SmileUp AI"></df-messenger-chat>
-          </df-messenger>
-        </div>
+
       </DialogContent>
     </Dialog>
   );
