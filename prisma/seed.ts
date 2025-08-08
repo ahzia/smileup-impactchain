@@ -3,6 +3,15 @@ import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
+// Real profile pictures from public/profiles
+const profilePictures = [
+  '/profiles/img1.jpg',
+  '/profiles/img2.jpeg',
+  '/profiles/img3.jpg',
+  '/profiles/img4.jpg',
+  '/profiles/img5.jpeg'
+];
+
 const userData = [
   {
     name: 'John Doe',
@@ -84,23 +93,26 @@ async function main() {
   // Create users
   console.log('👥 Creating users...');
   const users = [];
-  for (const userData of userData) {
-    const hashedPassword = await bcrypt.hash(userData.password, 12);
+  for (let i = 0; i < userData.length; i++) {
+    const userDataItem = userData[i];
+    const hashedPassword = await bcrypt.hash(userDataItem.password, 12);
+    const profilePicture = profilePictures[i % profilePictures.length]; // Cycle through pictures
+    
     const user = await prisma.user.create({
       data: {
-        name: userData.name,
-        email: userData.email,
+        name: userDataItem.name,
+        email: userDataItem.email,
         passwordHash: hashedPassword,
-        bio: userData.bio,
-        interests: userData.interests,
-        level: userData.level,
-        score: userData.score,
-        badges: userData.badges,
-        avatarUrl: `https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face&${Math.random()}`
+        bio: userDataItem.bio,
+        interests: userDataItem.interests,
+        level: userDataItem.level,
+        score: userDataItem.score,
+        badges: userDataItem.badges,
+        avatarUrl: profilePicture
       }
     });
     users.push(user);
-    console.log(`✅ Created user: ${user.name}`);
+    console.log(`✅ Created user: ${user.name} with avatar: ${profilePicture}`);
   }
 
   // Create communities

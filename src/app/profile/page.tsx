@@ -34,7 +34,8 @@ import {
   Lock,
   Zap,
   Globe,
-  Star
+  Star,
+  History
 } from 'lucide-react';
 import { 
   LoadingSpinner, 
@@ -56,6 +57,24 @@ function ProfilePageContent() {
   const handleRegisterSuccess = (userData: User) => {
     // Auth context will handle the user state automatically
     setShowRegisterModal(false);
+  };
+
+  const handleViewTransactions = () => {
+    setActiveTab('activities');
+    // Scroll to the activities section after a short delay to ensure tab switch is complete
+    setTimeout(() => {
+      // Try to find the activities tab content by ID
+      const activitiesContent = document.getElementById('activities-tab-content');
+      if (activitiesContent) {
+        activitiesContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        // Fallback: scroll to the tabs section
+        const tabsSection = document.querySelector('[role="tablist"]');
+        if (tabsSection) {
+          tabsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+    }, 300);
   };
 
   if (isLoading) {
@@ -199,7 +218,20 @@ function ProfilePageContent() {
               <p className="text-muted-foreground mb-4 md:mb-6 text-sm leading-relaxed">
                 Quick and secure wallet built into the app. Perfect for beginners and daily use.
               </p>
-              <CustodialWalletConnect />
+              <CustodialWalletConnect onViewTransactions={handleViewTransactions} />
+              
+              {/* Recent Transactions Button */}
+              <div className="mt-4 pt-4 border-t border-border/50">
+                <Button
+                  onClick={handleViewTransactions}
+                  variant="outline"
+                  size="sm"
+                  className="w-full bg-gradient-to-r from-blue-50 to-blue-100/50 hover:from-blue-100 hover:to-blue-200/50 border-blue-200 text-blue-700 hover:text-blue-800 font-medium"
+                >
+                  <History className="h-4 w-4 mr-2" />
+                  View Recent Transactions
+                </Button>
+              </div>
             </div>
             
             {/* Option 2: WalletConnect */}
@@ -221,11 +253,8 @@ function ProfilePageContent() {
           </div>
         </div>
 
-        {/* Stats Cards */}
-        <ProfileStats user={user} />
-
-        {/* Profile Tabs - Enhanced */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8 md:mt-10">
+        {/* Profile Tabs - Moved to top */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8 md:mb-10">
           <TabsList className="grid w-full grid-cols-4 bg-gradient-to-r from-card/80 to-card/60 backdrop-blur-sm border border-border/50 rounded-xl md:rounded-2xl p-1 h-12 md:h-14">
             <TabsTrigger 
               value="overview" 
@@ -254,6 +283,11 @@ function ProfilePageContent() {
           </TabsList>
 
           <TabsContent value="overview" className="mt-6 md:mt-8">
+            {/* Stats Cards - Moved from outside tabs to overview */}
+            <div className="mb-8 md:mb-10">
+              <ProfileStats user={user} />
+            </div>
+
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
               {/* Bio Section - Enhanced */}
               <div className="lg:col-span-2 space-y-6 md:space-y-8">
@@ -331,7 +365,7 @@ function ProfilePageContent() {
             <ProfileBadges badges={user.badges} />
           </TabsContent>
 
-          <TabsContent value="activities" className="mt-8">
+          <TabsContent value="activities" className="mt-8" id="activities-tab-content">
             <ProfileActivities activities={user.recentActivities} />
           </TabsContent>
 

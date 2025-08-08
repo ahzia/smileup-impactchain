@@ -5,6 +5,7 @@ import { VideoCard } from '@/components/feed/VideoCard';
 import { ImageCard } from '@/components/feed/ImageCard';
 import { TextCard } from '@/components/feed/TextCard';
 import { AIChat } from '@/components/feed/AIChat';
+import { AuthModal } from '@/components/auth/AuthModal';
 import { FeedPost } from '@/lib/types';
 import { useInView } from 'react-intersection-observer';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -28,12 +29,13 @@ const FeedSkeleton = () => (
 );
 
 export default function FeedPage() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, showAuthModal, setShowAuthModal } = useAuth();
   const [posts, setPosts] = useState<FeedPost[]>([]);
   const [postsLoaded, setPostsLoaded] = useState(false);
   const [aiChatOpen, setAiChatOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState<FeedPost | null>(null);
   const [donatingPostId, setDonatingPostId] = useState<string | null>(null);
+  const [pendingAction, setPendingAction] = useState<{ type: string; postId?: string } | null>(null);
 
   // Intersection observer for infinite scroll
   const { ref: loadMoreRef, inView } = useInView({
@@ -43,7 +45,8 @@ export default function FeedPage() {
 
   const handleSmile = async (postId: string) => {
     if (!isAuthenticated) {
-      console.log('User not authenticated, cannot donate');
+      setPendingAction({ type: 'donate', postId });
+      setShowAuthModal(true);
       return;
     }
 
@@ -88,6 +91,12 @@ export default function FeedPage() {
   };
 
   const handleSave = (postId: string) => {
+    if (!isAuthenticated) {
+      setPendingAction({ type: 'save', postId });
+      setShowAuthModal(true);
+      return;
+    }
+
     setPosts(prevPosts =>
       prevPosts.map(post =>
         post.id === postId
@@ -99,13 +108,66 @@ export default function FeedPage() {
   };
 
   const handleAIChat = (post: FeedPost) => {
+    if (!isAuthenticated) {
+      setPendingAction({ type: 'chat', postId: post.id });
+      setShowAuthModal(true);
+      return;
+    }
+
     setSelectedPost(post);
     setAiChatOpen(true);
   };
 
   const handleShare = (post: FeedPost) => {
+    if (!isAuthenticated) {
+      setPendingAction({ type: 'share', postId: post.id });
+      setShowAuthModal(true);
+      return;
+    }
+
     console.log('Sharing post:', post.id);
   };
+
+  // Handle auth modal close and execute pending action
+  const handleAuthModalClose = () => {
+    setShowAuthModal(false);
+    setPendingAction(null);
+  };
+
+  // Execute pending action after successful authentication
+  useEffect(() => {
+    if (isAuthenticated && pendingAction) {
+      switch (pendingAction.type) {
+        case 'donate':
+          if (pendingAction.postId) {
+            handleSmile(pendingAction.postId);
+          }
+          break;
+        case 'save':
+          if (pendingAction.postId) {
+            handleSave(pendingAction.postId);
+          }
+          break;
+        case 'chat':
+          if (pendingAction.postId) {
+            const post = posts.find(p => p.id === pendingAction.postId);
+            if (post) {
+              handleAIChat(post);
+            }
+          }
+          break;
+        case 'share':
+          if (pendingAction.postId) {
+            const post = posts.find(p => p.id === pendingAction.postId);
+            if (post) {
+              handleShare(post);
+            }
+          }
+          break;
+      }
+      setPendingAction(null);
+    }
+  }, [isAuthenticated, pendingAction, posts]);
 
   // Load initial posts
   useEffect(() => {
@@ -243,6 +305,13 @@ export default function FeedPage() {
         isOpen={aiChatOpen}
         onClose={() => setAiChatOpen(false)}
         post={selectedPost || undefined}
+      />
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={handleAuthModalClose}
+        action={pendingAction?.type}
       />
     </>
   );

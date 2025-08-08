@@ -56,11 +56,18 @@ const SlideShowCard: React.FC<SlideShowCardProps> = ({ post }) => {
             >
               {post.community ? (
                 <>
-                  <div className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-full overflow-hidden border-4 border-white/30 shadow-2xl">
+                  <div className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-full overflow-hidden border-4 border-white/30 shadow-2xl bg-white">
                     <img
                       src={post.community.logo}
                       alt={`${post.community.name} logo`}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain"
+                      onError={(e) => {
+                        console.error('Failed to load logo:', post.community.logo);
+                        e.currentTarget.style.display = 'none';
+                      }}
+                      onLoad={() => {
+                        console.log('Logo loaded successfully:', post.community.logo);
+                      }}
                     />
                   </div>
                   <motion.div

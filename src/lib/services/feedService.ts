@@ -49,7 +49,7 @@ export class FeedService {
   }
 
   static async findFeedPostById(id: string): Promise<FeedPost | null> {
-    return await prisma.feedPost.findUnique({
+    const feedPost = await prisma.feedPost.findUnique({
       where: { id },
       include: {
         user: {
@@ -90,6 +90,18 @@ export class FeedService {
         },
       },
     });
+
+    if (!feedPost) return null;
+
+    // Transform the data to match frontend expectations
+    return {
+      ...feedPost,
+      community: feedPost.community ? {
+        id: feedPost.community.id,
+        name: feedPost.community.name,
+        logo: feedPost.community.logoUrl, // Map logoUrl to logo
+      } : null,
+    };
   }
 
   static async updateFeedPost(id: string, data: UpdateFeedPostData): Promise<FeedPost> {
@@ -126,7 +138,7 @@ export class FeedService {
       where.communityId = query.communityId;
     }
 
-    return await prisma.feedPost.findMany({
+    const feedPosts = await prisma.feedPost.findMany({
       where,
       include: {
         user: {
@@ -171,10 +183,20 @@ export class FeedService {
       skip,
       take: pageSize,
     });
+
+    // Transform the data to match frontend expectations
+    return feedPosts.map(post => ({
+      ...post,
+      community: post.community ? {
+        id: post.community.id,
+        name: post.community.name,
+        logo: post.community.logoUrl, // Map logoUrl to logo
+      } : null,
+    }));
   }
 
   static async getUserFeedPosts(userId: string, limit: number = 20): Promise<FeedPost[]> {
-    return await prisma.feedPost.findMany({
+    const feedPosts = await prisma.feedPost.findMany({
       where: { userId },
       include: {
         user: {
@@ -218,10 +240,20 @@ export class FeedService {
       orderBy: { createdAt: 'desc' },
       take: limit,
     });
+
+    // Transform the data to match frontend expectations
+    return feedPosts.map(post => ({
+      ...post,
+      community: post.community ? {
+        id: post.community.id,
+        name: post.community.name,
+        logo: post.community.logoUrl, // Map logoUrl to logo
+      } : null,
+    }));
   }
 
   static async getCommunityFeedPosts(communityId: string, limit: number = 20): Promise<FeedPost[]> {
-    return await prisma.feedPost.findMany({
+    const feedPosts = await prisma.feedPost.findMany({
       where: { communityId },
       include: {
         user: {
@@ -265,6 +297,16 @@ export class FeedService {
       orderBy: { createdAt: 'desc' },
       take: limit,
     });
+
+    // Transform the data to match frontend expectations
+    return feedPosts.map(post => ({
+      ...post,
+      community: post.community ? {
+        id: post.community.id,
+        name: post.community.name,
+        logo: post.community.logoUrl, // Map logoUrl to logo
+      } : null,
+    }));
   }
 
   // ========================================

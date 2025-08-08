@@ -22,7 +22,11 @@ interface WalletInfo {
   };
 }
 
-export function CustodialWalletConnect() {
+interface CustodialWalletConnectProps {
+  onViewTransactions?: () => void;
+}
+
+export function CustodialWalletConnect({ onViewTransactions }: CustodialWalletConnectProps) {
   const { isAuthenticated } = useAuth();
   const [walletInfo, setWalletInfo] = useState<WalletInfo | null>(null);
   const [loading, setLoading] = useState(true);
