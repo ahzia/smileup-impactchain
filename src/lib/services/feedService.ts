@@ -30,22 +30,29 @@ export class FeedService {
   // ========================================
 
   static async createFeedPost(data: CreateFeedPostData): Promise<FeedPost> {
-    return await prisma.feedPost.create({
-      data: {
-        title: data.title,
-        description: data.description,
-        mediaType: data.mediaType,
-        mediaUrl: data.mediaUrl,
-        challenge: data.challenge,
-        callToAction: data.callToAction,
-        links: data.links,
-        smiles: 0,
-        commentsCount: 0,
-        likesCount: 0,
-        userId: data.userId,
-        communityId: data.communityId,
-      },
-    });
+    console.log('📝 FeedService.createFeedPost called with data:', JSON.stringify(data, null, 2));
+    console.log('🔗 Prisma client status:', !!prisma);
+    
+    try {
+      const post = await prisma.feedPost.create({
+        data: {
+          title: data.title,
+          description: data.description,
+          mediaType: data.mediaType || 'text',
+          mediaUrl: data.mediaUrl,
+          challenge: data.challenge,
+          callToAction: data.callToAction || [],
+          links: data.links || [],
+          userId: data.userId,
+          communityId: data.communityId,
+        },
+      });
+      console.log('✅ Feed post created successfully:', post.id);
+      return post;
+    } catch (error) {
+      console.error('❌ Error creating feed post:', error);
+      throw error;
+    }
   }
 
   static async findFeedPostById(id: string): Promise<FeedPost | null> {
