@@ -25,7 +25,10 @@
     "db:reset": "npx prisma db push --force-reset && npx prisma generate && npm run db:setup",
     "db:cloud:migrate": "node scripts/migrate-to-cloud.js",
     "db:cloud:backup": "node scripts/database-backup.js",
-    "db:cloud:studio": "npx prisma studio"
+    "db:cloud:studio": "npx prisma studio",
+    "deploy:check": "node scripts/deploy-to-vercel.js --check",
+    "deploy:build": "node scripts/deploy-to-vercel.js --build",
+    "deploy:vercel": "node scripts/deploy-to-vercel.js"
   },
   "dependencies": {
     "@hashgraph/hedera-wallet-connect": "^1.5.1",
