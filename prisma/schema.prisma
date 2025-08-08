@@ -1,0 +1,414 @@
+// SmileUp ImpactChain Database Schema
+// Generated: August 5, 2024
+// Purpose: Production-ready database for social impact platform
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+  previewFeatures = ["queryCompiler", "driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ========================================
+// USER MANAGEMENT
+// ========================================
+
+model User {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  passwordHash String?
+  name        String
+  avatarUrl   String?
+  bio         String?
+  interests   String[] // Array of interest tags
+  smiles      Int      @default(100)
+  level       Int      @default(1)
+  score       Int      @default(100)
+  badges      String[] // Array of badge IDs
+  isVerified  Boolean  @default(false)
+  isActive    Boolean  @default(true)
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relationships
+  communities     CommunityMember[]
+  missions        UserMission[]
+  rewards         UserReward[]
+  feedPosts       FeedPost[]
+  comments        Comment[]
+  likes           Like[]
+  donations       Donation[]
+  missionProofs   MissionProof[]
+  blockchainWallets BlockchainWallet[]
+  custodialWallets CustodialWallet[]
+  
+  @@map("users")
+}
+
+// ========================================
+// COMMUNITY MANAGEMENT
+// ========================================
+
+model Community {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  category    String
+  logoUrl     String?
+  bannerUrl   String?
+  location    String?
+  website     String?
+  status      String   @default("active") // active, inactive, pending
+  isVerified  Boolean  @default(false)
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  createdBy   String? // User ID who created the community
+  
+  // Relationships
+  members     CommunityMember[]
+  feedPosts   FeedPost[]
+  wallet      CommunityWallet?
+  missions    Mission[]
+  rewards     Reward[]
+  
+  @@map("communities")
+}
+
+model CommunityMember {
+  id          String   @id @default(cuid())
+  userId      String
+  communityId String
+  role        String   @default("member") // member, moderator, admin
+  joinedAt    DateTime @default(now())
+  
+  // Relationships
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  community   Community   @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, communityId])
+  @@map("community_members")
+}
+
+// ========================================
+// MISSION SYSTEM
+// ========================================
+
+model Mission {
+  id              String   @id @default(cuid())
+  title           String
+  description     String?
+  reward          Int
+  status          String   @default("available") // available, completed, expired
+  proofRequired   Boolean  @default(false)
+  deadline        DateTime?
+  maxParticipants Int?
+  currentParticipants Int   @default(0)
+  category        String?
+  difficulty      String   @default("easy") // easy, medium, hard
+  tags            String[] // Array of mission tags
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  createdBy       String? // User ID who created the mission
+  communityId     String? // Community ID who created the mission
+  
+  // Relationships
+  users           UserMission[]
+  proofs          MissionProof[]
+  community       Community? @relation(fields: [communityId], references: [id], onDelete: SetNull)
+  
+  @@map("missions")
+}
+
+model UserMission {
+  id          String   @id @default(cuid())
+  userId      String
+  missionId   String
+  status      String   @default("in_progress") // in_progress, completed, failed
+  completedAt DateTime?
+  proofText   String?
+  proofImages String[] // Array of image URLs
+  blockchainTransactionId String? // Hedera transaction ID for reward transfer
+  proofHash   String? // Hash of the proof for HCS logging
+  
+  // Timestamps
+  joinedAt    DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relationships
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mission     Mission   @relation(fields: [missionId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, missionId])
+  @@map("user_missions")
+}
+
+model MissionProof {
+  id              String   @id @default(cuid())
+  userId          String
+  missionId       String
+  blockchainTxId  String?  // Hedera transaction ID
+  proofHash       String?  // Hash of the proof
+  proofText       String?
+  proofImages     String[] // Array of image URLs
+  status          String   @default("pending") // pending, approved, rejected
+  reviewedBy      String?  // User ID who reviewed the proof
+  reviewedAt      DateTime?
+  reviewNotes     String?
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relationships
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mission         Mission   @relation(fields: [missionId], references: [id], onDelete: Cascade)
+  
+  @@map("mission_proofs")
+}
+
+// ========================================
+// REWARD SYSTEM
+// ========================================
+
+model Reward {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  price       Int      // Price in smiles
+  category    String?
+  imageUrl    String?
+  isAvailable Boolean  @default(true)
+  stock       Int?     // null for unlimited
+  soldCount   Int      @default(0)
+  communityId String?  // Community ID who created the reward
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relationships
+  purchases   UserReward[]
+  community   Community? @relation(fields: [communityId], references: [id], onDelete: SetNull)
+  
+  @@map("rewards")
+}
+
+model UserReward {
+  id          String   @id @default(cuid())
+  userId      String
+  rewardId    String
+  blockchainTransactionId String? // Hedera transaction ID for purchase
+  purchasedAt DateTime @default(now())
+  
+  // Relationships
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reward      Reward    @relation(fields: [rewardId], references: [id], onDelete: Cascade)
+  
+  @@map("user_rewards")
+}
+
+// ========================================
+// FEED & SOCIAL FEATURES
+// ========================================
+
+model FeedPost {
+  id          String   @id @default(cuid())
+  title       String?
+  description String?
+  mediaType   String   @default("text") // text, image, video, link
+  mediaUrl    String?
+  challenge   String?
+  callToAction String[] // Array of action items
+  links       String[] // Array of related links
+  smiles      Int      @default(0)
+  commentsCount Int    @default(0)
+  likesCount  Int      @default(0)
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relationships
+  userId      String?
+  communityId String?
+  comments    Comment[]
+  likes       Like[]
+  donations   Donation[]
+  
+  user        User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+  community   Community? @relation(fields: [communityId], references: [id], onDelete: SetNull)
+  
+  @@map("feed_posts")
+}
+
+model Comment {
+  id          String   @id @default(cuid())
+  content     String
+  userId      String
+  postId      String
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relationships
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post        FeedPost  @relation(fields: [postId], references: [id], onDelete: Cascade)
+  
+  @@map("comments")
+}
+
+model Like {
+  id          String   @id @default(cuid())
+  userId      String
+  postId      String
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  
+  // Relationships
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post        FeedPost  @relation(fields: [postId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, postId])
+  @@map("likes")
+}
+
+model Donation {
+  id          String   @id @default(cuid())
+  userId      String
+  postId      String
+  amount      Int
+  message     String?
+  blockchainTransactionId String?
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  
+  // Relationships
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post        FeedPost  @relation(fields: [postId], references: [id], onDelete: Cascade)
+  
+  @@map("donations")
+}
+
+// ========================================
+// BLOCKCHAIN INTEGRATION
+// ========================================
+
+model BlockchainWallet {
+  id          String   @id @default(cuid())
+  userId      String
+  walletAddress String  @unique
+  walletType  String   @default("hedera") // hedera, ethereum, etc.
+  isActive    Boolean  @default(true)
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relationships
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("blockchain_wallets")
+}
+
+model BlockchainTransaction {
+  id              String   @id @default(cuid())
+  txId            String   @unique // Hedera transaction ID
+  userId          String?
+  missionId       String?
+  transactionType String   // mission_completion, reward_purchase, etc.
+  amount          Int?
+  status          String   @default("pending") // pending, confirmed, failed
+  blockHash       String?
+  blockNumber     Int?
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  confirmedAt     DateTime?
+  
+  @@map("blockchain_transactions")
+}
+
+// ========================================
+// ANALYTICS & LEADERBOARDS
+// ========================================
+
+model LeaderboardEntry {
+  id          String   @id @default(cuid())
+  userId      String
+  period      String   // daily, weekly, monthly, all_time
+  score       Int
+  rank        Int?
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@unique([userId, period])
+  @@map("leaderboard_entries")
+}
+
+model UserAnalytics {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  totalMissions   Int      @default(0)
+  completedMissions Int    @default(0)
+  totalSmiles     Int      @default(0)
+  totalRewards    Int      @default(0)
+  impactScore     Int      @default(0)
+  lastActiveAt    DateTime?
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@map("user_analytics")
+}
+
+model CustodialWallet {
+  id                  String   @id @default(cuid())
+  userId              String
+  accountId           String   @unique
+  publicKey           String
+  encryptedPrivateKey String
+  hbarBalance         Float    @default(0)
+  smilesBalance       Float    @default(0)
+  isActive            Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([accountId])
+}
+
+model CommunityWallet {
+  id                  String   @id @default(cuid())
+  communityId         String   @unique
+  accountId           String   @unique
+  publicKey           String
+  encryptedPrivateKey String
+  hbarBalance         Float    @default(0)
+  smilesBalance       Float    @default(0)
+  isActive            Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+
+  @@index([communityId])
+  @@index([accountId])
+}

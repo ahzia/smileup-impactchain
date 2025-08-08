@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useAuth, getAuthHeaders } from '@/contexts/AuthContext';
 import { 
   Settings, 
   User as UserIcon, 
@@ -19,15 +20,16 @@ import {
   Bell,
   Shield,
   Palette,
-  Globe
+  Globe,
+  LogOut
 } from 'lucide-react';
 
 interface ProfileSettingsProps {
   user: User;
-  onUpdate: (user: User) => void;
 }
 
-export const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user, onUpdate }) => {
+export const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user }) => {
+  const { token } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     name: user.name,
@@ -37,13 +39,22 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user, onUpdate
     avatar: user.avatar
   });
 
+  const handleLogout = () => {
+    const confirmed = window.confirm('Are you sure you want to logout? This will end your session.');
+    if (confirmed) {
+      // Clear localStorage
+      localStorage.removeItem('smileup_token');
+      localStorage.removeItem('smileup_user');
+      // Redirect to home page
+      window.location.href = '/';
+    }
+  };
+
   const handleSave = async () => {
     try {
       const response = await fetch('/api/user/profile', {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: getAuthHeaders(token),
         body: JSON.stringify({
           name: formData.name,
           bio: formData.bio,
@@ -53,6 +64,7 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user, onUpdate
       });
 
       if (response.ok) {
+        // Update localStorage with new user data
         const updatedUser = { 
           ...user, 
           name: formData.name,
@@ -60,8 +72,11 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user, onUpdate
           interests: formData.interests.split(',').map(i => i.trim()),
           avatar: formData.avatar
         };
-        onUpdate(updatedUser);
+        localStorage.setItem('smileup_user', JSON.stringify(updatedUser));
         setIsEditing(false);
+        
+        // Reload the page to reflect changes
+        window.location.reload();
       }
     } catch (error) {
       console.error('Error updating profile:', error);
@@ -263,6 +278,31 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user, onUpdate
               <div className="text-2xl font-bold text-purple-600">{user.badges.length}</div>
               <div className="text-sm text-muted-foreground">Badges</div>
             </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Logout Section */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center text-red-600">
+            <LogOut className="h-5 w-5 mr-2" />
+            Logout
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Sign out of your account. You'll need to log in again to access your profile.
+            </p>
+            <Button 
+              variant="outline" 
+              onClick={handleLogout}
+              className="w-full text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+              Sign Out
+            </Button>
           </div>
         </CardContent>
       </Card>

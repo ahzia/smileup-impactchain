@@ -52,17 +52,35 @@ export class ChallengeService {
       throw new Error('Challenge must be completed before claiming reward');
     }
 
-    // Award Smiles to user
-    const user = await AuthService.updateUserSmiles(userId, challenge.reward);
+    try {
+      // Import blockchain service for minting rewards
+      const { BlockchainService } = await import('./blockchainService');
+      const { CustodialWalletService } = await import('../wallet/custodialWalletService');
 
-    // Add activity to user
-    await AuthService.addRecentActivity(userId, `Claimed challenge reward: "${challenge.title}" for ${challenge.reward} Smiles`);
+      // Mint Smiles to user's wallet
+      const custodialWalletService = new CustodialWalletService();
+      const mintResult = await custodialWalletService.mintTokensToUser(userId, challenge.reward);
 
-    return {
-      success: true,
-      reward: challenge.reward,
-      newBalance: user.smiles
-    };
+      if (!mintResult.success) {
+        throw new Error(`Failed to mint challenge reward: ${mintResult.error}`);
+      }
+
+      // Add activity to user
+      await AuthService.addRecentActivity(userId, `Claimed challenge reward: "${challenge.title}" for ${challenge.reward} Smiles`);
+
+      // Get updated balance
+      const newBalance = await BlockchainService.getUserBalance(userId);
+
+      return {
+        success: true,
+        reward: challenge.reward,
+        newBalance: newBalance
+      };
+
+    } catch (error) {
+      console.error('Challenge reward claim failed:', error);
+      throw new Error(`Challenge reward claim failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   }
 
   // Update challenge progress

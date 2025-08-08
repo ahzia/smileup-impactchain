@@ -121,7 +121,6 @@ dist
 
 # Gatsby files
 .cache/
-public
 
 # Storybook build outputs
 .out
@@ -175,3 +174,10 @@ pnpm-lock.yaml
 
 # Local development
 .local
+
+# Prisma generated files
+/src/generated/prisma
+node_modules/.prisma
+*.dll.node
+*.so
+*.dylib

@@ -1,39 +1,483 @@
-import { missions } from '@/data';
-import { Mission, CreateMissionRequest, CompleteMissionRequest, MissionProgress } from '@/lib/types';
-import { AuthService } from './authService';
-import { CommunityService } from './communityService';
+import { prisma } from '../database/client';
+import { Mission, UserMission, MissionProof } from '../../generated/prisma';
 
-// Mock mission storage
-let mockMissions = [...missions];
+export interface CreateMissionData {
+  title: string;
+  description?: string;
+  reward: number;
+  proofRequired?: boolean;
+  deadline?: Date;
+  maxParticipants?: number;
+  category?: string;
+  difficulty?: string;
+  tags?: string[];
+  createdBy?: string;
+}
+
+export interface UpdateMissionData {
+  title?: string;
+  description?: string;
+  reward?: number;
+  status?: string;
+  proofRequired?: boolean;
+  deadline?: Date;
+  maxParticipants?: number;
+  category?: string;
+  difficulty?: string;
+  tags?: string[];
+}
 
 export class MissionService {
-  // Get missions with filtering
+  // ========================================
+  // MISSION CREATION & MANAGEMENT
+  // ========================================
+
+  static async createMission(data: CreateMissionData): Promise<Mission> {
+    return await prisma.mission.create({
+      data: {
+        title: data.title,
+        description: data.description,
+        reward: data.reward,
+        proofRequired: data.proofRequired || false,
+        deadline: data.deadline,
+        maxParticipants: data.maxParticipants,
+        category: data.category,
+        difficulty: data.difficulty || 'easy',
+        tags: data.tags || [],
+        createdBy: data.createdBy,
+      },
+    });
+  }
+
+  static async findMissionById(id: string): Promise<Mission | null> {
+    return await prisma.mission.findUnique({
+      where: { id },
+      include: {
+        users: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                avatarUrl: true,
+                level: true,
+                score: true,
+              },
+            },
+          },
+        },
+        proofs: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                avatarUrl: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
+  static async updateMission(id: string, data: UpdateMissionData): Promise<Mission> {
+    return await prisma.mission.update({
+      where: { id },
+      data,
+    });
+  }
+
+  static async deleteMission(id: string): Promise<void> {
+    await prisma.mission.delete({
+      where: { id },
+    });
+  }
+
+  // ========================================
+  // MISSION SEARCH & FILTERING
+  // ========================================
+
+  static async searchMissions(query: string, limit: number = 10): Promise<Mission[]> {
+    return await prisma.mission.findMany({
+      where: {
+        OR: [
+          { title: { contains: query, mode: 'insensitive' } },
+          { description: { contains: query, mode: 'insensitive' } },
+        ],
+        status: 'available',
+      },
+      take: limit,
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  static async getMissionsByCategory(category: string, limit: number = 10): Promise<Mission[]> {
+    return await prisma.mission.findMany({
+      where: {
+        category,
+        status: 'available',
+      },
+      take: limit,
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  static async getMissionsByDifficulty(difficulty: string, limit: number = 10): Promise<Mission[]> {
+    return await prisma.mission.findMany({
+      where: {
+        difficulty,
+        status: 'available',
+      },
+      take: limit,
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  static async getAvailableMissions(limit: number = 20): Promise<Mission[]> {
+    return await prisma.mission.findMany({
+      where: { status: 'available' },
+      take: limit,
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  static async getPopularMissions(limit: number = 10): Promise<Mission[]> {
+    return await prisma.mission.findMany({
+      where: { status: 'available' },
+      take: limit,
+      orderBy: [
+        { users: { _count: 'desc' } },
+        { createdAt: 'desc' },
+      ],
+    });
+  }
+
+  // ========================================
+  // USER MISSION PARTICIPATION
+  // ========================================
+
+  static async joinMission(userId: string, missionId: string): Promise<UserMission> {
+    // Check if user is already participating
+    const existingParticipation = await prisma.userMission.findUnique({
+      where: {
+        userId_missionId: {
+          userId,
+          missionId,
+        },
+      },
+    });
+
+    if (existingParticipation) {
+      throw new Error('User is already participating in this mission');
+    }
+
+    // Check if mission is available and has capacity
+    const mission = await prisma.mission.findUnique({
+      where: { id: missionId },
+    });
+
+    if (!mission || mission.status !== 'available') {
+      throw new Error('Mission is not available');
+    }
+
+    if (mission.maxParticipants && mission.currentParticipants >= mission.maxParticipants) {
+      throw new Error('Mission is at full capacity');
+    }
+
+    // Create participation and increment participant count
+    const [userMission] = await prisma.$transaction([
+      prisma.userMission.create({
+        data: {
+          userId,
+          missionId,
+          status: 'in_progress',
+        },
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              avatarUrl: true,
+            },
+          },
+          mission: true,
+        },
+      }),
+      prisma.mission.update({
+        where: { id: missionId },
+        data: {
+          currentParticipants: {
+            increment: 1,
+          },
+        },
+      }),
+    ]);
+
+    return userMission;
+  }
+
+  static async leaveMission(userId: string, missionId: string): Promise<void> {
+    const [userMission] = await prisma.$transaction([
+      prisma.userMission.delete({
+        where: {
+          userId_missionId: {
+            userId,
+            missionId,
+          },
+        },
+      }),
+      prisma.mission.update({
+        where: { id: missionId },
+        data: {
+          currentParticipants: {
+            decrement: 1,
+          },
+        },
+      }),
+    ]);
+  }
+
+  static async completeMission(userId: string, missionId: string, proofText?: string, proofImages?: string[]): Promise<UserMission> {
+    const userMission = await prisma.userMission.findUnique({
+      where: {
+        userId_missionId: {
+          userId,
+          missionId,
+        },
+      },
+    });
+
+    if (!userMission) {
+      throw new Error('User is not participating in this mission');
+    }
+
+    if (userMission.status === 'completed') {
+      throw new Error('Mission is already completed');
+    }
+
+    // Import blockchain service
+    const { BlockchainService } = await import('./blockchainService');
+
+    try {
+      // Complete mission with blockchain integration
+      const blockchainResult = await BlockchainService.completeMissionWithBlockchain({
+        userId,
+        missionId,
+        proofText,
+        proofImages
+      });
+
+      // Update user mission with blockchain transaction details
+      return await prisma.userMission.update({
+        where: {
+          userId_missionId: {
+            userId,
+            missionId,
+          },
+        },
+        data: {
+          status: 'completed',
+          completedAt: new Date(),
+          proofText,
+          proofImages: proofImages || [],
+          blockchainTransactionId: blockchainResult.blockchainTransactionId,
+          proofHash: blockchainResult.proofHash,
+        },
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              avatarUrl: true,
+            },
+          },
+          mission: true,
+        },
+      });
+
+    } catch (error) {
+      console.error('Mission completion failed:', error);
+      throw new Error(`Mission completion failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+
+  static async getUserMissions(userId: string): Promise<UserMission[]> {
+    return await prisma.userMission.findMany({
+      where: { userId },
+      include: {
+        mission: true,
+      },
+      orderBy: { joinedAt: 'desc' },
+    });
+  }
+
+  static async getMissionParticipants(missionId: string): Promise<UserMission[]> {
+    return await prisma.userMission.findMany({
+      where: { missionId },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            avatarUrl: true,
+            level: true,
+            score: true,
+          },
+        },
+      },
+      orderBy: { joinedAt: 'desc' },
+    });
+  }
+
+  // ========================================
+  // MISSION PROOFS & BLOCKCHAIN
+  // ========================================
+
+  static async submitProof(data: {
+    userId: string;
+    missionId: string;
+    proofText?: string;
+    proofImages?: string[];
+    blockchainTxId?: string;
+    proofHash?: string;
+  }): Promise<MissionProof> {
+    return await prisma.missionProof.create({
+      data: {
+        userId: data.userId,
+        missionId: data.missionId,
+        proofText: data.proofText,
+        proofImages: data.proofImages || [],
+        blockchainTxId: data.blockchainTxId,
+        proofHash: data.proofHash,
+        status: 'pending',
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            avatarUrl: true,
+          },
+        },
+        mission: true,
+      },
+    });
+  }
+
+  static async reviewProof(proofId: string, status: 'approved' | 'rejected', reviewedBy: string, reviewNotes?: string): Promise<MissionProof> {
+    return await prisma.missionProof.update({
+      where: { id: proofId },
+      data: {
+        status,
+        reviewedBy,
+        reviewedAt: new Date(),
+        reviewNotes,
+      },
+    });
+  }
+
+  static async getProofsByMission(missionId: string): Promise<MissionProof[]> {
+    return await prisma.missionProof.findMany({
+      where: { missionId },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            avatarUrl: true,
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  static async getProofsByUser(userId: string): Promise<MissionProof[]> {
+    return await prisma.missionProof.findMany({
+      where: { userId },
+      include: {
+        mission: true,
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  // ========================================
+  // ANALYTICS
+  // ========================================
+
+  static async getMissionStats(missionId: string): Promise<{
+    participantCount: number;
+    completedCount: number;
+    totalReward: number;
+  }> {
+    const [participantCount, completedCount, completedMissions] = await Promise.all([
+      prisma.userMission.count({ where: { missionId } }),
+      prisma.userMission.count({ where: { missionId, status: 'completed' } }),
+      prisma.userMission.findMany({
+        where: { missionId, status: 'completed' },
+        include: { mission: true },
+      }),
+    ]);
+
+    const totalReward = completedMissions.reduce((sum, userMission) => {
+      return sum + (userMission.mission?.reward || 0);
+    }, 0);
+
+    return {
+      participantCount,
+      completedCount,
+      totalReward,
+    };
+  }
+
+  static async getCategoryStats(): Promise<{
+    category: string;
+    count: number;
+    totalReward: number;
+  }[]> {
+    const stats = await prisma.mission.groupBy({
+      by: ['category'],
+      where: { status: 'available' },
+      _count: { id: true },
+      _sum: { reward: true },
+    });
+
+    return stats.map(stat => ({
+      category: stat.category || 'Uncategorized',
+      count: stat._count.id,
+      totalReward: stat._sum.reward || 0,
+    }));
+  }
+
+  // ========================================
+  // API COMPATIBILITY METHODS
+  // ========================================
+
   static async getMissions(query: {
     type?: string;
     status?: string;
     communityId?: string;
     page?: number;
     pageSize?: number;
-  }): Promise<Mission[]> {
-    let filteredMissions = [...mockMissions];
+  }): Promise<any[]> {
+    let missions = await this.getAvailableMissions(100);
 
-    // Filter by type
+    // Filter by type (category)
     if (query.type && query.type !== 'all') {
-      filteredMissions = filteredMissions.filter(mission => mission.category === query.type);
+      missions = missions.filter(mission => mission.category === query.type);
     }
 
     // Filter by status
     if (query.status && query.status !== 'all') {
-      filteredMissions = filteredMissions.filter(mission => mission.status === query.status);
+      missions = missions.filter(mission => mission.status === query.status);
     }
 
-    // Filter by community
+    // Filter by community (if specified)
     if (query.communityId) {
-      filteredMissions = filteredMissions.filter(mission => mission.community.id === query.communityId);
+      missions = missions.filter(mission => mission.createdBy === query.communityId);
     }
-
-    // Sort by deadline (closest first)
-    filteredMissions.sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime());
 
     // Pagination
     const page = query.page || 1;
@@ -41,285 +485,37 @@ export class MissionService {
     const startIndex = (page - 1) * pageSize;
     const endIndex = startIndex + pageSize;
 
-    return filteredMissions.slice(startIndex, endIndex);
+    return missions.slice(startIndex, endIndex);
   }
 
-  // Get mission by ID
-  static async getMissionById(missionId: string): Promise<Mission | null> {
-    const mission = mockMissions.find(m => m.id === missionId);
-    return mission || null;
-  }
-
-  // Create new mission
-  static async createMission(missionData: CreateMissionRequest, userId: string): Promise<Mission> {
-    // Get community info
-    const community = await CommunityService.getCommunityById(missionData.communityId);
-    if (!community) {
-      throw new Error('Community not found');
-    }
-
-    const newMission: Mission = {
-      id: `mission_${Date.now()}`,
-      title: missionData.title,
-      description: missionData.description,
-      reward: missionData.reward,
-      status: 'available',
-      proofRequired: missionData.proofRequired,
-      deadline: missionData.deadline || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-      steps: 1,
-      currentStep: 0,
-      progress: 'Not Started',
-      effortLevel: missionData.effortLevel,
-      requiredTime: missionData.requiredTime,
-      icon: missionData.icon,
-      category: missionData.category,
-      community: {
-        id: community.id,
-        name: community.name,
-        logo: community.logo
-      }
+  static async createMissionWithUser(data: any, userId: string): Promise<any> {
+    const missionData = {
+      title: data.title,
+      description: data.description,
+      reward: data.reward,
+      proofRequired: data.proofRequired || false,
+      deadline: data.deadline ? new Date(data.deadline) : undefined,
+      maxParticipants: data.maxParticipants,
+      category: data.category,
+      difficulty: data.difficulty || 'easy',
+      tags: data.tags || [],
+      createdBy: userId,
+      communityId: data.communityId, // Add community relationship
     };
 
-    mockMissions.push(newMission);
-
-    // Update community mission count
-    await CommunityService.updateCommunityStats(community.id, {
-      missions: community.missions + 1
-    });
-
-    // Add to community's recent missions
-    await CommunityService.addRecentMission(community.id, {
-      id: newMission.id,
-      title: newMission.title,
-      reward: newMission.reward,
-      status: newMission.status
-    });
-
-    return newMission;
-  }
-
-  // Accept mission
-  static async acceptMission(missionId: string, userId: string): Promise<Mission> {
-    const missionIndex = mockMissions.findIndex(m => m.id === missionId);
-    if (missionIndex === -1) {
-      throw new Error('Mission not found');
-    }
-
-    const mission = mockMissions[missionIndex];
-    if (mission.status !== 'available') {
-      throw new Error('Mission is not available');
-    }
-
-    mission.status = 'accepted';
-    mission.progress = 'In Progress';
-    mission.currentStep = 1;
-
-    // Add activity to user
-    await AuthService.addRecentActivity(userId, `Accepted mission: "${mission.title}"`);
-
-    return mission;
-  }
-
-  // Complete mission
-  static async completeMission(missionId: string, completionData: CompleteMissionRequest, userId: string): Promise<{
-    success: boolean;
-    reward: number;
-    newBalance: number;
-    mission: Mission;
-  }> {
-    const missionIndex = mockMissions.findIndex(m => m.id === missionId);
-    if (missionIndex === -1) {
-      throw new Error('Mission not found');
-    }
-
-    const mission = mockMissions[missionIndex];
-    if (mission.status !== 'accepted') {
-      throw new Error('Mission must be accepted before completion');
-    }
-
-    // Validate proof if required
-    if (mission.proofRequired) {
-      if (!completionData.proofType || (!completionData.proofUrl && !completionData.proofText)) {
-        throw new Error('Proof is required for this mission');
-      }
-    }
-
-    // Update mission status
-    mission.status = 'completed';
-    mission.progress = 'Completed';
-    mission.currentStep = mission.steps || 1;
-
-    // Award Smiles to user
-    const user = await AuthService.updateUserSmiles(userId, mission.reward);
-
-    // Add activity to user
-    await AuthService.addRecentActivity(userId, `Completed mission: "${mission.title}" and earned ${mission.reward} Smiles`);
-
-    // Check for badges
-    await this.checkForBadges(userId, mission);
-
-    return {
-      success: true,
-      reward: mission.reward,
-      newBalance: user.smiles,
-      mission
-    };
-  }
-
-  // Get mission progress
-  static async getMissionProgress(missionId: string, userId: string): Promise<MissionProgress> {
-    const mission = mockMissions.find(m => m.id === missionId);
-    if (!mission) {
-      throw new Error('Mission not found');
-    }
+    const mission = await this.createMission(missionData);
 
     return {
       id: mission.id,
-      currentStep: mission.currentStep || 0,
-      totalSteps: mission.steps || 1,
-      progress: mission.progress
+      title: mission.title,
+      description: mission.description,
+      reward: mission.reward,
+      status: mission.status,
+      category: mission.category,
+      difficulty: mission.difficulty,
+      createdBy: mission.createdBy,
+      communityId: mission.communityId,
+      createdAt: mission.createdAt,
     };
-  }
-
-  // Update mission progress
-  static async updateMissionProgress(missionId: string, step: number, userId: string): Promise<Mission> {
-    const missionIndex = mockMissions.findIndex(m => m.id === missionId);
-    if (missionIndex === -1) {
-      throw new Error('Mission not found');
-    }
-
-    const mission = mockMissions[missionIndex];
-    if (mission.status !== 'accepted') {
-      throw new Error('Mission must be accepted to update progress');
-    }
-
-    mission.currentStep = step;
-    
-    if (step >= (mission.steps || 1)) {
-      mission.progress = 'Completed';
-    } else {
-      mission.progress = 'In Progress';
-    }
-
-    return mission;
-  }
-
-  // Get daily missions
-  static async getDailyMissions(): Promise<Mission[]> {
-    return mockMissions.filter(mission => mission.category === 'daily');
-  }
-
-  // Get weekly missions
-  static async getWeeklyMissions(): Promise<Mission[]> {
-    return mockMissions.filter(mission => mission.category === 'weekly');
-  }
-
-  // Get community missions
-  static async getCommunityMissions(communityId: string): Promise<Mission[]> {
-    return mockMissions.filter(mission => mission.community.id === communityId);
-  }
-
-  // Get missions by effort level
-  static async getMissionsByEffortLevel(effortLevel: string): Promise<Mission[]> {
-    return mockMissions.filter(mission => mission.effortLevel === effortLevel);
-  }
-
-  // Get missions by deadline
-  static async getMissionsByDeadline(days: number): Promise<Mission[]> {
-    const deadline = new Date();
-    deadline.setDate(deadline.getDate() + days);
-    
-    return mockMissions.filter(mission => {
-      const missionDeadline = new Date(mission.deadline);
-      return missionDeadline <= deadline;
-    });
-  }
-
-  // Search missions
-  static async searchMissions(query: string): Promise<Mission[]> {
-    const searchTerm = query.toLowerCase();
-    return mockMissions.filter(mission => 
-      mission.title.toLowerCase().includes(searchTerm) ||
-      mission.description.toLowerCase().includes(searchTerm) ||
-      mission.community.name.toLowerCase().includes(searchTerm)
-    );
-  }
-
-  // Get recommended missions for user
-  static async getRecommendedMissions(userId: string): Promise<Mission[]> {
-    const user = await AuthService.getUserById(userId);
-    if (!user) {
-      return [];
-    }
-
-    // Get missions from communities user has joined
-    const userCommunities = user.communitiesJoined;
-    const communityMissions = mockMissions.filter(mission => 
-      userCommunities.includes(mission.community.id)
-    );
-
-    // Sort by reward and effort level
-    return communityMissions.sort((a, b) => {
-      // Prioritize higher rewards and lower effort
-      const scoreA = a.reward / (a.effortLevel === 'High' ? 3 : a.effortLevel === 'Medium' ? 2 : 1);
-      const scoreB = b.reward / (b.effortLevel === 'High' ? 3 : b.effortLevel === 'Medium' ? 2 : 1);
-      return scoreB - scoreA;
-    }).slice(0, 10);
-  }
-
-  // Delete mission
-  static async deleteMission(missionId: string, userId: string): Promise<void> {
-    const missionIndex = mockMissions.findIndex(m => m.id === missionId);
-    if (missionIndex === -1) {
-      throw new Error('Mission not found');
-    }
-
-    const mission = mockMissions[missionIndex];
-    
-    // Check if user is the creator or community admin
-    // For now, allow deletion
-    mockMissions.splice(missionIndex, 1);
-  }
-
-  // Update mission
-  static async updateMission(missionId: string, updates: Partial<Mission>, userId: string): Promise<Mission> {
-    const missionIndex = mockMissions.findIndex(m => m.id === missionId);
-    if (missionIndex === -1) {
-      throw new Error('Mission not found');
-    }
-
-    mockMissions[missionIndex] = {
-      ...mockMissions[missionIndex],
-      ...updates
-    };
-
-    return mockMissions[missionIndex];
-  }
-
-  // Check for badges based on mission completion
-  private static async checkForBadges(userId: string, mission: Mission): Promise<void> {
-    const user = await AuthService.getUserById(userId);
-    if (!user) return;
-
-    // Check for mission completion badges
-    const completedMissions = mockMissions.filter(m => m.status === 'completed');
-    
-    if (completedMissions.length >= 10) {
-      await AuthService.addBadge(userId, 'Mission Master');
-    }
-    
-    if (completedMissions.length >= 5) {
-      await AuthService.addBadge(userId, 'Dedicated Volunteer');
-    }
-    
-    if (completedMissions.length >= 1) {
-      await AuthService.addBadge(userId, 'First Mission');
-    }
-
-    // Check for community-specific badges
-    const communityMissions = completedMissions.filter(m => m.community.id === mission.community.id);
-    if (communityMissions.length >= 3) {
-      await AuthService.addBadge(userId, `${mission.community.name} Supporter`);
-    }
   }
 } 

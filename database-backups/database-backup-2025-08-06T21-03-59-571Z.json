@@ -1,0 +1,3529 @@
+{
+  "timestamp": "2025-08-06T21:03:59.506Z",
+  "version": "1.0",
+  "tables": {
+    "users": [
+      {
+        "id": "user_001",
+        "email": "sarah.chen@email.com",
+        "passwordHash": "$2b$12$Bk6zGkICzVt5Yw/PGSRYPefKLxDTS6sSkB1N5OZDt8hdLYgeV9zci",
+        "name": "Sarah Chen",
+        "avatarUrl": "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
+        "bio": "Environmental activist and community organizer. Passionate about sustainable living and youth empowerment.",
+        "interests": [
+          "Sustainability",
+          "Community Service",
+          "Photography",
+          "Hiking"
+        ],
+        "smiles": 1250,
+        "level": 8,
+        "score": 3200,
+        "badges": [
+          "Early Adopter",
+          "Community Leader",
+          "Eco Warrior",
+          "Mission Master"
+        ],
+        "isVerified": true,
+        "isActive": true,
+        "createdAt": "2024-01-15T10:30:00.000Z",
+        "updatedAt": "2025-08-05T15:50:07.385Z",
+        "custodialWallets": [],
+        "communities": [
+          {
+            "id": "cmdyptpv1000bremwr1uun4pi",
+            "userId": "user_001",
+            "communityId": "comm_003",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "community": {
+              "id": "comm_003",
+              "name": "Student Environmentalists Network",
+              "description": "A nationwide network of student activists working together to address environmental challenges on campuses and in local communities. Empowering the next generation of environmental leaders.",
+              "category": "education",
+              "logoUrl": "https://images.unsplash.com/photo-1523240798132-8757214e6b0a?w=100&h=100&fit=crop",
+              "bannerUrl": "https://images.unsplash.com/photo-1523240798132-8757214e6b0a?w=800&h=300&fit=crop",
+              "location": "Multiple Campuses",
+              "website": "https://studentenvironmentalists.org",
+              "status": "featured",
+              "isVerified": true,
+              "createdAt": "2023-07-10T08:30:00.000Z",
+              "updatedAt": "2025-08-05T15:50:07.400Z",
+              "createdBy": "user_004"
+            }
+          },
+          {
+            "id": "cmdyptpv1000dremwapgepxcs",
+            "userId": "user_001",
+            "communityId": "comm_005",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "community": {
+              "id": "comm_005",
+              "name": "Community Health Advocates",
+              "description": "Promoting health and wellness in underserved communities. We provide health education, organize wellness programs, and connect people with healthcare resources.",
+              "category": "health",
+              "logoUrl": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=100&h=100&fit=crop",
+              "bannerUrl": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=800&h=300&fit=crop",
+              "location": "Los Angeles, CA",
+              "website": "https://communityhealthadvocates.org",
+              "status": "active",
+              "isVerified": true,
+              "createdAt": "2023-11-12T10:20:00.000Z",
+              "updatedAt": "2025-08-05T15:50:07.400Z",
+              "createdBy": "user_003"
+            }
+          },
+          {
+            "id": "cmdyptpv1000oremwe4pnwy8w",
+            "userId": "user_001",
+            "communityId": "comm_007",
+            "role": "admin",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "community": {
+              "id": "comm_007",
+              "name": "Green Tech Innovators",
+              "description": "Advancing sustainable technology solutions. We bring together engineers, designers, and entrepreneurs to develop innovative solutions for environmental challenges.",
+              "category": "technology",
+              "logoUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=100&h=100&fit=crop",
+              "bannerUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=300&fit=crop",
+              "location": "Seattle, WA",
+              "website": "https://greentechinnovators.org",
+              "status": "active",
+              "isVerified": true,
+              "createdAt": "2024-01-20T14:30:00.000Z",
+              "updatedAt": "2025-08-05T15:50:07.400Z",
+              "createdBy": "user_001"
+            }
+          },
+          {
+            "id": "cmdyptpv1000cremw4t7if6oj",
+            "userId": "user_001",
+            "communityId": "comm_001",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "community": {
+              "id": "comm_001",
+              "name": "Green Earth Initiative",
+              "description": "A leading environmental organization dedicated to protecting our planet through community action, education, and sustainable practices. We focus on local environmental challenges and global climate solutions.",
+              "category": "sustainability",
+              "logoUrl": "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=100&h=100&fit=crop",
+              "bannerUrl": "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=300&fit=crop",
+              "location": "San Francisco, CA",
+              "website": "https://greenearthinitiative.org",
+              "status": "featured",
+              "isVerified": true,
+              "createdAt": "2023-08-15T09:00:00.000Z",
+              "updatedAt": "2025-08-05T15:50:07.400Z",
+              "createdBy": "user_001"
+            }
+          },
+          {
+            "id": "cmdyq5a1h0004rerpv04s9342",
+            "userId": "user_001",
+            "communityId": "cmdyq5a1g0002rerp8grtonsm",
+            "role": "admin",
+            "joinedAt": "2025-08-05T15:59:06.774Z",
+            "community": {
+              "id": "cmdyq5a1g0002rerp8grtonsm",
+              "name": "Test Community",
+              "description": "A test community for API testing",
+              "category": "technology",
+              "logoUrl": "https://example.com/logo.png",
+              "bannerUrl": "https://example.com/banner.png",
+              "location": "Test City",
+              "website": "https://testcommunity.org",
+              "status": "active",
+              "isVerified": false,
+              "createdAt": "2025-08-05T15:59:06.772Z",
+              "updatedAt": "2025-08-05T15:59:06.772Z",
+              "createdBy": "user_001"
+            }
+          },
+          {
+            "id": "cmdyr55d2000brerphydw5o8a",
+            "userId": "user_001",
+            "communityId": "cmdyr55d00009rerpu7c1c6a9",
+            "role": "admin",
+            "joinedAt": "2025-08-05T16:27:00.326Z",
+            "community": {
+              "id": "cmdyr55d00009rerpu7c1c6a9",
+              "name": "Test Community",
+              "description": "A test community",
+              "category": "sustainability",
+              "logoUrl": null,
+              "bannerUrl": null,
+              "location": null,
+              "website": null,
+              "status": "active",
+              "isVerified": false,
+              "createdAt": "2025-08-05T16:27:00.325Z",
+              "updatedAt": "2025-08-05T16:27:00.325Z",
+              "createdBy": "user_001"
+            }
+          }
+        ]
+      },
+      {
+        "id": "user_004",
+        "email": "david.rodriguez@email.com",
+        "passwordHash": "$2b$12$Bk6zGkICzVt5Yw/PGSRYPefKLxDTS6sSkB1N5OZDt8hdLYgeV9zci",
+        "name": "David Rodriguez",
+        "avatarUrl": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+        "bio": "Student and environmental advocate. Learning and growing while making a difference.",
+        "interests": [
+          "Education",
+          "Environment",
+          "Student Life",
+          "Activism"
+        ],
+        "smiles": 650,
+        "level": 4,
+        "score": 1200,
+        "badges": [
+          "Student Activist",
+          "Eco Warrior"
+        ],
+        "isVerified": true,
+        "isActive": true,
+        "createdAt": "2024-03-10T16:45:00.000Z",
+        "updatedAt": "2025-08-05T15:50:07.385Z",
+        "custodialWallets": [],
+        "communities": [
+          {
+            "id": "cmdyptpv1000lremwnc3syyv5",
+            "userId": "user_004",
+            "communityId": "comm_001",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "community": {
+              "id": "comm_001",
+              "name": "Green Earth Initiative",
+              "description": "A leading environmental organization dedicated to protecting our planet through community action, education, and sustainable practices. We focus on local environmental challenges and global climate solutions.",
+              "category": "sustainability",
+              "logoUrl": "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=100&h=100&fit=crop",
+              "bannerUrl": "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=300&fit=crop",
+              "location": "San Francisco, CA",
+              "website": "https://greenearthinitiative.org",
+              "status": "featured",
+              "isVerified": true,
+              "createdAt": "2023-08-15T09:00:00.000Z",
+              "updatedAt": "2025-08-05T15:50:07.400Z",
+              "createdBy": "user_001"
+            }
+          },
+          {
+            "id": "cmdyptpv7000tremw97jxxsey",
+            "userId": "user_004",
+            "communityId": "comm_003",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "community": {
+              "id": "comm_003",
+              "name": "Student Environmentalists Network",
+              "description": "A nationwide network of student activists working together to address environmental challenges on campuses and in local communities. Empowering the next generation of environmental leaders.",
+              "category": "education",
+              "logoUrl": "https://images.unsplash.com/photo-1523240798132-8757214e6b0a?w=100&h=100&fit=crop",
+              "bannerUrl": "https://images.unsplash.com/photo-1523240798132-8757214e6b0a?w=800&h=300&fit=crop",
+              "location": "Multiple Campuses",
+              "website": "https://studentenvironmentalists.org",
+              "status": "featured",
+              "isVerified": true,
+              "createdAt": "2023-07-10T08:30:00.000Z",
+              "updatedAt": "2025-08-05T15:50:07.400Z",
+              "createdBy": "user_004"
+            }
+          }
+        ]
+      },
+      {
+        "id": "user_002",
+        "email": "marcus.johnson@email.com",
+        "passwordHash": "$2b$12$Bk6zGkICzVt5Yw/PGSRYPefKLxDTS6sSkB1N5OZDt8hdLYgeV9zci",
+        "name": "Marcus Johnson",
+        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+        "bio": "Tech enthusiast and digital nomad. Building solutions for a better tomorrow.",
+        "interests": [
+          "Technology",
+          "Digital Innovation",
+          "Travel",
+          "Coding"
+        ],
+        "smiles": 850,
+        "level": 6,
+        "score": 2100,
+        "badges": [
+          "Tech Innovator",
+          "Digital Nomad",
+          "Mission Master"
+        ],
+        "isVerified": true,
+        "isActive": true,
+        "createdAt": "2024-02-01T14:20:00.000Z",
+        "updatedAt": "2025-08-05T15:50:07.385Z",
+        "custodialWallets": [],
+        "communities": [
+          {
+            "id": "cmdyptpv1000kremwxx95r9qy",
+            "userId": "user_002",
+            "communityId": "comm_004",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "community": {
+              "id": "comm_004",
+              "name": "Local Arts Collective",
+              "description": "Supporting local artists and cultural initiatives. We organize community art events, workshops, and exhibitions to celebrate diversity and creativity in our neighborhoods.",
+              "category": "culture",
+              "logoUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=100&h=100&fit=crop",
+              "bannerUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=300&fit=crop",
+              "location": "Brooklyn, NY",
+              "website": "https://localartscollective.org",
+              "status": "active",
+              "isVerified": true,
+              "createdAt": "2023-10-05T13:45:00.000Z",
+              "updatedAt": "2025-08-05T15:50:07.400Z",
+              "createdBy": "user_005"
+            }
+          },
+          {
+            "id": "cmdyptpv1000rremwp7ykpu0y",
+            "userId": "user_002",
+            "communityId": "comm_002",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "community": {
+              "id": "comm_002",
+              "name": "Tech for Social Impact",
+              "description": "Empowering communities through technology innovation. We connect tech professionals with social causes, providing digital solutions for nonprofits and community organizations.",
+              "category": "technology",
+              "logoUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=100&h=100&fit=crop",
+              "bannerUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=300&fit=crop",
+              "location": "Austin, TX",
+              "website": "https://techforsocialimpact.org",
+              "status": "active",
+              "isVerified": true,
+              "createdAt": "2023-09-20T11:15:00.000Z",
+              "updatedAt": "2025-08-05T15:50:07.400Z",
+              "createdBy": "user_002"
+            }
+          }
+        ]
+      },
+      {
+        "id": "user_006",
+        "email": "james.wilson@email.com",
+        "passwordHash": "$2b$12$Bk6zGkICzVt5Yw/PGSRYPefKLxDTS6sSkB1N5OZDt8hdLYgeV9zci",
+        "name": "James Wilson",
+        "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face",
+        "bio": "Business consultant and social entrepreneur. Building sustainable business models.",
+        "interests": [
+          "Business",
+          "Social Enterprise",
+          "Sustainability",
+          "Mentoring"
+        ],
+        "smiles": 950,
+        "level": 7,
+        "score": 2400,
+        "badges": [
+          "Social Entrepreneur",
+          "Business Mentor",
+          "Mission Master"
+        ],
+        "isVerified": true,
+        "isActive": true,
+        "createdAt": "2024-01-25T13:20:00.000Z",
+        "updatedAt": "2025-08-05T15:50:07.385Z",
+        "custodialWallets": [],
+        "communities": [
+          {
+            "id": "cmdyptpvb0011remw1i3qkg6v",
+            "userId": "user_006",
+            "communityId": "comm_002",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "community": {
+              "id": "comm_002",
+              "name": "Tech for Social Impact",
+              "description": "Empowering communities through technology innovation. We connect tech professionals with social causes, providing digital solutions for nonprofits and community organizations.",
+              "category": "technology",
+              "logoUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=100&h=100&fit=crop",
+              "bannerUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=300&fit=crop",
+              "location": "Austin, TX",
+              "website": "https://techforsocialimpact.org",
+              "status": "active",
+              "isVerified": true,
+              "createdAt": "2023-09-20T11:15:00.000Z",
+              "updatedAt": "2025-08-05T15:50:07.400Z",
+              "createdBy": "user_002"
+            }
+          },
+          {
+            "id": "cmdyptpvc0013remwolldfj5x",
+            "userId": "user_006",
+            "communityId": "comm_007",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "community": {
+              "id": "comm_007",
+              "name": "Green Tech Innovators",
+              "description": "Advancing sustainable technology solutions. We bring together engineers, designers, and entrepreneurs to develop innovative solutions for environmental challenges.",
+              "category": "technology",
+              "logoUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=100&h=100&fit=crop",
+              "bannerUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=300&fit=crop",
+              "location": "Seattle, WA",
+              "website": "https://greentechinnovators.org",
+              "status": "active",
+              "isVerified": true,
+              "createdAt": "2024-01-20T14:30:00.000Z",
+              "updatedAt": "2025-08-05T15:50:07.400Z",
+              "createdBy": "user_001"
+            }
+          }
+        ]
+      },
+      {
+        "id": "user_007",
+        "email": "maria.garcia@email.com",
+        "passwordHash": "$2b$12$Bk6zGkICzVt5Yw/PGSRYPefKLxDTS6sSkB1N5OZDt8hdLYgeV9zci",
+        "name": "Maria Garcia",
+        "avatarUrl": "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=150&h=150&fit=crop&crop=face",
+        "bio": "Teacher and education advocate. Empowering students through innovative learning.",
+        "interests": [
+          "Education",
+          "Teaching",
+          "Innovation",
+          "Student Development"
+        ],
+        "smiles": 1400,
+        "level": 9,
+        "score": 3100,
+        "badges": [
+          "Education Champion",
+          "Innovation Leader",
+          "Community Builder"
+        ],
+        "isVerified": true,
+        "isActive": true,
+        "createdAt": "2024-02-15T08:45:00.000Z",
+        "updatedAt": "2025-08-05T15:50:07.385Z",
+        "custodialWallets": [],
+        "communities": [
+          {
+            "id": "cmdyptpv8000xremwcvhc10i7",
+            "userId": "user_007",
+            "communityId": "comm_008",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "community": {
+              "id": "comm_008",
+              "name": "Mental Health Awareness",
+              "description": "Breaking the stigma around mental health. We provide education, support groups, and resources to help communities understand and address mental health challenges.",
+              "category": "health",
+              "logoUrl": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=100&h=100&fit=crop",
+              "bannerUrl": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=800&h=300&fit=crop",
+              "location": "Boston, MA",
+              "website": "https://mentalhealthawareness.org",
+              "status": "featured",
+              "isVerified": true,
+              "createdAt": "2024-02-10T11:00:00.000Z",
+              "updatedAt": "2025-08-05T15:50:07.400Z",
+              "createdBy": "user_003"
+            }
+          },
+          {
+            "id": "cmdyptpvc0015remwg7ylwckw",
+            "userId": "user_007",
+            "communityId": "comm_003",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "community": {
+              "id": "comm_003",
+              "name": "Student Environmentalists Network",
+              "description": "A nationwide network of student activists working together to address environmental challenges on campuses and in local communities. Empowering the next generation of environmental leaders.",
+              "category": "education",
+              "logoUrl": "https://images.unsplash.com/photo-1523240798132-8757214e6b0a?w=100&h=100&fit=crop",
+              "bannerUrl": "https://images.unsplash.com/photo-1523240798132-8757214e6b0a?w=800&h=300&fit=crop",
+              "location": "Multiple Campuses",
+              "website": "https://studentenvironmentalists.org",
+              "status": "featured",
+              "isVerified": true,
+              "createdAt": "2023-07-10T08:30:00.000Z",
+              "updatedAt": "2025-08-05T15:50:07.400Z",
+              "createdBy": "user_004"
+            }
+          },
+          {
+            "id": "cmdyptpvg001bremwr6exdx9c",
+            "userId": "user_007",
+            "communityId": "comm_010",
+            "role": "admin",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "community": {
+              "id": "comm_010",
+              "name": "Digital Learning Hub",
+              "description": "Bridging the digital divide through education. We provide free computer classes, coding workshops, and digital literacy programs for all ages.",
+              "category": "education",
+              "logoUrl": "https://images.unsplash.com/photo-1523240798132-8757214e6b0a?w=100&h=100&fit=crop",
+              "bannerUrl": "https://images.unsplash.com/photo-1523240798132-8757214e6b0a?w=800&h=300&fit=crop",
+              "location": "Miami, FL",
+              "website": "https://digitallearninghub.org",
+              "status": "active",
+              "isVerified": true,
+              "createdAt": "2024-02-05T10:30:00.000Z",
+              "updatedAt": "2025-08-05T15:50:07.400Z",
+              "createdBy": "user_007"
+            }
+          }
+        ]
+      },
+      {
+        "id": "user_008",
+        "email": "alex.kim@email.com",
+        "passwordHash": "$2b$12$Bk6zGkICzVt5Yw/PGSRYPefKLxDTS6sSkB1N5OZDt8hdLYgeV9zci",
+        "name": "Alex Kim",
+        "avatarUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop&crop=face",
+        "bio": "Software developer and open source contributor. Building technology for social good.",
+        "interests": [
+          "Technology",
+          "Open Source",
+          "Social Impact",
+          "Coding"
+        ],
+        "smiles": 750,
+        "level": 5,
+        "score": 1600,
+        "badges": [
+          "Tech Innovator",
+          "Open Source Contributor"
+        ],
+        "isVerified": true,
+        "isActive": true,
+        "createdAt": "2024-03-01T10:15:00.000Z",
+        "updatedAt": "2025-08-05T15:50:07.385Z",
+        "custodialWallets": [],
+        "communities": [
+          {
+            "id": "cmdyptpve0019remwq1p9czpl",
+            "userId": "user_008",
+            "communityId": "comm_004",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "community": {
+              "id": "comm_004",
+              "name": "Local Arts Collective",
+              "description": "Supporting local artists and cultural initiatives. We organize community art events, workshops, and exhibitions to celebrate diversity and creativity in our neighborhoods.",
+              "category": "culture",
+              "logoUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=100&h=100&fit=crop",
+              "bannerUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=300&fit=crop",
+              "location": "Brooklyn, NY",
+              "website": "https://localartscollective.org",
+              "status": "active",
+              "isVerified": true,
+              "createdAt": "2023-10-05T13:45:00.000Z",
+              "updatedAt": "2025-08-05T15:50:07.400Z",
+              "createdBy": "user_005"
+            }
+          },
+          {
+            "id": "cmdyptpvg001dremwqj9byjxk",
+            "userId": "user_008",
+            "communityId": "comm_002",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "community": {
+              "id": "comm_002",
+              "name": "Tech for Social Impact",
+              "description": "Empowering communities through technology innovation. We connect tech professionals with social causes, providing digital solutions for nonprofits and community organizations.",
+              "category": "technology",
+              "logoUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=100&h=100&fit=crop",
+              "bannerUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=300&fit=crop",
+              "location": "Austin, TX",
+              "website": "https://techforsocialimpact.org",
+              "status": "active",
+              "isVerified": true,
+              "createdAt": "2023-09-20T11:15:00.000Z",
+              "updatedAt": "2025-08-05T15:50:07.400Z",
+              "createdBy": "user_002"
+            }
+          }
+        ]
+      },
+      {
+        "id": "user_003",
+        "email": "aisha.patel@email.com",
+        "passwordHash": "$2b$12$Bk6zGkICzVt5Yw/PGSRYPefKLxDTS6sSkB1N5OZDt8hdLYgeV9zci",
+        "name": "Aisha Patel",
+        "avatarUrl": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+        "bio": "Healthcare professional and community health advocate. Making healthcare accessible to all.",
+        "interests": [
+          "Healthcare",
+          "Community Health",
+          "Yoga",
+          "Meditation"
+        ],
+        "smiles": 2100,
+        "level": 12,
+        "score": 4800,
+        "badges": [
+          "Health Champion",
+          "Community Leader",
+          "Mission Master",
+          "Top Contributor"
+        ],
+        "isVerified": true,
+        "isActive": true,
+        "createdAt": "2023-11-20T09:15:00.000Z",
+        "updatedAt": "2025-08-05T15:50:07.385Z",
+        "custodialWallets": [],
+        "communities": [
+          {
+            "id": "cmdyptpv1000iremwmmmthxmw",
+            "userId": "user_003",
+            "communityId": "comm_006",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "community": {
+              "id": "comm_006",
+              "name": "Urban Garden Network",
+              "description": "Transforming urban spaces into green oases. We help communities create and maintain gardens, promote sustainable urban agriculture, and build food security.",
+              "category": "sustainability",
+              "logoUrl": "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=100&h=100&fit=crop",
+              "bannerUrl": "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800&h=300&fit=crop",
+              "location": "Chicago, IL",
+              "website": "https://urbangardennetwork.org",
+              "status": "active",
+              "isVerified": true,
+              "createdAt": "2023-12-01T09:15:00.000Z",
+              "updatedAt": "2025-08-05T15:50:07.400Z",
+              "createdBy": "user_001"
+            }
+          },
+          {
+            "id": "cmdyptpv1000jremwqnkvadco",
+            "userId": "user_003",
+            "communityId": "comm_008",
+            "role": "admin",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "community": {
+              "id": "comm_008",
+              "name": "Mental Health Awareness",
+              "description": "Breaking the stigma around mental health. We provide education, support groups, and resources to help communities understand and address mental health challenges.",
+              "category": "health",
+              "logoUrl": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=100&h=100&fit=crop",
+              "bannerUrl": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=800&h=300&fit=crop",
+              "location": "Boston, MA",
+              "website": "https://mentalhealthawareness.org",
+              "status": "featured",
+              "isVerified": true,
+              "createdAt": "2024-02-10T11:00:00.000Z",
+              "updatedAt": "2025-08-05T15:50:07.400Z",
+              "createdBy": "user_003"
+            }
+          },
+          {
+            "id": "cmdyptpv8000vremwlsk9o1yq",
+            "userId": "user_003",
+            "communityId": "comm_005",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "community": {
+              "id": "comm_005",
+              "name": "Community Health Advocates",
+              "description": "Promoting health and wellness in underserved communities. We provide health education, organize wellness programs, and connect people with healthcare resources.",
+              "category": "health",
+              "logoUrl": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=100&h=100&fit=crop",
+              "bannerUrl": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=800&h=300&fit=crop",
+              "location": "Los Angeles, CA",
+              "website": "https://communityhealthadvocates.org",
+              "status": "active",
+              "isVerified": true,
+              "createdAt": "2023-11-12T10:20:00.000Z",
+              "updatedAt": "2025-08-05T15:50:07.400Z",
+              "createdBy": "user_003"
+            }
+          }
+        ]
+      },
+      {
+        "id": "user_005",
+        "email": "emma.thompson@email.com",
+        "passwordHash": "$2b$12$Bk6zGkICzVt5Yw/PGSRYPefKLxDTS6sSkB1N5OZDt8hdLYgeV9zci",
+        "name": "Emma Thompson",
+        "avatarUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face",
+        "bio": "Creative director and cultural advocate. Using art and culture to bring communities together.",
+        "interests": [
+          "Arts",
+          "Culture",
+          "Community Events",
+          "Photography"
+        ],
+        "smiles": 1800,
+        "level": 10,
+        "score": 3900,
+        "badges": [
+          "Cultural Ambassador",
+          "Community Leader",
+          "Creative Innovator"
+        ],
+        "isVerified": true,
+        "isActive": true,
+        "createdAt": "2023-12-05T11:30:00.000Z",
+        "updatedAt": "2025-08-05T15:50:07.385Z",
+        "custodialWallets": [],
+        "communities": [
+          {
+            "id": "cmdyptpv1000qremw2xjdea1d",
+            "userId": "user_005",
+            "communityId": "comm_004",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "community": {
+              "id": "comm_004",
+              "name": "Local Arts Collective",
+              "description": "Supporting local artists and cultural initiatives. We organize community art events, workshops, and exhibitions to celebrate diversity and creativity in our neighborhoods.",
+              "category": "culture",
+              "logoUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=100&h=100&fit=crop",
+              "bannerUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=300&fit=crop",
+              "location": "Brooklyn, NY",
+              "website": "https://localartscollective.org",
+              "status": "active",
+              "isVerified": true,
+              "createdAt": "2023-10-05T13:45:00.000Z",
+              "updatedAt": "2025-08-05T15:50:07.400Z",
+              "createdBy": "user_005"
+            }
+          },
+          {
+            "id": "cmdyptpv9000zremwsfu598hb",
+            "userId": "user_005",
+            "communityId": "comm_006",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "community": {
+              "id": "comm_006",
+              "name": "Urban Garden Network",
+              "description": "Transforming urban spaces into green oases. We help communities create and maintain gardens, promote sustainable urban agriculture, and build food security.",
+              "category": "sustainability",
+              "logoUrl": "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=100&h=100&fit=crop",
+              "bannerUrl": "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800&h=300&fit=crop",
+              "location": "Chicago, IL",
+              "website": "https://urbangardennetwork.org",
+              "status": "active",
+              "isVerified": true,
+              "createdAt": "2023-12-01T09:15:00.000Z",
+              "updatedAt": "2025-08-05T15:50:07.400Z",
+              "createdBy": "user_001"
+            }
+          },
+          {
+            "id": "cmdyptpvd0017remw3p4l44cs",
+            "userId": "user_005",
+            "communityId": "comm_009",
+            "role": "admin",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "community": {
+              "id": "comm_009",
+              "name": "Local Arts Collective",
+              "description": "Celebrating local artists and cultural diversity. We organize art exhibitions, workshops, and cultural events to bring communities together through creativity.",
+              "category": "culture",
+              "logoUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=100&h=100&fit=crop",
+              "bannerUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=300&fit=crop",
+              "location": "Portland, OR",
+              "website": "https://localartscollective.org",
+              "status": "active",
+              "isVerified": true,
+              "createdAt": "2024-01-15T16:45:00.000Z",
+              "updatedAt": "2025-08-05T15:50:07.400Z",
+              "createdBy": "user_005"
+            }
+          }
+        ]
+      },
+      {
+        "id": "cmdyq3qsh0000rerpqkmdctyl",
+        "email": "test@example.com",
+        "passwordHash": "$2b$12$/jTRqGjhF8eiGUX7c9c5YumQ9XOuj7eS3PAw8BE69GbPs3HejM2ga",
+        "name": "Test User",
+        "avatarUrl": "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
+        "bio": "Test bio",
+        "interests": [
+          "technology",
+          "community"
+        ],
+        "smiles": 100,
+        "level": 1,
+        "score": 100,
+        "badges": [],
+        "isVerified": false,
+        "isActive": true,
+        "createdAt": "2025-08-05T15:57:55.169Z",
+        "updatedAt": "2025-08-05T15:57:55.169Z",
+        "custodialWallets": [],
+        "communities": []
+      },
+      {
+        "id": "cmdzrla2g0000rezf9dh00feb",
+        "email": "demo@smileup.com",
+        "passwordHash": "$2b$10$LQcSL9wPcIz.ItHvd3z0uO0xE9bSWtzUY95.ktlXU.CBRkT4epowq",
+        "name": "Demo User",
+        "avatarUrl": "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
+        "bio": "I'm passionate about making a positive impact in my community through technology and social innovation.",
+        "interests": [
+          "Technology",
+          "Social Impact",
+          "Community Service",
+          "Environmental Conservation"
+        ],
+        "smiles": 2500,
+        "level": 8,
+        "score": 3200,
+        "badges": [
+          "First Mission",
+          "Community Leader",
+          "Environmental Champion"
+        ],
+        "isVerified": false,
+        "isActive": true,
+        "createdAt": "2025-08-06T09:27:19.097Z",
+        "updatedAt": "2025-08-06T09:27:19.097Z",
+        "custodialWallets": [
+          {
+            "id": "cme070tvy0001remqgtzlmqhc",
+            "userId": "cmdzrla2g0000rezf9dh00feb",
+            "accountId": "0.0.6511860",
+            "publicKey": "302a300506032b657003210076488709e4ee71121aab59c47b7c9b3bb10fa0cb16377ecc096fe7476701c271",
+            "encryptedPrivateKey": "$2b$12$5b8seM4R87U9oRHhzrJ6gOI5CneYhUU3f7bvXPD6YA9fcC.AW9VVe",
+            "hbarBalance": 1,
+            "smilesBalance": 0,
+            "isActive": true,
+            "createdAt": "2025-08-06T16:39:18.862Z",
+            "updatedAt": "2025-08-06T16:39:18.862Z"
+          }
+        ],
+        "communities": []
+      },
+      {
+        "id": "cme09xpv20002remqo9dhv4x2",
+        "email": "newuser@example.com",
+        "passwordHash": "$2b$12$dc77vrmyVSfnKK0o/C4A2OoKvFBfK.VFVsBKQnB2WI7Xn4Vjwyj8y",
+        "name": "New User",
+        "avatarUrl": "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
+        "bio": "New user bio",
+        "interests": [
+          "Technology",
+          "Social Impact"
+        ],
+        "smiles": 100,
+        "level": 1,
+        "score": 100,
+        "badges": [],
+        "isVerified": false,
+        "isActive": true,
+        "createdAt": "2025-08-06T18:00:52.526Z",
+        "updatedAt": "2025-08-06T18:00:52.526Z",
+        "custodialWallets": [
+          {
+            "id": "cme09zqt30005remqfgnv03k2",
+            "userId": "cme09xpv20002remqo9dhv4x2",
+            "accountId": "0.0.6512183",
+            "publicKey": "302a300506032b65700321008668dfb498818fa16048d153a91e21822f99b2492715cc5f629a63d477cd4ac3",
+            "encryptedPrivateKey": "$2b$12$dhuGI2QvTJwHqECiSARpKuWfM4ELI0up5G.hjUd55PlI6i45NVnJe",
+            "hbarBalance": 1,
+            "smilesBalance": 0,
+            "isActive": true,
+            "createdAt": "2025-08-06T18:02:27.063Z",
+            "updatedAt": "2025-08-06T18:02:27.063Z"
+          }
+        ],
+        "communities": []
+      },
+      {
+        "id": "cme0a05li0006remqz7fiofh8",
+        "email": "testuser2@example.com",
+        "passwordHash": "$2b$12$bnYCsYTPbjWRrhDwQZwQ1ONSFwcR6nha1nWktlCfTCEh0ttQygM82",
+        "name": "Test User 2",
+        "avatarUrl": "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
+        "bio": "Test bio 2",
+        "interests": [
+          "Technology",
+          "Social Impact"
+        ],
+        "smiles": 100,
+        "level": 1,
+        "score": 100,
+        "badges": [],
+        "isVerified": false,
+        "isActive": true,
+        "createdAt": "2025-08-06T18:02:46.231Z",
+        "updatedAt": "2025-08-06T18:02:46.231Z",
+        "custodialWallets": [
+          {
+            "id": "cme0a095n0009remqpuis5283",
+            "userId": "cme0a05li0006remqz7fiofh8",
+            "accountId": "0.0.6512184",
+            "publicKey": "302a300506032b657003210077ec1c63ff7f9bda941d088c8ac527bffc3b3fbf3f3e9815beced25e674712e3",
+            "encryptedPrivateKey": "$2b$12$XtuFuvoEtC/3Y.xGhGKQ8OU7KMN3/qDSPOIB6eHsnz1WA8rl2c0c6",
+            "hbarBalance": 1,
+            "smilesBalance": 0,
+            "isActive": true,
+            "createdAt": "2025-08-06T18:02:50.843Z",
+            "updatedAt": "2025-08-06T18:02:50.843Z"
+          }
+        ],
+        "communities": [
+          {
+            "id": "cme0a6s7f000cremqg04rszvn",
+            "userId": "cme0a05li0006remqz7fiofh8",
+            "communityId": "cme0a6qil000aremq0j8358ly",
+            "role": "admin",
+            "joinedAt": "2025-08-06T18:07:55.467Z",
+            "community": {
+              "id": "cme0a6qil000aremq0j8358ly",
+              "name": "Test Community",
+              "description": "A test community for wallet creation",
+              "category": "Technology",
+              "logoUrl": "https://example.com/logo.png",
+              "bannerUrl": "https://example.com/banner.png",
+              "location": "San Francisco",
+              "website": "https://example.com",
+              "status": "active",
+              "isVerified": false,
+              "createdAt": "2025-08-06T18:07:53.278Z",
+              "updatedAt": "2025-08-06T18:07:53.278Z",
+              "createdBy": "cme0a05li0006remqz7fiofh8"
+            }
+          },
+          {
+            "id": "cme0ab0l80006rer6upilacza",
+            "userId": "cme0a05li0006remqz7fiofh8",
+            "communityId": "cme0aayq30002rer6cp33g4wa",
+            "role": "admin",
+            "joinedAt": "2025-08-06T18:11:12.956Z",
+            "community": {
+              "id": "cme0aayq30002rer6cp33g4wa",
+              "name": "Auto Wallet Community",
+              "description": "A community to test automatic wallet creation",
+              "category": "Technology",
+              "logoUrl": "https://example.com/logo2.png",
+              "bannerUrl": "https://example.com/banner2.png",
+              "location": "New York",
+              "website": "https://example2.com",
+              "status": "active",
+              "isVerified": false,
+              "createdAt": "2025-08-06T18:11:10.540Z",
+              "updatedAt": "2025-08-06T18:11:10.540Z",
+              "createdBy": "cme0a05li0006remqz7fiofh8"
+            }
+          }
+        ]
+      }
+    ],
+    "communities": [
+      {
+        "id": "comm_001",
+        "name": "Green Earth Initiative",
+        "description": "A leading environmental organization dedicated to protecting our planet through community action, education, and sustainable practices. We focus on local environmental challenges and global climate solutions.",
+        "category": "sustainability",
+        "logoUrl": "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=100&h=100&fit=crop",
+        "bannerUrl": "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=300&fit=crop",
+        "location": "San Francisco, CA",
+        "website": "https://greenearthinitiative.org",
+        "status": "featured",
+        "isVerified": true,
+        "createdAt": "2023-08-15T09:00:00.000Z",
+        "updatedAt": "2025-08-05T15:50:07.400Z",
+        "createdBy": "user_001",
+        "members": [
+          {
+            "id": "cmdyptpv1000lremwnc3syyv5",
+            "userId": "user_004",
+            "communityId": "comm_001",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "user": {
+              "id": "user_004",
+              "name": "David Rodriguez",
+              "email": "david.rodriguez@email.com"
+            }
+          },
+          {
+            "id": "cmdyptpv1000cremw4t7if6oj",
+            "userId": "user_001",
+            "communityId": "comm_001",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "user": {
+              "id": "user_001",
+              "name": "Sarah Chen",
+              "email": "sarah.chen@email.com"
+            }
+          }
+        ],
+        "wallet": null
+      },
+      {
+        "id": "comm_004",
+        "name": "Local Arts Collective",
+        "description": "Supporting local artists and cultural initiatives. We organize community art events, workshops, and exhibitions to celebrate diversity and creativity in our neighborhoods.",
+        "category": "culture",
+        "logoUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=100&h=100&fit=crop",
+        "bannerUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=300&fit=crop",
+        "location": "Brooklyn, NY",
+        "website": "https://localartscollective.org",
+        "status": "active",
+        "isVerified": true,
+        "createdAt": "2023-10-05T13:45:00.000Z",
+        "updatedAt": "2025-08-05T15:50:07.400Z",
+        "createdBy": "user_005",
+        "members": [
+          {
+            "id": "cmdyptpv1000kremwxx95r9qy",
+            "userId": "user_002",
+            "communityId": "comm_004",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "user": {
+              "id": "user_002",
+              "name": "Marcus Johnson",
+              "email": "marcus.johnson@email.com"
+            }
+          },
+          {
+            "id": "cmdyptpv1000qremw2xjdea1d",
+            "userId": "user_005",
+            "communityId": "comm_004",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "user": {
+              "id": "user_005",
+              "name": "Emma Thompson",
+              "email": "emma.thompson@email.com"
+            }
+          },
+          {
+            "id": "cmdyptpve0019remwq1p9czpl",
+            "userId": "user_008",
+            "communityId": "comm_004",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "user": {
+              "id": "user_008",
+              "name": "Alex Kim",
+              "email": "alex.kim@email.com"
+            }
+          }
+        ],
+        "wallet": {
+          "id": "cme0as670000mrer603xwv9o6",
+          "communityId": "comm_004",
+          "accountId": "0.0.6512267",
+          "publicKey": "302a300506032b65700321006e9488242b32885f426f06ae83115b22200cce2611148321582e3eda3891acc4",
+          "encryptedPrivateKey": "$2b$12$/EvhD5jbRoagdFxvebWrvu4FEXMUbaBglI1pHPoNXz5cYszUtohn6",
+          "hbarBalance": 1,
+          "smilesBalance": 0,
+          "isActive": true,
+          "createdAt": "2025-08-06T18:24:33.373Z",
+          "updatedAt": "2025-08-06T18:24:33.373Z"
+        }
+      },
+      {
+        "id": "comm_002",
+        "name": "Tech for Social Impact",
+        "description": "Empowering communities through technology innovation. We connect tech professionals with social causes, providing digital solutions for nonprofits and community organizations.",
+        "category": "technology",
+        "logoUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=100&h=100&fit=crop",
+        "bannerUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=300&fit=crop",
+        "location": "Austin, TX",
+        "website": "https://techforsocialimpact.org",
+        "status": "active",
+        "isVerified": true,
+        "createdAt": "2023-09-20T11:15:00.000Z",
+        "updatedAt": "2025-08-05T15:50:07.400Z",
+        "createdBy": "user_002",
+        "members": [
+          {
+            "id": "cmdyptpv1000rremwp7ykpu0y",
+            "userId": "user_002",
+            "communityId": "comm_002",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "user": {
+              "id": "user_002",
+              "name": "Marcus Johnson",
+              "email": "marcus.johnson@email.com"
+            }
+          },
+          {
+            "id": "cmdyptpvb0011remw1i3qkg6v",
+            "userId": "user_006",
+            "communityId": "comm_002",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "user": {
+              "id": "user_006",
+              "name": "James Wilson",
+              "email": "james.wilson@email.com"
+            }
+          },
+          {
+            "id": "cmdyptpvg001dremwqj9byjxk",
+            "userId": "user_008",
+            "communityId": "comm_002",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "user": {
+              "id": "user_008",
+              "name": "Alex Kim",
+              "email": "alex.kim@email.com"
+            }
+          }
+        ],
+        "wallet": {
+          "id": "cme0asbpc000orer680gs18gg",
+          "communityId": "comm_002",
+          "accountId": "0.0.6512268",
+          "publicKey": "302a300506032b6570032100728f4f6b9a2c099cca80a1988b212df600fb07f1b67507ae93d31d59b395f901",
+          "encryptedPrivateKey": "$2b$12$EhuO6IV1drQP.NkHVxWK3O2Q0Ul/aP.UfNtob9l4lTQKAzp0dmvri",
+          "hbarBalance": 1,
+          "smilesBalance": 0,
+          "isActive": true,
+          "createdAt": "2025-08-06T18:24:40.512Z",
+          "updatedAt": "2025-08-06T18:24:40.512Z"
+        }
+      },
+      {
+        "id": "comm_003",
+        "name": "Student Environmentalists Network",
+        "description": "A nationwide network of student activists working together to address environmental challenges on campuses and in local communities. Empowering the next generation of environmental leaders.",
+        "category": "education",
+        "logoUrl": "https://images.unsplash.com/photo-1523240798132-8757214e6b0a?w=100&h=100&fit=crop",
+        "bannerUrl": "https://images.unsplash.com/photo-1523240798132-8757214e6b0a?w=800&h=300&fit=crop",
+        "location": "Multiple Campuses",
+        "website": "https://studentenvironmentalists.org",
+        "status": "featured",
+        "isVerified": true,
+        "createdAt": "2023-07-10T08:30:00.000Z",
+        "updatedAt": "2025-08-05T15:50:07.400Z",
+        "createdBy": "user_004",
+        "members": [
+          {
+            "id": "cmdyptpv1000bremwr1uun4pi",
+            "userId": "user_001",
+            "communityId": "comm_003",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "user": {
+              "id": "user_001",
+              "name": "Sarah Chen",
+              "email": "sarah.chen@email.com"
+            }
+          },
+          {
+            "id": "cmdyptpv7000tremw97jxxsey",
+            "userId": "user_004",
+            "communityId": "comm_003",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "user": {
+              "id": "user_004",
+              "name": "David Rodriguez",
+              "email": "david.rodriguez@email.com"
+            }
+          },
+          {
+            "id": "cmdyptpvc0015remwg7ylwckw",
+            "userId": "user_007",
+            "communityId": "comm_003",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "user": {
+              "id": "user_007",
+              "name": "Maria Garcia",
+              "email": "maria.garcia@email.com"
+            }
+          }
+        ],
+        "wallet": null
+      },
+      {
+        "id": "comm_005",
+        "name": "Community Health Advocates",
+        "description": "Promoting health and wellness in underserved communities. We provide health education, organize wellness programs, and connect people with healthcare resources.",
+        "category": "health",
+        "logoUrl": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=100&h=100&fit=crop",
+        "bannerUrl": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=800&h=300&fit=crop",
+        "location": "Los Angeles, CA",
+        "website": "https://communityhealthadvocates.org",
+        "status": "active",
+        "isVerified": true,
+        "createdAt": "2023-11-12T10:20:00.000Z",
+        "updatedAt": "2025-08-05T15:50:07.400Z",
+        "createdBy": "user_003",
+        "members": [
+          {
+            "id": "cmdyptpv1000dremwapgepxcs",
+            "userId": "user_001",
+            "communityId": "comm_005",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "user": {
+              "id": "user_001",
+              "name": "Sarah Chen",
+              "email": "sarah.chen@email.com"
+            }
+          },
+          {
+            "id": "cmdyptpv8000vremwlsk9o1yq",
+            "userId": "user_003",
+            "communityId": "comm_005",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "user": {
+              "id": "user_003",
+              "name": "Aisha Patel",
+              "email": "aisha.patel@email.com"
+            }
+          }
+        ],
+        "wallet": {
+          "id": "cme0as1tc000krer60q7arni6",
+          "communityId": "comm_005",
+          "accountId": "0.0.6512266",
+          "publicKey": "302a300506032b6570032100531476e0d4c364c1f0500d2d724381cdd9ffbb3afd7c1340673166f9a5615bb9",
+          "encryptedPrivateKey": "$2b$12$UvuYleQfTdhwkUxWvFq0hurggOhT4fzHNSli8wIKinTkNm4QWR.r2",
+          "hbarBalance": 1,
+          "smilesBalance": 0,
+          "isActive": true,
+          "createdAt": "2025-08-06T18:24:27.697Z",
+          "updatedAt": "2025-08-06T18:24:27.697Z"
+        }
+      },
+      {
+        "id": "comm_010",
+        "name": "Digital Learning Hub",
+        "description": "Bridging the digital divide through education. We provide free computer classes, coding workshops, and digital literacy programs for all ages.",
+        "category": "education",
+        "logoUrl": "https://images.unsplash.com/photo-1523240798132-8757214e6b0a?w=100&h=100&fit=crop",
+        "bannerUrl": "https://images.unsplash.com/photo-1523240798132-8757214e6b0a?w=800&h=300&fit=crop",
+        "location": "Miami, FL",
+        "website": "https://digitallearninghub.org",
+        "status": "active",
+        "isVerified": true,
+        "createdAt": "2024-02-05T10:30:00.000Z",
+        "updatedAt": "2025-08-05T15:50:07.400Z",
+        "createdBy": "user_007",
+        "members": [
+          {
+            "id": "cmdyptpvg001bremwr6exdx9c",
+            "userId": "user_007",
+            "communityId": "comm_010",
+            "role": "admin",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "user": {
+              "id": "user_007",
+              "name": "Maria Garcia",
+              "email": "maria.garcia@email.com"
+            }
+          }
+        ],
+        "wallet": {
+          "id": "cme0ars89000crer6n7jjpi8b",
+          "communityId": "comm_010",
+          "accountId": "0.0.6512262",
+          "publicKey": "302a300506032b65700321003f0a12a76bcb1cdad689cf7dd4e18244d7ec114c41f07839808d91f3640995b3",
+          "encryptedPrivateKey": "$2b$12$1mY/np8uhKLmy/Et5gX/C.cvqG9q9kN8yJIuGB5X0erbh0gQjzMU.",
+          "hbarBalance": 1,
+          "smilesBalance": 0,
+          "isActive": true,
+          "createdAt": "2025-08-06T18:24:15.274Z",
+          "updatedAt": "2025-08-06T18:24:15.274Z"
+        }
+      },
+      {
+        "id": "comm_009",
+        "name": "Local Arts Collective",
+        "description": "Celebrating local artists and cultural diversity. We organize art exhibitions, workshops, and cultural events to bring communities together through creativity.",
+        "category": "culture",
+        "logoUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=100&h=100&fit=crop",
+        "bannerUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=300&fit=crop",
+        "location": "Portland, OR",
+        "website": "https://localartscollective.org",
+        "status": "active",
+        "isVerified": true,
+        "createdAt": "2024-01-15T16:45:00.000Z",
+        "updatedAt": "2025-08-05T15:50:07.400Z",
+        "createdBy": "user_005",
+        "members": [
+          {
+            "id": "cmdyptpvd0017remw3p4l44cs",
+            "userId": "user_005",
+            "communityId": "comm_009",
+            "role": "admin",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "user": {
+              "id": "user_005",
+              "name": "Emma Thompson",
+              "email": "emma.thompson@email.com"
+            }
+          }
+        ],
+        "wallet": {
+          "id": "cme0arwmm000grer6eslmgoo4",
+          "communityId": "comm_009",
+          "accountId": "0.0.6512264",
+          "publicKey": "302a300506032b65700321000fb3ec15d5f2658d7a2c5d05e6282d17808da0103c61163f0492745bc7bdc446",
+          "encryptedPrivateKey": "$2b$12$H8sYLtYKfI2E6FcY0RAU4.YcmvKnkNPyqfr635crhIcb6IE4FgrYC",
+          "hbarBalance": 1,
+          "smilesBalance": 0,
+          "isActive": true,
+          "createdAt": "2025-08-06T18:24:20.974Z",
+          "updatedAt": "2025-08-06T18:24:20.974Z"
+        }
+      },
+      {
+        "id": "comm_007",
+        "name": "Green Tech Innovators",
+        "description": "Advancing sustainable technology solutions. We bring together engineers, designers, and entrepreneurs to develop innovative solutions for environmental challenges.",
+        "category": "technology",
+        "logoUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=100&h=100&fit=crop",
+        "bannerUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=300&fit=crop",
+        "location": "Seattle, WA",
+        "website": "https://greentechinnovators.org",
+        "status": "active",
+        "isVerified": true,
+        "createdAt": "2024-01-20T14:30:00.000Z",
+        "updatedAt": "2025-08-05T15:50:07.400Z",
+        "createdBy": "user_001",
+        "members": [
+          {
+            "id": "cmdyptpv1000oremwe4pnwy8w",
+            "userId": "user_001",
+            "communityId": "comm_007",
+            "role": "admin",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "user": {
+              "id": "user_001",
+              "name": "Sarah Chen",
+              "email": "sarah.chen@email.com"
+            }
+          },
+          {
+            "id": "cmdyptpvc0013remwolldfj5x",
+            "userId": "user_006",
+            "communityId": "comm_007",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "user": {
+              "id": "user_006",
+              "name": "James Wilson",
+              "email": "james.wilson@email.com"
+            }
+          }
+        ],
+        "wallet": {
+          "id": "cme0aruom000erer6eild4jqq",
+          "communityId": "comm_007",
+          "accountId": "0.0.6512263",
+          "publicKey": "302a300506032b6570032100c9ea7ef6d14b22ada165af4bf8037e3ba77a2c4b8591632f33639e8cc219927e",
+          "encryptedPrivateKey": "$2b$12$GSqm7udRRV0MyXF3MCw7AeBKgpSi26QxoIqlQ9D9nJSiztt2jnK5e",
+          "hbarBalance": 1,
+          "smilesBalance": 0,
+          "isActive": true,
+          "createdAt": "2025-08-06T18:24:18.455Z",
+          "updatedAt": "2025-08-06T18:24:18.455Z"
+        }
+      },
+      {
+        "id": "comm_008",
+        "name": "Mental Health Awareness",
+        "description": "Breaking the stigma around mental health. We provide education, support groups, and resources to help communities understand and address mental health challenges.",
+        "category": "health",
+        "logoUrl": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=100&h=100&fit=crop",
+        "bannerUrl": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=800&h=300&fit=crop",
+        "location": "Boston, MA",
+        "website": "https://mentalhealthawareness.org",
+        "status": "featured",
+        "isVerified": true,
+        "createdAt": "2024-02-10T11:00:00.000Z",
+        "updatedAt": "2025-08-05T15:50:07.400Z",
+        "createdBy": "user_003",
+        "members": [
+          {
+            "id": "cmdyptpv1000jremwqnkvadco",
+            "userId": "user_003",
+            "communityId": "comm_008",
+            "role": "admin",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "user": {
+              "id": "user_003",
+              "name": "Aisha Patel",
+              "email": "aisha.patel@email.com"
+            }
+          },
+          {
+            "id": "cmdyptpv8000xremwcvhc10i7",
+            "userId": "user_007",
+            "communityId": "comm_008",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "user": {
+              "id": "user_007",
+              "name": "Maria Garcia",
+              "email": "maria.garcia@email.com"
+            }
+          }
+        ],
+        "wallet": null
+      },
+      {
+        "id": "comm_006",
+        "name": "Urban Garden Network",
+        "description": "Transforming urban spaces into green oases. We help communities create and maintain gardens, promote sustainable urban agriculture, and build food security.",
+        "category": "sustainability",
+        "logoUrl": "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=100&h=100&fit=crop",
+        "bannerUrl": "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800&h=300&fit=crop",
+        "location": "Chicago, IL",
+        "website": "https://urbangardennetwork.org",
+        "status": "active",
+        "isVerified": true,
+        "createdAt": "2023-12-01T09:15:00.000Z",
+        "updatedAt": "2025-08-05T15:50:07.400Z",
+        "createdBy": "user_001",
+        "members": [
+          {
+            "id": "cmdyptpv1000iremwmmmthxmw",
+            "userId": "user_003",
+            "communityId": "comm_006",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "user": {
+              "id": "user_003",
+              "name": "Aisha Patel",
+              "email": "aisha.patel@email.com"
+            }
+          },
+          {
+            "id": "cmdyptpv9000zremwsfu598hb",
+            "userId": "user_005",
+            "communityId": "comm_006",
+            "role": "member",
+            "joinedAt": "2025-08-05T15:50:07.405Z",
+            "user": {
+              "id": "user_005",
+              "name": "Emma Thompson",
+              "email": "emma.thompson@email.com"
+            }
+          }
+        ],
+        "wallet": {
+          "id": "cme0arzfh000irer60asjk3wm",
+          "communityId": "comm_006",
+          "accountId": "0.0.6512265",
+          "publicKey": "302a300506032b6570032100f1d80e6cfec069d09e27297bb4a7a71753d7b34e5c29187357a8d097b3e5d0cc",
+          "encryptedPrivateKey": "$2b$12$j1RPKqFnl8xSyNztSQd2puD1JyRSijpwQcbufwP4i4Va2f9yfwmde",
+          "hbarBalance": 1,
+          "smilesBalance": 0,
+          "isActive": true,
+          "createdAt": "2025-08-06T18:24:24.606Z",
+          "updatedAt": "2025-08-06T18:24:24.606Z"
+        }
+      },
+      {
+        "id": "cmdyq5a1g0002rerp8grtonsm",
+        "name": "Test Community",
+        "description": "A test community for API testing",
+        "category": "technology",
+        "logoUrl": "https://example.com/logo.png",
+        "bannerUrl": "https://example.com/banner.png",
+        "location": "Test City",
+        "website": "https://testcommunity.org",
+        "status": "active",
+        "isVerified": false,
+        "createdAt": "2025-08-05T15:59:06.772Z",
+        "updatedAt": "2025-08-05T15:59:06.772Z",
+        "createdBy": "user_001",
+        "members": [
+          {
+            "id": "cmdyq5a1h0004rerpv04s9342",
+            "userId": "user_001",
+            "communityId": "cmdyq5a1g0002rerp8grtonsm",
+            "role": "admin",
+            "joinedAt": "2025-08-05T15:59:06.774Z",
+            "user": {
+              "id": "user_001",
+              "name": "Sarah Chen",
+              "email": "sarah.chen@email.com"
+            }
+          }
+        ],
+        "wallet": {
+          "id": "cme0arp8l000arer6vvd13f6o",
+          "communityId": "cmdyq5a1g0002rerp8grtonsm",
+          "accountId": "0.0.6512261",
+          "publicKey": "302a300506032b65700321004bfb8f2fc0a4e277f76ac7a54c0ab732c93bfe84956c75607fe1864c0e6ec04b",
+          "encryptedPrivateKey": "$2b$12$dddZ9AAIBQWGxbVa9pAfkuSJ7fOS1mlHRpKit8aLGDgnavbczpu/G",
+          "hbarBalance": 1,
+          "smilesBalance": 0,
+          "isActive": true,
+          "createdAt": "2025-08-06T18:24:11.398Z",
+          "updatedAt": "2025-08-06T18:24:11.398Z"
+        }
+      },
+      {
+        "id": "cmdyr55d00009rerpu7c1c6a9",
+        "name": "Test Community",
+        "description": "A test community",
+        "category": "sustainability",
+        "logoUrl": null,
+        "bannerUrl": null,
+        "location": null,
+        "website": null,
+        "status": "active",
+        "isVerified": false,
+        "createdAt": "2025-08-05T16:27:00.325Z",
+        "updatedAt": "2025-08-05T16:27:00.325Z",
+        "createdBy": "user_001",
+        "members": [
+          {
+            "id": "cmdyr55d2000brerphydw5o8a",
+            "userId": "user_001",
+            "communityId": "cmdyr55d00009rerpu7c1c6a9",
+            "role": "admin",
+            "joinedAt": "2025-08-05T16:27:00.326Z",
+            "user": {
+              "id": "user_001",
+              "name": "Sarah Chen",
+              "email": "sarah.chen@email.com"
+            }
+          }
+        ],
+        "wallet": {
+          "id": "cme0arm860008rer6ay19j08w",
+          "communityId": "cmdyr55d00009rerpu7c1c6a9",
+          "accountId": "0.0.6512260",
+          "publicKey": "302a300506032b6570032100f0751b0302c582571c35c38bc466332a71a8556c4743f0b89121ec51d4b22c09",
+          "encryptedPrivateKey": "$2b$12$ranBLTDgv/1iohOPRIPubeGnU9o8l0hEj.4bM58K/jbOu.uxfn2/e",
+          "hbarBalance": 1,
+          "smilesBalance": 0,
+          "isActive": true,
+          "createdAt": "2025-08-06T18:24:07.494Z",
+          "updatedAt": "2025-08-06T18:24:07.494Z"
+        }
+      },
+      {
+        "id": "cme0a6qil000aremq0j8358ly",
+        "name": "Test Community",
+        "description": "A test community for wallet creation",
+        "category": "Technology",
+        "logoUrl": "https://example.com/logo.png",
+        "bannerUrl": "https://example.com/banner.png",
+        "location": "San Francisco",
+        "website": "https://example.com",
+        "status": "active",
+        "isVerified": false,
+        "createdAt": "2025-08-06T18:07:53.278Z",
+        "updatedAt": "2025-08-06T18:07:53.278Z",
+        "createdBy": "cme0a05li0006remqz7fiofh8",
+        "members": [
+          {
+            "id": "cme0a6s7f000cremqg04rszvn",
+            "userId": "cme0a05li0006remqz7fiofh8",
+            "communityId": "cme0a6qil000aremq0j8358ly",
+            "role": "admin",
+            "joinedAt": "2025-08-06T18:07:55.467Z",
+            "user": {
+              "id": "cme0a05li0006remqz7fiofh8",
+              "name": "Test User 2",
+              "email": "testuser2@example.com"
+            }
+          }
+        ],
+        "wallet": {
+          "id": "cme0aanbv0001rer6kcqjre3u",
+          "communityId": "cme0a6qil000aremq0j8358ly",
+          "accountId": "0.0.6512196",
+          "publicKey": "302a300506032b6570032100c46e7f00188bf895c918ed4e168d4eb3773ce297f33d8e9c4033207931fecea1",
+          "encryptedPrivateKey": "$2b$12$XQEP8Hb.mkDUB2pz8h5fTOrC/1SgB0Uzya9hoAicaQLHh2w8SZkoS",
+          "hbarBalance": 1,
+          "smilesBalance": 0,
+          "isActive": true,
+          "createdAt": "2025-08-06T18:10:55.771Z",
+          "updatedAt": "2025-08-06T18:10:55.771Z"
+        }
+      },
+      {
+        "id": "cme0aayq30002rer6cp33g4wa",
+        "name": "Auto Wallet Community",
+        "description": "A community to test automatic wallet creation",
+        "category": "Technology",
+        "logoUrl": "https://example.com/logo2.png",
+        "bannerUrl": "https://example.com/banner2.png",
+        "location": "New York",
+        "website": "https://example2.com",
+        "status": "active",
+        "isVerified": false,
+        "createdAt": "2025-08-06T18:11:10.540Z",
+        "updatedAt": "2025-08-06T18:11:10.540Z",
+        "createdBy": "cme0a05li0006remqz7fiofh8",
+        "members": [
+          {
+            "id": "cme0ab0l80006rer6upilacza",
+            "userId": "cme0a05li0006remqz7fiofh8",
+            "communityId": "cme0aayq30002rer6cp33g4wa",
+            "role": "admin",
+            "joinedAt": "2025-08-06T18:11:12.956Z",
+            "user": {
+              "id": "cme0a05li0006remqz7fiofh8",
+              "name": "Test User 2",
+              "email": "testuser2@example.com"
+            }
+          }
+        ],
+        "wallet": {
+          "id": "cme0ab0l70004rer6wkytexaf",
+          "communityId": "cme0aayq30002rer6cp33g4wa",
+          "accountId": "0.0.6512199",
+          "publicKey": "302a300506032b65700321004bc109b2cd3f216cf30062f488f78b2aa7df7e71245c773718d5583e11778230",
+          "encryptedPrivateKey": "$2b$12$HuN1HVJmVFnH8suxYWu3PuZzolWINAPJ9Y34CyxrgnBz0I6IM8M6S",
+          "hbarBalance": 1,
+          "smilesBalance": 0,
+          "isActive": true,
+          "createdAt": "2025-08-06T18:11:12.955Z",
+          "updatedAt": "2025-08-06T18:11:12.955Z"
+        }
+      }
+    ],
+    "communityWallets": [
+      {
+        "id": "cme0aanbv0001rer6kcqjre3u",
+        "communityId": "cme0a6qil000aremq0j8358ly",
+        "accountId": "0.0.6512196",
+        "publicKey": "302a300506032b6570032100c46e7f00188bf895c918ed4e168d4eb3773ce297f33d8e9c4033207931fecea1",
+        "encryptedPrivateKey": "$2b$12$XQEP8Hb.mkDUB2pz8h5fTOrC/1SgB0Uzya9hoAicaQLHh2w8SZkoS",
+        "hbarBalance": 1,
+        "smilesBalance": 0,
+        "isActive": true,
+        "createdAt": "2025-08-06T18:10:55.771Z",
+        "updatedAt": "2025-08-06T18:10:55.771Z"
+      },
+      {
+        "id": "cme0ab0l70004rer6wkytexaf",
+        "communityId": "cme0aayq30002rer6cp33g4wa",
+        "accountId": "0.0.6512199",
+        "publicKey": "302a300506032b65700321004bc109b2cd3f216cf30062f488f78b2aa7df7e71245c773718d5583e11778230",
+        "encryptedPrivateKey": "$2b$12$HuN1HVJmVFnH8suxYWu3PuZzolWINAPJ9Y34CyxrgnBz0I6IM8M6S",
+        "hbarBalance": 1,
+        "smilesBalance": 0,
+        "isActive": true,
+        "createdAt": "2025-08-06T18:11:12.955Z",
+        "updatedAt": "2025-08-06T18:11:12.955Z"
+      },
+      {
+        "id": "cme0arm860008rer6ay19j08w",
+        "communityId": "cmdyr55d00009rerpu7c1c6a9",
+        "accountId": "0.0.6512260",
+        "publicKey": "302a300506032b6570032100f0751b0302c582571c35c38bc466332a71a8556c4743f0b89121ec51d4b22c09",
+        "encryptedPrivateKey": "$2b$12$ranBLTDgv/1iohOPRIPubeGnU9o8l0hEj.4bM58K/jbOu.uxfn2/e",
+        "hbarBalance": 1,
+        "smilesBalance": 0,
+        "isActive": true,
+        "createdAt": "2025-08-06T18:24:07.494Z",
+        "updatedAt": "2025-08-06T18:24:07.494Z"
+      },
+      {
+        "id": "cme0arp8l000arer6vvd13f6o",
+        "communityId": "cmdyq5a1g0002rerp8grtonsm",
+        "accountId": "0.0.6512261",
+        "publicKey": "302a300506032b65700321004bfb8f2fc0a4e277f76ac7a54c0ab732c93bfe84956c75607fe1864c0e6ec04b",
+        "encryptedPrivateKey": "$2b$12$dddZ9AAIBQWGxbVa9pAfkuSJ7fOS1mlHRpKit8aLGDgnavbczpu/G",
+        "hbarBalance": 1,
+        "smilesBalance": 0,
+        "isActive": true,
+        "createdAt": "2025-08-06T18:24:11.398Z",
+        "updatedAt": "2025-08-06T18:24:11.398Z"
+      },
+      {
+        "id": "cme0ars89000crer6n7jjpi8b",
+        "communityId": "comm_010",
+        "accountId": "0.0.6512262",
+        "publicKey": "302a300506032b65700321003f0a12a76bcb1cdad689cf7dd4e18244d7ec114c41f07839808d91f3640995b3",
+        "encryptedPrivateKey": "$2b$12$1mY/np8uhKLmy/Et5gX/C.cvqG9q9kN8yJIuGB5X0erbh0gQjzMU.",
+        "hbarBalance": 1,
+        "smilesBalance": 0,
+        "isActive": true,
+        "createdAt": "2025-08-06T18:24:15.274Z",
+        "updatedAt": "2025-08-06T18:24:15.274Z"
+      },
+      {
+        "id": "cme0aruom000erer6eild4jqq",
+        "communityId": "comm_007",
+        "accountId": "0.0.6512263",
+        "publicKey": "302a300506032b6570032100c9ea7ef6d14b22ada165af4bf8037e3ba77a2c4b8591632f33639e8cc219927e",
+        "encryptedPrivateKey": "$2b$12$GSqm7udRRV0MyXF3MCw7AeBKgpSi26QxoIqlQ9D9nJSiztt2jnK5e",
+        "hbarBalance": 1,
+        "smilesBalance": 0,
+        "isActive": true,
+        "createdAt": "2025-08-06T18:24:18.455Z",
+        "updatedAt": "2025-08-06T18:24:18.455Z"
+      },
+      {
+        "id": "cme0arwmm000grer6eslmgoo4",
+        "communityId": "comm_009",
+        "accountId": "0.0.6512264",
+        "publicKey": "302a300506032b65700321000fb3ec15d5f2658d7a2c5d05e6282d17808da0103c61163f0492745bc7bdc446",
+        "encryptedPrivateKey": "$2b$12$H8sYLtYKfI2E6FcY0RAU4.YcmvKnkNPyqfr635crhIcb6IE4FgrYC",
+        "hbarBalance": 1,
+        "smilesBalance": 0,
+        "isActive": true,
+        "createdAt": "2025-08-06T18:24:20.974Z",
+        "updatedAt": "2025-08-06T18:24:20.974Z"
+      },
+      {
+        "id": "cme0arzfh000irer60asjk3wm",
+        "communityId": "comm_006",
+        "accountId": "0.0.6512265",
+        "publicKey": "302a300506032b6570032100f1d80e6cfec069d09e27297bb4a7a71753d7b34e5c29187357a8d097b3e5d0cc",
+        "encryptedPrivateKey": "$2b$12$j1RPKqFnl8xSyNztSQd2puD1JyRSijpwQcbufwP4i4Va2f9yfwmde",
+        "hbarBalance": 1,
+        "smilesBalance": 0,
+        "isActive": true,
+        "createdAt": "2025-08-06T18:24:24.606Z",
+        "updatedAt": "2025-08-06T18:24:24.606Z"
+      },
+      {
+        "id": "cme0as1tc000krer60q7arni6",
+        "communityId": "comm_005",
+        "accountId": "0.0.6512266",
+        "publicKey": "302a300506032b6570032100531476e0d4c364c1f0500d2d724381cdd9ffbb3afd7c1340673166f9a5615bb9",
+        "encryptedPrivateKey": "$2b$12$UvuYleQfTdhwkUxWvFq0hurggOhT4fzHNSli8wIKinTkNm4QWR.r2",
+        "hbarBalance": 1,
+        "smilesBalance": 0,
+        "isActive": true,
+        "createdAt": "2025-08-06T18:24:27.697Z",
+        "updatedAt": "2025-08-06T18:24:27.697Z"
+      },
+      {
+        "id": "cme0as670000mrer603xwv9o6",
+        "communityId": "comm_004",
+        "accountId": "0.0.6512267",
+        "publicKey": "302a300506032b65700321006e9488242b32885f426f06ae83115b22200cce2611148321582e3eda3891acc4",
+        "encryptedPrivateKey": "$2b$12$/EvhD5jbRoagdFxvebWrvu4FEXMUbaBglI1pHPoNXz5cYszUtohn6",
+        "hbarBalance": 1,
+        "smilesBalance": 0,
+        "isActive": true,
+        "createdAt": "2025-08-06T18:24:33.373Z",
+        "updatedAt": "2025-08-06T18:24:33.373Z"
+      },
+      {
+        "id": "cme0asbpc000orer680gs18gg",
+        "communityId": "comm_002",
+        "accountId": "0.0.6512268",
+        "publicKey": "302a300506032b6570032100728f4f6b9a2c099cca80a1988b212df600fb07f1b67507ae93d31d59b395f901",
+        "encryptedPrivateKey": "$2b$12$EhuO6IV1drQP.NkHVxWK3O2Q0Ul/aP.UfNtob9l4lTQKAzp0dmvri",
+        "hbarBalance": 1,
+        "smilesBalance": 0,
+        "isActive": true,
+        "createdAt": "2025-08-06T18:24:40.512Z",
+        "updatedAt": "2025-08-06T18:24:40.512Z"
+      }
+    ],
+    "custodialWallets": [
+      {
+        "id": "cme070tvy0001remqgtzlmqhc",
+        "userId": "cmdzrla2g0000rezf9dh00feb",
+        "accountId": "0.0.6511860",
+        "publicKey": "302a300506032b657003210076488709e4ee71121aab59c47b7c9b3bb10fa0cb16377ecc096fe7476701c271",
+        "encryptedPrivateKey": "$2b$12$5b8seM4R87U9oRHhzrJ6gOI5CneYhUU3f7bvXPD6YA9fcC.AW9VVe",
+        "hbarBalance": 1,
+        "smilesBalance": 0,
+        "isActive": true,
+        "createdAt": "2025-08-06T16:39:18.862Z",
+        "updatedAt": "2025-08-06T16:39:18.862Z"
+      },
+      {
+        "id": "cme09zqt30005remqfgnv03k2",
+        "userId": "cme09xpv20002remqo9dhv4x2",
+        "accountId": "0.0.6512183",
+        "publicKey": "302a300506032b65700321008668dfb498818fa16048d153a91e21822f99b2492715cc5f629a63d477cd4ac3",
+        "encryptedPrivateKey": "$2b$12$dhuGI2QvTJwHqECiSARpKuWfM4ELI0up5G.hjUd55PlI6i45NVnJe",
+        "hbarBalance": 1,
+        "smilesBalance": 0,
+        "isActive": true,
+        "createdAt": "2025-08-06T18:02:27.063Z",
+        "updatedAt": "2025-08-06T18:02:27.063Z"
+      },
+      {
+        "id": "cme0a095n0009remqpuis5283",
+        "userId": "cme0a05li0006remqz7fiofh8",
+        "accountId": "0.0.6512184",
+        "publicKey": "302a300506032b657003210077ec1c63ff7f9bda941d088c8ac527bffc3b3fbf3f3e9815beced25e674712e3",
+        "encryptedPrivateKey": "$2b$12$XtuFuvoEtC/3Y.xGhGKQ8OU7KMN3/qDSPOIB6eHsnz1WA8rl2c0c6",
+        "hbarBalance": 1,
+        "smilesBalance": 0,
+        "isActive": true,
+        "createdAt": "2025-08-06T18:02:50.843Z",
+        "updatedAt": "2025-08-06T18:02:50.843Z"
+      }
+    ],
+    "missions": [
+      {
+        "id": "cmdyq6f520005rerpu3ir5qx3",
+        "title": "Test Mission",
+        "description": "A test mission for API testing",
+        "reward": 50,
+        "status": "available",
+        "proofRequired": true,
+        "deadline": "2024-12-31T23:59:59.000Z",
+        "maxParticipants": 100,
+        "currentParticipants": 0,
+        "category": "technology",
+        "difficulty": "medium",
+        "tags": [
+          "technology",
+          "medium"
+        ],
+        "createdAt": "2025-08-05T16:00:00.039Z",
+        "updatedAt": "2025-08-05T16:00:00.039Z",
+        "createdBy": "user_001",
+        "users": []
+      },
+      {
+        "id": "mission_001",
+        "title": "Watch Your First Impact Video",
+        "description": "Explore the SmileUp video feed and watch your first impact video to understand how communities are making a difference!",
+        "reward": 20,
+        "status": "available",
+        "proofRequired": false,
+        "deadline": "2024-03-16T23:59:59.000Z",
+        "maxParticipants": 200,
+        "currentParticipants": 52,
+        "category": "daily",
+        "difficulty": "easy",
+        "tags": [
+          "daily",
+          "low"
+        ],
+        "createdAt": "2025-08-05T15:50:07.421Z",
+        "updatedAt": "2025-08-05T16:27:07.825Z",
+        "createdBy": null,
+        "users": [
+          {
+            "id": "cmdyptpvl001sremwuef49tdf",
+            "userId": "user_003",
+            "missionId": "mission_001",
+            "status": "in_progress",
+            "completedAt": null,
+            "proofText": null,
+            "proofImages": [],
+            "joinedAt": "2025-08-05T15:50:07.426Z",
+            "updatedAt": "2025-08-05T15:50:07.426Z",
+            "user": {
+              "id": "user_003",
+              "name": "Aisha Patel",
+              "email": "aisha.patel@email.com"
+            }
+          },
+          {
+            "id": "cmdyr5b5d000drerpb00ty4gc",
+            "userId": "user_001",
+            "missionId": "mission_001",
+            "status": "in_progress",
+            "completedAt": null,
+            "proofText": null,
+            "proofImages": [],
+            "joinedAt": "2025-08-05T16:27:07.825Z",
+            "updatedAt": "2025-08-05T16:27:07.825Z",
+            "user": {
+              "id": "user_001",
+              "name": "Sarah Chen",
+              "email": "sarah.chen@email.com"
+            }
+          }
+        ]
+      },
+      {
+        "id": "mission_003",
+        "title": "Use AI Assistant",
+        "description": "Ask a question or get help from the AI assistant about a specific project or community initiative.",
+        "reward": 10,
+        "status": "available",
+        "proofRequired": false,
+        "deadline": "2024-03-16T23:59:59.000Z",
+        "maxParticipants": 200,
+        "currentParticipants": 27,
+        "category": "daily",
+        "difficulty": "easy",
+        "tags": [
+          "daily",
+          "low"
+        ],
+        "createdAt": "2025-08-05T15:50:07.422Z",
+        "updatedAt": "2025-08-05T15:50:07.423Z",
+        "createdBy": null,
+        "users": [
+          {
+            "id": "cmdyptpvm002gremwgjh6u8hh",
+            "userId": "user_008",
+            "missionId": "mission_003",
+            "status": "in_progress",
+            "completedAt": null,
+            "proofText": null,
+            "proofImages": [],
+            "joinedAt": "2025-08-05T15:50:07.426Z",
+            "updatedAt": "2025-08-05T15:50:07.426Z",
+            "user": {
+              "id": "user_008",
+              "name": "Alex Kim",
+              "email": "alex.kim@email.com"
+            }
+          }
+        ]
+      },
+      {
+        "id": "mission_004",
+        "title": "Participate in 3 Impact Events",
+        "description": "Engage in at least 3 community events or webinars this week to learn about different causes and initiatives.",
+        "reward": 50,
+        "status": "available",
+        "proofRequired": true,
+        "deadline": "2024-03-23T23:59:59.000Z",
+        "maxParticipants": 100,
+        "currentParticipants": 31,
+        "category": "weekly",
+        "difficulty": "medium",
+        "tags": [
+          "weekly",
+          "medium"
+        ],
+        "createdAt": "2025-08-05T15:50:07.422Z",
+        "updatedAt": "2025-08-05T15:50:07.423Z",
+        "createdBy": null,
+        "users": []
+      },
+      {
+        "id": "mission_002",
+        "title": "Add 3 New Friends",
+        "description": "Connect with 3 new members in the SmileUp community to expand your network of changemakers.",
+        "reward": 15,
+        "status": "available",
+        "proofRequired": false,
+        "deadline": "2024-03-16T23:59:59.000Z",
+        "maxParticipants": 200,
+        "currentParticipants": 40,
+        "category": "daily",
+        "difficulty": "easy",
+        "tags": [
+          "daily",
+          "low"
+        ],
+        "createdAt": "2025-08-05T15:50:07.422Z",
+        "updatedAt": "2025-08-05T15:50:07.423Z",
+        "createdBy": null,
+        "users": [
+          {
+            "id": "cmdyptpvl001oremw534hjv3o",
+            "userId": "user_002",
+            "missionId": "mission_002",
+            "status": "in_progress",
+            "completedAt": null,
+            "proofText": null,
+            "proofImages": [],
+            "joinedAt": "2025-08-05T15:50:07.426Z",
+            "updatedAt": "2025-08-05T15:50:07.426Z",
+            "user": {
+              "id": "user_002",
+              "name": "Marcus Johnson",
+              "email": "marcus.johnson@email.com"
+            }
+          },
+          {
+            "id": "cmdyptpvm0029remwo25sug3k",
+            "userId": "user_007",
+            "missionId": "mission_002",
+            "status": "completed",
+            "completedAt": "2025-08-02T21:37:47.946Z",
+            "proofText": "Completed Add 3 New Friends successfully!",
+            "proofImages": [
+              "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=300&fit=crop"
+            ],
+            "joinedAt": "2025-08-05T15:50:07.426Z",
+            "updatedAt": "2025-08-05T15:50:07.426Z",
+            "user": {
+              "id": "user_007",
+              "name": "Maria Garcia",
+              "email": "maria.garcia@email.com"
+            }
+          }
+        ]
+      },
+      {
+        "id": "mission_013",
+        "title": "Community Mural Painting",
+        "description": "Help create a community mural that celebrates local culture and brings art to public spaces.",
+        "reward": 80,
+        "status": "available",
+        "proofRequired": true,
+        "deadline": "2024-03-24T18:00:00.000Z",
+        "maxParticipants": 100,
+        "currentParticipants": 48,
+        "category": "community",
+        "difficulty": "medium",
+        "tags": [
+          "community",
+          "medium"
+        ],
+        "createdAt": "2025-08-05T15:50:07.422Z",
+        "updatedAt": "2025-08-05T15:50:07.423Z",
+        "createdBy": "comm_004",
+        "users": [
+          {
+            "id": "cmdyptpvl001jremwk3h40v1z",
+            "userId": "user_002",
+            "missionId": "mission_013",
+            "status": "in_progress",
+            "completedAt": null,
+            "proofText": null,
+            "proofImages": [],
+            "joinedAt": "2025-08-05T15:50:07.426Z",
+            "updatedAt": "2025-08-05T15:50:07.426Z",
+            "user": {
+              "id": "user_002",
+              "name": "Marcus Johnson",
+              "email": "marcus.johnson@email.com"
+            }
+          }
+        ]
+      },
+      {
+        "id": "mission_011",
+        "title": "Campus Cleanup Mission",
+        "description": "Organize a campus-wide cleanup event to collect recyclable materials and promote waste reduction.",
+        "reward": 30,
+        "status": "available",
+        "proofRequired": true,
+        "deadline": "2024-03-19T16:00:00.000Z",
+        "maxParticipants": 100,
+        "currentParticipants": 37,
+        "category": "community",
+        "difficulty": "medium",
+        "tags": [
+          "community",
+          "medium"
+        ],
+        "createdAt": "2025-08-05T15:50:07.422Z",
+        "updatedAt": "2025-08-05T15:50:07.423Z",
+        "createdBy": "comm_003",
+        "users": [
+          {
+            "id": "cmdyptpvl001uremw5362reed",
+            "userId": "user_003",
+            "missionId": "mission_011",
+            "status": "completed",
+            "completedAt": "2025-07-31T18:40:52.879Z",
+            "proofText": "Completed Campus Cleanup Mission successfully!",
+            "proofImages": [
+              "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=300&fit=crop"
+            ],
+            "joinedAt": "2025-08-05T15:50:07.426Z",
+            "updatedAt": "2025-08-05T15:50:07.426Z",
+            "user": {
+              "id": "user_003",
+              "name": "Aisha Patel",
+              "email": "aisha.patel@email.com"
+            }
+          },
+          {
+            "id": "cmdyptpvm0026remw3mln03lv",
+            "userId": "user_005",
+            "missionId": "mission_011",
+            "status": "completed",
+            "completedAt": "2025-08-04T12:05:48.120Z",
+            "proofText": "Completed Campus Cleanup Mission successfully!",
+            "proofImages": [
+              "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=300&fit=crop"
+            ],
+            "joinedAt": "2025-08-05T15:50:07.426Z",
+            "updatedAt": "2025-08-05T15:50:07.426Z",
+            "user": {
+              "id": "user_005",
+              "name": "Emma Thompson",
+              "email": "emma.thompson@email.com"
+            }
+          }
+        ]
+      },
+      {
+        "id": "mission_012",
+        "title": "Recycling Drive Challenge",
+        "description": "Collect recyclable materials from your campus and community to promote sustainable waste management.",
+        "reward": 25,
+        "status": "available",
+        "proofRequired": true,
+        "deadline": "2024-03-21T17:00:00.000Z",
+        "maxParticipants": 200,
+        "currentParticipants": 22,
+        "category": "community",
+        "difficulty": "easy",
+        "tags": [
+          "community",
+          "low"
+        ],
+        "createdAt": "2025-08-05T15:50:07.422Z",
+        "updatedAt": "2025-08-05T15:50:07.423Z",
+        "createdBy": "comm_003",
+        "users": [
+          {
+            "id": "cmdyptpvm0021remw6ua3pyjp",
+            "userId": "user_005",
+            "missionId": "mission_012",
+            "status": "in_progress",
+            "completedAt": null,
+            "proofText": null,
+            "proofImages": [],
+            "joinedAt": "2025-08-05T15:50:07.426Z",
+            "updatedAt": "2025-08-05T15:50:07.426Z",
+            "user": {
+              "id": "user_005",
+              "name": "Emma Thompson",
+              "email": "emma.thompson@email.com"
+            }
+          },
+          {
+            "id": "cmdyptpvm001wremwg7uc59g6",
+            "userId": "user_004",
+            "missionId": "mission_012",
+            "status": "in_progress",
+            "completedAt": null,
+            "proofText": null,
+            "proofImages": [],
+            "joinedAt": "2025-08-05T15:50:07.426Z",
+            "updatedAt": "2025-08-05T15:50:07.426Z",
+            "user": {
+              "id": "user_004",
+              "name": "David Rodriguez",
+              "email": "david.rodriguez@email.com"
+            }
+          }
+        ]
+      },
+      {
+        "id": "mission_010",
+        "title": "Digital Literacy Teaching",
+        "description": "Teach seniors how to use technology safely and effectively in our digital literacy program.",
+        "reward": 60,
+        "status": "available",
+        "proofRequired": true,
+        "deadline": "2024-03-22T15:00:00.000Z",
+        "maxParticipants": 100,
+        "currentParticipants": 53,
+        "category": "community",
+        "difficulty": "medium",
+        "tags": [
+          "community",
+          "medium"
+        ],
+        "createdAt": "2025-08-05T15:50:07.422Z",
+        "updatedAt": "2025-08-05T15:50:07.423Z",
+        "createdBy": "comm_002",
+        "users": []
+      },
+      {
+        "id": "mission_016",
+        "title": "Community Health Screening",
+        "description": "Volunteer at free health screening events to provide basic health services to uninsured individuals.",
+        "reward": 90,
+        "status": "available",
+        "proofRequired": true,
+        "deadline": "2024-03-23T17:00:00.000Z",
+        "maxParticipants": 50,
+        "currentParticipants": 36,
+        "category": "community",
+        "difficulty": "hard",
+        "tags": [
+          "community",
+          "high"
+        ],
+        "createdAt": "2025-08-05T15:50:07.422Z",
+        "updatedAt": "2025-08-05T15:50:07.423Z",
+        "createdBy": "comm_005",
+        "users": []
+      },
+      {
+        "id": "mission_014",
+        "title": "Art Workshop Teaching",
+        "description": "Teach art workshops for children in underserved communities to make creativity accessible to all.",
+        "reward": 45,
+        "status": "available",
+        "proofRequired": true,
+        "deadline": "2024-03-17T15:00:00.000Z",
+        "maxParticipants": 100,
+        "currentParticipants": 12,
+        "category": "community",
+        "difficulty": "medium",
+        "tags": [
+          "community",
+          "medium"
+        ],
+        "createdAt": "2025-08-05T15:50:07.422Z",
+        "updatedAt": "2025-08-05T15:50:07.423Z",
+        "createdBy": "comm_004",
+        "users": [
+          {
+            "id": "cmdyptpvm002fremw2jg060xz",
+            "userId": "user_007",
+            "missionId": "mission_014",
+            "status": "in_progress",
+            "completedAt": null,
+            "proofText": null,
+            "proofImages": [],
+            "joinedAt": "2025-08-05T15:50:07.426Z",
+            "updatedAt": "2025-08-05T15:50:07.426Z",
+            "user": {
+              "id": "user_007",
+              "name": "Maria Garcia",
+              "email": "maria.garcia@email.com"
+            }
+          },
+          {
+            "id": "cmdyptpvm0028remw0ld61p5x",
+            "userId": "user_006",
+            "missionId": "mission_014",
+            "status": "in_progress",
+            "completedAt": null,
+            "proofText": null,
+            "proofImages": [],
+            "joinedAt": "2025-08-05T15:50:07.426Z",
+            "updatedAt": "2025-08-05T15:50:07.426Z",
+            "user": {
+              "id": "user_006",
+              "name": "James Wilson",
+              "email": "james.wilson@email.com"
+            }
+          }
+        ]
+      },
+      {
+        "id": "mission_015",
+        "title": "Health Workshop Mission",
+        "description": "Facilitate health education workshops to promote wellness and preventive care in communities.",
+        "reward": 75,
+        "status": "available",
+        "proofRequired": true,
+        "deadline": "2024-03-20T16:00:00.000Z",
+        "maxParticipants": 100,
+        "currentParticipants": 51,
+        "category": "community",
+        "difficulty": "medium",
+        "tags": [
+          "community",
+          "medium"
+        ],
+        "createdAt": "2025-08-05T15:50:07.422Z",
+        "updatedAt": "2025-08-05T15:50:07.423Z",
+        "createdBy": "comm_005",
+        "users": [
+          {
+            "id": "cmdyptpvm002hremw25j9dce8",
+            "userId": "user_008",
+            "missionId": "mission_015",
+            "status": "in_progress",
+            "completedAt": null,
+            "proofText": null,
+            "proofImages": [],
+            "joinedAt": "2025-08-05T15:50:07.426Z",
+            "updatedAt": "2025-08-05T15:50:07.426Z",
+            "user": {
+              "id": "user_008",
+              "name": "Alex Kim",
+              "email": "alex.kim@email.com"
+            }
+          }
+        ]
+      },
+      {
+        "id": "mission_008",
+        "title": "Tree Planting Challenge",
+        "description": "Plant native trees in our community to restore local ecosystems and improve air quality.",
+        "reward": 75,
+        "status": "available",
+        "proofRequired": true,
+        "deadline": "2024-03-18T16:00:00.000Z",
+        "maxParticipants": 50,
+        "currentParticipants": 43,
+        "category": "community",
+        "difficulty": "hard",
+        "tags": [
+          "community",
+          "high"
+        ],
+        "createdAt": "2025-08-05T15:50:07.422Z",
+        "updatedAt": "2025-08-05T15:50:07.423Z",
+        "createdBy": "comm_001",
+        "users": [
+          {
+            "id": "cmdyptpvl001gremwrffovg18",
+            "userId": "user_001",
+            "missionId": "mission_008",
+            "status": "in_progress",
+            "completedAt": null,
+            "proofText": null,
+            "proofImages": [],
+            "joinedAt": "2025-08-05T15:50:07.426Z",
+            "updatedAt": "2025-08-05T15:50:07.426Z",
+            "user": {
+              "id": "user_001",
+              "name": "Sarah Chen",
+              "email": "sarah.chen@email.com"
+            }
+          },
+          {
+            "id": "cmdyptpvm001xremwbfz5qp62",
+            "userId": "user_004",
+            "missionId": "mission_008",
+            "status": "completed",
+            "completedAt": "2025-07-31T13:27:35.945Z",
+            "proofText": "Completed Tree Planting Challenge successfully!",
+            "proofImages": [
+              "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=300&fit=crop"
+            ],
+            "joinedAt": "2025-08-05T15:50:07.426Z",
+            "updatedAt": "2025-08-05T15:50:07.426Z",
+            "user": {
+              "id": "user_004",
+              "name": "David Rodriguez",
+              "email": "david.rodriguez@email.com"
+            }
+          },
+          {
+            "id": "cmdyptpvm0020remwk9v8hpg3",
+            "userId": "user_006",
+            "missionId": "mission_008",
+            "status": "completed",
+            "completedAt": "2025-08-03T01:33:18.132Z",
+            "proofText": "Completed Tree Planting Challenge successfully!",
+            "proofImages": [
+              "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=300&fit=crop"
+            ],
+            "joinedAt": "2025-08-05T15:50:07.426Z",
+            "updatedAt": "2025-08-05T15:50:07.426Z",
+            "user": {
+              "id": "user_006",
+              "name": "James Wilson",
+              "email": "james.wilson@email.com"
+            }
+          }
+        ]
+      },
+      {
+        "id": "mission_018",
+        "title": "Composting Workshop",
+        "description": "Teach community members how to compost kitchen waste and reduce organic waste in landfills.",
+        "reward": 35,
+        "status": "available",
+        "proofRequired": true,
+        "deadline": "2024-03-21T15:00:00.000Z",
+        "maxParticipants": 200,
+        "currentParticipants": 6,
+        "category": "community",
+        "difficulty": "easy",
+        "tags": [
+          "community",
+          "low"
+        ],
+        "createdAt": "2025-08-05T15:50:07.422Z",
+        "updatedAt": "2025-08-05T15:50:07.423Z",
+        "createdBy": "comm_006",
+        "users": []
+      },
+      {
+        "id": "mission_017",
+        "title": "Garden Maintenance Mission",
+        "description": "Help maintain community gardens and teach others about sustainable urban agriculture.",
+        "reward": 40,
+        "status": "available",
+        "proofRequired": true,
+        "deadline": "2024-03-19T16:00:00.000Z",
+        "maxParticipants": 100,
+        "currentParticipants": 18,
+        "category": "community",
+        "difficulty": "medium",
+        "tags": [
+          "community",
+          "medium"
+        ],
+        "createdAt": "2025-08-05T15:50:07.422Z",
+        "updatedAt": "2025-08-05T15:50:07.423Z",
+        "createdBy": "comm_006",
+        "users": []
+      },
+      {
+        "id": "mission_006",
+        "title": "Make 5 New Friends",
+        "description": "Connect with at least 5 new members on SmileUp to build your network of impact-driven individuals.",
+        "reward": 50,
+        "status": "available",
+        "proofRequired": false,
+        "deadline": "2024-03-23T23:59:59.000Z",
+        "maxParticipants": 100,
+        "currentParticipants": 46,
+        "category": "weekly",
+        "difficulty": "medium",
+        "tags": [
+          "weekly",
+          "medium"
+        ],
+        "createdAt": "2025-08-05T15:50:07.422Z",
+        "updatedAt": "2025-08-05T15:50:07.423Z",
+        "createdBy": null,
+        "users": []
+      },
+      {
+        "id": "mission_009",
+        "title": "Code for Good Hackathon",
+        "description": "Participate in our 48-hour hackathon to create technology solutions for local nonprofits.",
+        "reward": 100,
+        "status": "available",
+        "proofRequired": true,
+        "deadline": "2024-03-25T18:00:00.000Z",
+        "maxParticipants": 50,
+        "currentParticipants": 21,
+        "category": "community",
+        "difficulty": "hard",
+        "tags": [
+          "community",
+          "high"
+        ],
+        "createdAt": "2025-08-05T15:50:07.422Z",
+        "updatedAt": "2025-08-05T15:50:07.423Z",
+        "createdBy": "comm_002",
+        "users": [
+          {
+            "id": "cmdyptpvl001hremw11bjlzcf",
+            "userId": "user_001",
+            "missionId": "mission_009",
+            "status": "completed",
+            "completedAt": "2025-08-03T22:09:57.609Z",
+            "proofText": "Completed Code for Good Hackathon successfully!",
+            "proofImages": [
+              "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=300&fit=crop"
+            ],
+            "joinedAt": "2025-08-05T15:50:07.426Z",
+            "updatedAt": "2025-08-05T15:50:07.426Z",
+            "user": {
+              "id": "user_001",
+              "name": "Sarah Chen",
+              "email": "sarah.chen@email.com"
+            }
+          },
+          {
+            "id": "cmdyptpvl001qremwwxry8vwt",
+            "userId": "user_003",
+            "missionId": "mission_009",
+            "status": "in_progress",
+            "completedAt": null,
+            "proofText": null,
+            "proofImages": [],
+            "joinedAt": "2025-08-05T15:50:07.426Z",
+            "updatedAt": "2025-08-05T15:50:07.426Z",
+            "user": {
+              "id": "user_003",
+              "name": "Aisha Patel",
+              "email": "aisha.patel@email.com"
+            }
+          }
+        ]
+      },
+      {
+        "id": "mission_020",
+        "title": "Green Tech Workshop",
+        "description": "Lead workshops on sustainable technology solutions and renewable energy for community members.",
+        "reward": 65,
+        "status": "available",
+        "proofRequired": true,
+        "deadline": "2024-03-22T16:00:00.000Z",
+        "maxParticipants": 100,
+        "currentParticipants": 16,
+        "category": "community",
+        "difficulty": "medium",
+        "tags": [
+          "community",
+          "medium"
+        ],
+        "createdAt": "2025-08-05T15:50:07.422Z",
+        "updatedAt": "2025-08-05T15:50:07.423Z",
+        "createdBy": "comm_007",
+        "users": []
+      },
+      {
+        "id": "mission_007",
+        "title": "Beach Cleanup Mission",
+        "description": "Join our beach cleanup event and help remove plastic waste and marine debris from our local shoreline.",
+        "reward": 50,
+        "status": "available",
+        "proofRequired": true,
+        "deadline": "2024-03-20T17:00:00.000Z",
+        "maxParticipants": 100,
+        "currentParticipants": 9,
+        "category": "community",
+        "difficulty": "medium",
+        "tags": [
+          "community",
+          "medium"
+        ],
+        "createdAt": "2025-08-05T15:50:07.422Z",
+        "updatedAt": "2025-08-05T15:50:07.423Z",
+        "createdBy": "comm_001",
+        "users": []
+      },
+      {
+        "id": "mission_005",
+        "title": "Redeem a Reward",
+        "description": "Use your Smiles to redeem a special reward from the Bazaar and support community initiatives.",
+        "reward": 30,
+        "status": "available",
+        "proofRequired": false,
+        "deadline": "2024-03-23T23:59:59.000Z",
+        "maxParticipants": 200,
+        "currentParticipants": 42,
+        "category": "weekly",
+        "difficulty": "easy",
+        "tags": [
+          "weekly",
+          "low"
+        ],
+        "createdAt": "2025-08-05T15:50:07.422Z",
+        "updatedAt": "2025-08-05T15:50:07.423Z",
+        "createdBy": null,
+        "users": [
+          {
+            "id": "cmdyptpvm002bremw8fywsisk",
+            "userId": "user_007",
+            "missionId": "mission_005",
+            "status": "completed",
+            "completedAt": "2025-08-05T04:06:10.794Z",
+            "proofText": "Completed Redeem a Reward successfully!",
+            "proofImages": [
+              "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=300&fit=crop"
+            ],
+            "joinedAt": "2025-08-05T15:50:07.426Z",
+            "updatedAt": "2025-08-05T15:50:07.426Z",
+            "user": {
+              "id": "user_007",
+              "name": "Maria Garcia",
+              "email": "maria.garcia@email.com"
+            }
+          }
+        ]
+      },
+      {
+        "id": "mission_019",
+        "title": "Solar Panel Installation",
+        "description": "Help install solar panels on community buildings to promote renewable energy adoption.",
+        "reward": 120,
+        "status": "available",
+        "proofRequired": true,
+        "deadline": "2024-03-26T17:00:00.000Z",
+        "maxParticipants": 50,
+        "currentParticipants": 37,
+        "category": "community",
+        "difficulty": "hard",
+        "tags": [
+          "community",
+          "high"
+        ],
+        "createdAt": "2025-08-05T15:50:07.422Z",
+        "updatedAt": "2025-08-05T15:50:07.423Z",
+        "createdBy": "comm_007",
+        "users": [
+          {
+            "id": "cmdyptpvm001vremwa1hp4k6q",
+            "userId": "user_003",
+            "missionId": "mission_019",
+            "status": "in_progress",
+            "completedAt": null,
+            "proofText": null,
+            "proofImages": [],
+            "joinedAt": "2025-08-05T15:50:07.426Z",
+            "updatedAt": "2025-08-05T15:50:07.426Z",
+            "user": {
+              "id": "user_003",
+              "name": "Aisha Patel",
+              "email": "aisha.patel@email.com"
+            }
+          },
+          {
+            "id": "cmdyptpvm002aremw16sgdeip",
+            "userId": "user_007",
+            "missionId": "mission_019",
+            "status": "completed",
+            "completedAt": "2025-08-02T02:17:02.492Z",
+            "proofText": "Completed Solar Panel Installation successfully!",
+            "proofImages": [
+              "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=300&fit=crop"
+            ],
+            "joinedAt": "2025-08-05T15:50:07.426Z",
+            "updatedAt": "2025-08-05T15:50:07.426Z",
+            "user": {
+              "id": "user_007",
+              "name": "Maria Garcia",
+              "email": "maria.garcia@email.com"
+            }
+          }
+        ]
+      }
+    ],
+    "rewards": [
+      {
+        "id": "reward_002",
+        "name": "Impact Leader Certificate",
+        "description": "Official certificate recognizing your contributions to community impact and social change. Perfect for resumes and portfolios.",
+        "price": 250,
+        "category": "certificate",
+        "imageUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=300&h=300&fit=crop",
+        "isAvailable": true,
+        "stock": null,
+        "soldCount": 6,
+        "createdAt": "2025-08-05T15:50:07.429Z",
+        "updatedAt": "2025-08-05T15:50:07.429Z",
+        "purchases": [
+          {
+            "id": "cmdyptpvr002mremwtlr13aga",
+            "userId": "user_001",
+            "rewardId": "reward_002",
+            "purchasedAt": "2025-07-31T13:48:23.714Z",
+            "user": {
+              "id": "user_001",
+              "name": "Sarah Chen",
+              "email": "sarah.chen@email.com"
+            }
+          },
+          {
+            "id": "cmdyptpvr002tremw0jl2b50e",
+            "userId": "user_002",
+            "rewardId": "reward_002",
+            "purchasedAt": "2025-07-08T00:41:14.526Z",
+            "user": {
+              "id": "user_002",
+              "name": "Marcus Johnson",
+              "email": "marcus.johnson@email.com"
+            }
+          }
+        ]
+      },
+      {
+        "id": "reward_003",
+        "name": "SmileUp Impact T-Shirt",
+        "description": "High-quality organic cotton t-shirt featuring the SmileUp logo and a message of social impact. Available in multiple sizes.",
+        "price": 150,
+        "category": "merchandise",
+        "imageUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=300&h=300&fit=crop",
+        "isAvailable": true,
+        "stock": 17,
+        "soldCount": 19,
+        "createdAt": "2025-08-05T15:50:07.429Z",
+        "updatedAt": "2025-08-05T15:50:07.429Z",
+        "purchases": []
+      },
+      {
+        "id": "reward_001",
+        "name": "Early Adopter Badge",
+        "description": "Exclusive digital badge for being one of the first users of SmileUp ImpactChain. Show your commitment to social impact from day one.",
+        "price": 100,
+        "category": "digital",
+        "imageUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=300&h=300&fit=crop",
+        "isAvailable": true,
+        "stock": null,
+        "soldCount": 14,
+        "createdAt": "2025-08-05T15:50:07.429Z",
+        "updatedAt": "2025-08-05T15:50:07.429Z",
+        "purchases": [
+          {
+            "id": "cmdyptpvr002vremwg81zp1q3",
+            "userId": "user_004",
+            "rewardId": "reward_001",
+            "purchasedAt": "2025-07-23T13:08:44.072Z",
+            "user": {
+              "id": "user_004",
+              "name": "David Rodriguez",
+              "email": "david.rodriguez@email.com"
+            }
+          },
+          {
+            "id": "cmdyptpvr002uremwavozx8sr",
+            "userId": "user_003",
+            "rewardId": "reward_001",
+            "purchasedAt": "2025-07-09T02:27:40.353Z",
+            "user": {
+              "id": "user_003",
+              "name": "Aisha Patel",
+              "email": "aisha.patel@email.com"
+            }
+          }
+        ]
+      },
+      {
+        "id": "reward_004",
+        "name": "Guided Nature Hike",
+        "description": "Join a professional naturalist for a guided hike through protected wilderness areas. Learn about local ecosystems and conservation efforts.",
+        "price": 300,
+        "category": "experience",
+        "imageUrl": "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=300&h=300&fit=crop",
+        "isAvailable": true,
+        "stock": 54,
+        "soldCount": 10,
+        "createdAt": "2025-08-05T15:50:07.429Z",
+        "updatedAt": "2025-08-05T15:50:07.429Z",
+        "purchases": [
+          {
+            "id": "cmdyptpvr002nremwrktt5xn4",
+            "userId": "user_001",
+            "rewardId": "reward_004",
+            "purchasedAt": "2025-07-29T13:58:15.981Z",
+            "user": {
+              "id": "user_001",
+              "name": "Sarah Chen",
+              "email": "sarah.chen@email.com"
+            }
+          }
+        ]
+      },
+      {
+        "id": "reward_009",
+        "name": "Campus Sustainability Tour",
+        "description": "Guided tour of sustainable initiatives on university campuses, including green buildings, renewable energy, and waste management systems.",
+        "price": 75,
+        "category": "experience",
+        "imageUrl": "https://images.unsplash.com/photo-1523240798132-8757214e6b0a?w=300&h=300&fit=crop",
+        "isAvailable": true,
+        "stock": 31,
+        "soldCount": 0,
+        "createdAt": "2025-08-05T15:50:07.429Z",
+        "updatedAt": "2025-08-05T15:50:07.429Z",
+        "purchases": []
+      },
+      {
+        "id": "reward_011",
+        "name": "Local Artist Print",
+        "description": "Limited edition print from a local artist, featuring original artwork that celebrates community and culture.",
+        "price": 120,
+        "category": "merchandise",
+        "imageUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=300&h=300&fit=crop",
+        "isAvailable": true,
+        "stock": 26,
+        "soldCount": 3,
+        "createdAt": "2025-08-05T15:50:07.429Z",
+        "updatedAt": "2025-08-05T15:50:07.429Z",
+        "purchases": []
+      },
+      {
+        "id": "reward_012",
+        "name": "Health Consultation Session",
+        "description": "Free health consultation session with a healthcare professional to discuss wellness and preventive care.",
+        "price": 250,
+        "category": "service",
+        "imageUrl": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=300&h=300&fit=crop",
+        "isAvailable": true,
+        "stock": 31,
+        "soldCount": 6,
+        "createdAt": "2025-08-05T15:50:07.429Z",
+        "updatedAt": "2025-08-05T15:50:07.429Z",
+        "purchases": []
+      },
+      {
+        "id": "reward_007",
+        "name": "Code Review Session",
+        "description": "One-hour code review session with senior developers to improve your programming skills and project quality.",
+        "price": 150,
+        "category": "service",
+        "imageUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=300&h=300&fit=crop",
+        "isAvailable": true,
+        "stock": 34,
+        "soldCount": 0,
+        "createdAt": "2025-08-05T15:50:07.429Z",
+        "updatedAt": "2025-08-05T15:50:07.429Z",
+        "purchases": [
+          {
+            "id": "cmdyptpvr002premwy2gy09ra",
+            "userId": "user_002",
+            "rewardId": "reward_007",
+            "purchasedAt": "2025-07-31T21:44:02.791Z",
+            "user": {
+              "id": "user_002",
+              "name": "Marcus Johnson",
+              "email": "marcus.johnson@email.com"
+            }
+          },
+          {
+            "id": "cmdyptpvr002lremwgfleez5a",
+            "userId": "user_001",
+            "rewardId": "reward_007",
+            "purchasedAt": "2025-07-22T12:07:13.683Z",
+            "user": {
+              "id": "user_001",
+              "name": "Sarah Chen",
+              "email": "sarah.chen@email.com"
+            }
+          }
+        ]
+      },
+      {
+        "id": "reward_005",
+        "name": "Environmental Stewardship Certificate",
+        "description": "Certificate recognizing your contributions to environmental conservation and sustainable practices.",
+        "price": 200,
+        "category": "certificate",
+        "imageUrl": "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=300&h=300&fit=crop",
+        "isAvailable": true,
+        "stock": null,
+        "soldCount": 16,
+        "createdAt": "2025-08-05T15:50:07.429Z",
+        "updatedAt": "2025-08-05T15:50:07.429Z",
+        "purchases": [
+          {
+            "id": "cmdyptpvr0037remwgqtbtn8a",
+            "userId": "user_004",
+            "rewardId": "reward_005",
+            "purchasedAt": "2025-07-25T14:27:25.674Z",
+            "user": {
+              "id": "user_004",
+              "name": "David Rodriguez",
+              "email": "david.rodriguez@email.com"
+            }
+          }
+        ]
+      },
+      {
+        "id": "reward_008",
+        "name": "Student Activist Award",
+        "description": "Recognition award for outstanding student leadership in environmental activism and campus sustainability initiatives.",
+        "price": 100,
+        "category": "award",
+        "imageUrl": "https://images.unsplash.com/photo-1523240798132-8757214e6b0a?w=300&h=300&fit=crop",
+        "isAvailable": true,
+        "stock": 15,
+        "soldCount": 5,
+        "createdAt": "2025-08-05T15:50:07.429Z",
+        "updatedAt": "2025-08-05T15:50:07.429Z",
+        "purchases": [
+          {
+            "id": "cmdyptpvr0036remwq64ku39a",
+            "userId": "user_007",
+            "rewardId": "reward_008",
+            "purchasedAt": "2025-07-13T02:26:30.050Z",
+            "user": {
+              "id": "user_007",
+              "name": "Maria Garcia",
+              "email": "maria.garcia@email.com"
+            }
+          }
+        ]
+      },
+      {
+        "id": "reward_014",
+        "name": "Garden Design Consultation",
+        "description": "Professional consultation to help you design and start your own urban garden, including plant selection and maintenance tips.",
+        "price": 180,
+        "category": "experience",
+        "imageUrl": "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=300&h=300&fit=crop",
+        "isAvailable": true,
+        "stock": 44,
+        "soldCount": 0,
+        "createdAt": "2025-08-05T15:50:07.429Z",
+        "updatedAt": "2025-08-05T15:50:07.429Z",
+        "purchases": []
+      },
+      {
+        "id": "reward_015",
+        "name": "Garden Starter Kit",
+        "description": "Complete starter kit including seeds, soil, pots, and gardening tools to begin your urban gardening journey.",
+        "price": 100,
+        "category": "merchandise",
+        "imageUrl": "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=300&h=300&fit=crop",
+        "isAvailable": true,
+        "stock": 54,
+        "soldCount": 13,
+        "createdAt": "2025-08-05T15:50:07.429Z",
+        "updatedAt": "2025-08-05T15:50:07.429Z",
+        "purchases": [
+          {
+            "id": "cmdyptpvr0039remwffxndaee",
+            "userId": "user_005",
+            "rewardId": "reward_015",
+            "purchasedAt": "2025-07-16T15:52:41.057Z",
+            "user": {
+              "id": "user_005",
+              "name": "Emma Thompson",
+              "email": "emma.thompson@email.com"
+            }
+          },
+          {
+            "id": "cmdyptpvs003dremwlwiqegje",
+            "userId": "user_004",
+            "rewardId": "reward_015",
+            "purchasedAt": "2025-07-19T02:13:59.204Z",
+            "user": {
+              "id": "user_004",
+              "name": "David Rodriguez",
+              "email": "david.rodriguez@email.com"
+            }
+          }
+        ]
+      },
+      {
+        "id": "reward_013",
+        "name": "Wellness Retreat Pass",
+        "description": "Weekend wellness retreat featuring yoga, meditation, nutrition workshops, and community building activities.",
+        "price": 500,
+        "category": "event",
+        "imageUrl": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=300&h=300&fit=crop",
+        "isAvailable": true,
+        "stock": 23,
+        "soldCount": 1,
+        "createdAt": "2025-08-05T15:50:07.429Z",
+        "updatedAt": "2025-08-05T15:50:07.429Z",
+        "purchases": [
+          {
+            "id": "cmdyptpvr0035remw3p916fa1",
+            "userId": "user_005",
+            "rewardId": "reward_013",
+            "purchasedAt": "2025-07-25T18:42:14.305Z",
+            "user": {
+              "id": "user_005",
+              "name": "Emma Thompson",
+              "email": "emma.thompson@email.com"
+            }
+          }
+        ]
+      },
+      {
+        "id": "reward_016",
+        "name": "Solar Panel Installation Workshop",
+        "description": "Hands-on workshop to learn about solar panel installation, renewable energy systems, and sustainable technology.",
+        "price": 350,
+        "category": "experience",
+        "imageUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=300&h=300&fit=crop",
+        "isAvailable": true,
+        "stock": 33,
+        "soldCount": 12,
+        "createdAt": "2025-08-05T15:50:07.430Z",
+        "updatedAt": "2025-08-05T15:50:07.430Z",
+        "purchases": []
+      },
+      {
+        "id": "reward_018",
+        "name": "Mental Health First Aid Training",
+        "description": "Comprehensive training to recognize and respond to mental health challenges in your community.",
+        "price": 400,
+        "category": "service",
+        "imageUrl": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=300&h=300&fit=crop",
+        "isAvailable": true,
+        "stock": 23,
+        "soldCount": 15,
+        "createdAt": "2025-08-05T15:50:07.430Z",
+        "updatedAt": "2025-08-05T15:50:07.430Z",
+        "purchases": []
+      },
+      {
+        "id": "reward_020",
+        "name": "Coding Bootcamp Scholarship",
+        "description": "Partial scholarship for our intensive coding bootcamp, helping you develop in-demand programming skills.",
+        "price": 800,
+        "category": "service",
+        "imageUrl": "https://images.unsplash.com/photo-1523240798132-8757214e6b0a?w=300&h=300&fit=crop",
+        "isAvailable": true,
+        "stock": 45,
+        "soldCount": 0,
+        "createdAt": "2025-08-05T15:50:07.430Z",
+        "updatedAt": "2025-08-05T15:50:07.430Z",
+        "purchases": [
+          {
+            "id": "cmdyptpvr0034remwyb9v9fhs",
+            "userId": "user_006",
+            "rewardId": "reward_020",
+            "purchasedAt": "2025-07-14T08:27:23.728Z",
+            "user": {
+              "id": "user_006",
+              "name": "James Wilson",
+              "email": "james.wilson@email.com"
+            }
+          }
+        ]
+      },
+      {
+        "id": "reward_019",
+        "name": "Mindfulness Workshop Series",
+        "description": "Six-week series of mindfulness workshops to develop stress management and emotional well-being skills.",
+        "price": 250,
+        "category": "event",
+        "imageUrl": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=300&h=300&fit=crop",
+        "isAvailable": true,
+        "stock": 47,
+        "soldCount": 0,
+        "createdAt": "2025-08-05T15:50:07.430Z",
+        "updatedAt": "2025-08-05T15:50:07.430Z",
+        "purchases": [
+          {
+            "id": "cmdyptpvs003bremwpjurqcw9",
+            "userId": "user_007",
+            "rewardId": "reward_019",
+            "purchasedAt": "2025-07-07T03:16:27.095Z",
+            "user": {
+              "id": "user_007",
+              "name": "Maria Garcia",
+              "email": "maria.garcia@email.com"
+            }
+          }
+        ]
+      },
+      {
+        "id": "reward_021",
+        "name": "Digital Literacy Certificate",
+        "description": "Certificate recognizing proficiency in digital skills, computer literacy, and technology fundamentals.",
+        "price": 150,
+        "category": "certificate",
+        "imageUrl": "https://images.unsplash.com/photo-1523240798132-8757214e6b0a?w=300&h=300&fit=crop",
+        "isAvailable": true,
+        "stock": null,
+        "soldCount": 9,
+        "createdAt": "2025-08-05T15:50:07.430Z",
+        "updatedAt": "2025-08-05T15:50:07.430Z",
+        "purchases": [
+          {
+            "id": "cmdyptpvr0030remw2mbkr2q6",
+            "userId": "user_005",
+            "rewardId": "reward_021",
+            "purchasedAt": "2025-07-23T16:11:01.057Z",
+            "user": {
+              "id": "user_005",
+              "name": "Emma Thompson",
+              "email": "emma.thompson@email.com"
+            }
+          }
+        ]
+      },
+      {
+        "id": "reward_010",
+        "name": "Artist Workshop Session",
+        "description": "One-on-one workshop session with a local artist to learn new techniques and develop your creative skills.",
+        "price": 200,
+        "category": "experience",
+        "imageUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=300&h=300&fit=crop",
+        "isAvailable": true,
+        "stock": 56,
+        "soldCount": 17,
+        "createdAt": "2025-08-05T15:50:07.429Z",
+        "updatedAt": "2025-08-05T15:50:07.429Z",
+        "purchases": [
+          {
+            "id": "cmdyptpvr0038remw8u49dcbr",
+            "userId": "user_002",
+            "rewardId": "reward_010",
+            "purchasedAt": "2025-08-02T22:46:02.193Z",
+            "user": {
+              "id": "user_002",
+              "name": "Marcus Johnson",
+              "email": "marcus.johnson@email.com"
+            }
+          }
+        ]
+      },
+      {
+        "id": "reward_006",
+        "name": "Tech for Good Conference Pass",
+        "description": "Free pass to attend our annual Tech for Good conference featuring speakers from leading tech companies and nonprofits.",
+        "price": 400,
+        "category": "event",
+        "imageUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=300&h=300&fit=crop",
+        "isAvailable": true,
+        "stock": 23,
+        "soldCount": 14,
+        "createdAt": "2025-08-05T15:50:07.430Z",
+        "updatedAt": "2025-08-05T15:50:07.430Z",
+        "purchases": []
+      },
+      {
+        "id": "reward_017",
+        "name": "Sustainable Technology Certificate",
+        "description": "Certificate recognizing expertise in sustainable technology solutions and renewable energy systems.",
+        "price": 300,
+        "category": "certificate",
+        "imageUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=300&h=300&fit=crop",
+        "isAvailable": true,
+        "stock": null,
+        "soldCount": 11,
+        "createdAt": "2025-08-05T15:50:07.430Z",
+        "updatedAt": "2025-08-05T15:50:07.430Z",
+        "purchases": []
+      },
+      {
+        "id": "cmdyq8rqv0006rerpzu1saowr",
+        "name": "Test Reward",
+        "description": "A test reward for API testing",
+        "price": 50,
+        "category": "digital",
+        "imageUrl": "https://example.com/reward.png",
+        "isAvailable": true,
+        "stock": null,
+        "soldCount": 0,
+        "createdAt": "2025-08-05T16:01:49.687Z",
+        "updatedAt": "2025-08-05T16:01:49.687Z",
+        "purchases": []
+      }
+    ],
+    "feedPosts": [
+      {
+        "id": "cmdyn7j34001ores17zg19akb",
+        "title": "Community Health Workshop Success",
+        "description": "Our nutrition workshop was a huge success! 25 people attended and learned about healthy eating habits.",
+        "mediaType": "image",
+        "mediaUrl": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=600&h=400&fit=crop",
+        "challenge": "Organize a health workshop in your community",
+        "callToAction": [
+          "Learn about organizing workshops",
+          "Share your health tips"
+        ],
+        "links": [
+          "https://communityhealth.org/workshops"
+        ],
+        "smiles": 67,
+        "commentsCount": 12,
+        "likesCount": 34,
+        "createdAt": "2025-08-05T14:36:52.960Z",
+        "updatedAt": "2025-08-05T14:36:52.960Z",
+        "userId": null,
+        "communityId": null,
+        "user": null,
+        "community": null,
+        "comments": [],
+        "likes": []
+      },
+      {
+        "id": "cmdyn7j34001mres1a472etsi",
+        "title": "Amazing Community Tree Planting Event!",
+        "description": "Yesterday we planted 50 trees in our local park. The community came together and it was incredible to see everyone working together for a greener future.",
+        "mediaType": "image",
+        "mediaUrl": "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&h=400&fit=crop",
+        "challenge": "Join us next month for another tree planting event!",
+        "callToAction": [
+          "Sign up for next event",
+          "Share your tree planting story"
+        ],
+        "links": [
+          "https://greenearth.org/events"
+        ],
+        "smiles": 45,
+        "commentsCount": 8,
+        "likesCount": 23,
+        "createdAt": "2025-08-05T14:36:52.960Z",
+        "updatedAt": "2025-08-05T14:36:52.960Z",
+        "userId": null,
+        "communityId": null,
+        "user": null,
+        "community": null,
+        "comments": [],
+        "likes": []
+      },
+      {
+        "id": "cmdyn7j34001nres1q8deifdl",
+        "title": "Teaching Tech Skills to Seniors",
+        "description": "Spent the afternoon teaching basic computer skills to my elderly neighbors. Their enthusiasm for learning was inspiring!",
+        "mediaType": "text",
+        "mediaUrl": null,
+        "challenge": "Help someone learn something new this week",
+        "callToAction": [
+          "Share your teaching story",
+          "Find someone to help"
+        ],
+        "links": [
+          "https://techforgood.org/mentoring"
+        ],
+        "smiles": 32,
+        "commentsCount": 5,
+        "likesCount": 18,
+        "createdAt": "2025-08-05T14:36:52.960Z",
+        "updatedAt": "2025-08-05T14:36:52.960Z",
+        "userId": null,
+        "communityId": null,
+        "user": null,
+        "community": null,
+        "comments": [],
+        "likes": []
+      },
+      {
+        "id": "cmdyptpvu003jremw5b4wtxim",
+        "title": "Hackathon Results - 15 New Apps for Nonprofits",
+        "description": "Our weekend hackathon was a huge success! We developed 15 new applications to help local nonprofits with their digital needs.",
+        "mediaType": "image",
+        "mediaUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=600&h=400&fit=crop",
+        "challenge": "Help us implement these solutions in your community",
+        "callToAction": [
+          "Learn about the apps",
+          "Volunteer for implementation"
+        ],
+        "links": [
+          "https://techforsocialimpact.org/hackathon"
+        ],
+        "smiles": 67,
+        "commentsCount": 12,
+        "likesCount": 34,
+        "createdAt": "2025-08-05T15:50:07.435Z",
+        "updatedAt": "2025-08-05T15:50:07.435Z",
+        "userId": "user_002",
+        "communityId": "comm_002",
+        "user": {
+          "id": "user_002",
+          "name": "Marcus Johnson",
+          "email": "marcus.johnson@email.com"
+        },
+        "community": {
+          "id": "comm_002",
+          "name": "Tech for Social Impact"
+        },
+        "comments": [],
+        "likes": []
+      },
+      {
+        "id": "cmdyptpvu003mremw2jl4fe3l",
+        "title": "Tree Planting Initiative - 100 Trees Planted",
+        "description": "Our community planted 100 trees this weekend! Each tree will help combat climate change and provide habitat for local wildlife.",
+        "mediaType": "image",
+        "mediaUrl": "https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600&h=400&fit=crop",
+        "challenge": "Plant a tree in your neighborhood",
+        "callToAction": [
+          "Join next planting event",
+          "Share your tree story"
+        ],
+        "links": [
+          "https://greenearthinitiative.org/tree-planting"
+        ],
+        "smiles": 56,
+        "commentsCount": 9,
+        "likesCount": 28,
+        "createdAt": "2025-08-05T15:50:07.435Z",
+        "updatedAt": "2025-08-05T15:50:07.435Z",
+        "userId": "user_001",
+        "communityId": "comm_001",
+        "user": {
+          "id": "user_001",
+          "name": "Sarah Chen",
+          "email": "sarah.chen@email.com"
+        },
+        "community": {
+          "id": "comm_001",
+          "name": "Green Earth Initiative"
+        },
+        "comments": [],
+        "likes": []
+      },
+      {
+        "id": "cmdyptpvu003kremwvewcxujy",
+        "title": "Amazing Beach Cleanup Success!",
+        "description": "Yesterday we collected over 500kg of waste from our local beach. The community came together and it was incredible to see everyone working for a cleaner environment.",
+        "mediaType": "image",
+        "mediaUrl": "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=600&h=400&fit=crop",
+        "challenge": "Join us next month for another cleanup event!",
+        "callToAction": [
+          "Sign up for next event",
+          "Share your cleanup story"
+        ],
+        "links": [
+          "https://greenearthinitiative.org/events"
+        ],
+        "smiles": 45,
+        "commentsCount": 8,
+        "likesCount": 23,
+        "createdAt": "2025-08-05T15:50:07.435Z",
+        "updatedAt": "2025-08-05T15:50:07.435Z",
+        "userId": "user_001",
+        "communityId": "comm_001",
+        "user": {
+          "id": "user_001",
+          "name": "Sarah Chen",
+          "email": "sarah.chen@email.com"
+        },
+        "community": {
+          "id": "comm_001",
+          "name": "Green Earth Initiative"
+        },
+        "comments": [],
+        "likes": []
+      },
+      {
+        "id": "cmdyptpvu003nremwqaxn7uol",
+        "title": "Digital Literacy Program Launch",
+        "description": "We're excited to launch our digital literacy program for seniors. Teaching basic computer skills to help them stay connected.",
+        "mediaType": "text",
+        "mediaUrl": null,
+        "challenge": "Help someone learn something new this week",
+        "callToAction": [
+          "Volunteer to teach",
+          "Share your teaching story"
+        ],
+        "links": [
+          "https://techforsocialimpact.org/digital-literacy"
+        ],
+        "smiles": 32,
+        "commentsCount": 5,
+        "likesCount": 18,
+        "createdAt": "2025-08-05T15:50:07.435Z",
+        "updatedAt": "2025-08-05T15:50:07.435Z",
+        "userId": "user_002",
+        "communityId": "comm_002",
+        "user": {
+          "id": "user_002",
+          "name": "Marcus Johnson",
+          "email": "marcus.johnson@email.com"
+        },
+        "community": {
+          "id": "comm_002",
+          "name": "Tech for Social Impact"
+        },
+        "comments": [],
+        "likes": []
+      },
+      {
+        "id": "cmdyptpvu003lremwhm2hy4cm",
+        "title": "Mental Health Workshop Success",
+        "description": "Our community health workshop reached 25 people today. We covered stress management, mindfulness, and building healthy habits.",
+        "mediaType": "image",
+        "mediaUrl": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=600&h=400&fit=crop",
+        "challenge": "Organize a health workshop in your community",
+        "callToAction": [
+          "Learn about organizing workshops",
+          "Share your health tips"
+        ],
+        "links": [
+          "https://communityhealth.org/workshops"
+        ],
+        "smiles": 89,
+        "commentsCount": 15,
+        "likesCount": 42,
+        "createdAt": "2025-08-05T15:50:07.435Z",
+        "updatedAt": "2025-08-05T15:50:07.435Z",
+        "userId": "user_003",
+        "communityId": "comm_003",
+        "user": {
+          "id": "user_003",
+          "name": "Aisha Patel",
+          "email": "aisha.patel@email.com"
+        },
+        "community": {
+          "id": "comm_003",
+          "name": "Student Environmentalists Network"
+        },
+        "comments": [],
+        "likes": []
+      },
+      {
+        "id": "cmdyqaojg0008rerpoqkiq0dt",
+        "title": "Test Feed Post",
+        "description": "A test feed post for API testing",
+        "mediaType": "text",
+        "mediaUrl": "https://example.com/image.jpg",
+        "challenge": "Test challenge",
+        "callToAction": [
+          "Action 1",
+          "Action 2"
+        ],
+        "links": [
+          "https://example.com"
+        ],
+        "smiles": 0,
+        "commentsCount": 0,
+        "likesCount": 0,
+        "createdAt": "2025-08-05T16:03:18.845Z",
+        "updatedAt": "2025-08-05T16:03:18.845Z",
+        "userId": "user_001",
+        "communityId": "comm_001",
+        "user": {
+          "id": "user_001",
+          "name": "Sarah Chen",
+          "email": "sarah.chen@email.com"
+        },
+        "community": {
+          "id": "comm_001",
+          "name": "Green Earth Initiative"
+        },
+        "comments": [],
+        "likes": []
+      },
+      {
+        "id": "cmdzotkkq0001rec84t57orfm",
+        "title": "Beach Cleanup Success - 500kg of waste collected!",
+        "description": "Our amazing volunteers spent the weekend cleaning up the local beach. We collected over 500kg of plastic waste and marine debris. This is what community action looks like! 🌊♻️",
+        "mediaType": "video",
+        "mediaUrl": "/videos/example.mp4",
+        "challenge": "Marine pollution is threatening our oceans. Every piece of plastic we remove makes a difference.",
+        "callToAction": [
+          "Join our next cleanup",
+          "Donate to support our work",
+          "Learn about marine conservation"
+        ],
+        "links": [
+          "https://greenearthinitiative.org/cleanup",
+          "https://greenearthinitiative.org/donate"
+        ],
+        "smiles": 1250,
+        "commentsCount": 45,
+        "likesCount": 320,
+        "createdAt": "2025-08-06T08:09:47.115Z",
+        "updatedAt": "2025-08-06T08:09:47.115Z",
+        "userId": "user_001",
+        "communityId": "comm_001",
+        "user": {
+          "id": "user_001",
+          "name": "Sarah Chen",
+          "email": "sarah.chen@email.com"
+        },
+        "community": {
+          "id": "comm_001",
+          "name": "Green Earth Initiative"
+        },
+        "comments": [],
+        "likes": []
+      },
+      {
+        "id": "cmdzotkku0003rec8jp9hxowi",
+        "title": "Hackathon Results - 15 new apps for nonprofits",
+        "description": "Our 48-hour hackathon brought together 50 developers who created 15 innovative apps for local nonprofits. Technology for social good! 💻❤️",
+        "mediaType": "video",
+        "mediaUrl": "/videos/ceti.mp4",
+        "challenge": "Nonprofits often lack the resources for custom software solutions. We're bridging that gap.",
+        "callToAction": [
+          "Join our next hackathon",
+          "Volunteer your tech skills",
+          "Support our programs"
+        ],
+        "links": [
+          "https://techforsocialimpact.org/hackathon",
+          "https://techforsocialimpact.org/volunteer"
+        ],
+        "smiles": 2100,
+        "commentsCount": 67,
+        "likesCount": 445,
+        "createdAt": "2025-08-06T08:09:47.118Z",
+        "updatedAt": "2025-08-06T08:09:47.118Z",
+        "userId": "user_001",
+        "communityId": "comm_001",
+        "user": {
+          "id": "user_001",
+          "name": "Sarah Chen",
+          "email": "sarah.chen@email.com"
+        },
+        "community": {
+          "id": "comm_001",
+          "name": "Green Earth Initiative"
+        },
+        "comments": [],
+        "likes": []
+      },
+      {
+        "id": "cmdzotkkv0005rec8whfkhuma",
+        "title": "Community Mural Project - Final Reveal",
+        "description": "After 3 months of work, our community mural is complete! 50 artists, 200 volunteers, one beautiful story. 🎨✨",
+        "mediaType": "video",
+        "mediaUrl": "/videos/hot_mapathon.mp4",
+        "challenge": "Public spaces often lack cultural representation. We're bringing community stories to life through art.",
+        "callToAction": [
+          "Visit the mural",
+          "Join our next project",
+          "Support local artists"
+        ],
+        "links": [
+          "https://localartscollective.org/mural",
+          "https://localartscollective.org/projects"
+        ],
+        "smiles": 1200,
+        "commentsCount": 56,
+        "likesCount": 378,
+        "createdAt": "2025-08-06T08:09:47.119Z",
+        "updatedAt": "2025-08-06T08:09:47.119Z",
+        "userId": "user_001",
+        "communityId": "comm_001",
+        "user": {
+          "id": "user_001",
+          "name": "Sarah Chen",
+          "email": "sarah.chen@email.com"
+        },
+        "community": {
+          "id": "comm_001",
+          "name": "Green Earth Initiative"
+        },
+        "comments": [],
+        "likes": []
+      },
+      {
+        "id": "cmdzotkkv0007rec8iig0p3do",
+        "title": "Mental Health Awareness Workshop - Success",
+        "description": "Over 200 people attended our mental health workshop. Breaking the stigma, one conversation at a time. 💚🧠",
+        "mediaType": "video",
+        "mediaUrl": "/videos/example.mp4",
+        "challenge": "Mental health stigma prevents people from seeking help. We're creating safe spaces for open dialogue.",
+        "callToAction": [
+          "Join our support groups",
+          "Volunteer as a facilitator",
+          "Donate to our programs"
+        ],
+        "links": [
+          "https://communityhealthadvocates.org/support",
+          "https://communityhealthadvocates.org/volunteer"
+        ],
+        "smiles": 1650,
+        "commentsCount": 78,
+        "likesCount": 432,
+        "createdAt": "2025-08-06T08:09:47.120Z",
+        "updatedAt": "2025-08-06T08:09:47.120Z",
+        "userId": "user_001",
+        "communityId": "comm_001",
+        "user": {
+          "id": "user_001",
+          "name": "Sarah Chen",
+          "email": "sarah.chen@email.com"
+        },
+        "community": {
+          "id": "comm_001",
+          "name": "Green Earth Initiative"
+        },
+        "comments": [],
+        "likes": []
+      },
+      {
+        "id": "cmdzotkkw0009rec82cib3h3z",
+        "title": "Community Garden Harvest - 500lbs of vegetables",
+        "description": "Our community garden produced 500lbs of fresh vegetables this season! Food security starts in our neighborhoods. 🥬🌽",
+        "mediaType": "video",
+        "mediaUrl": "/videos/ceti.mp4",
+        "challenge": "Food deserts leave communities without access to fresh produce. We're growing food where people live.",
+        "callToAction": [
+          "Join a community garden",
+          "Start your own garden",
+          "Donate gardening supplies"
+        ],
+        "links": [
+          "https://urbangardennetwork.org/gardens",
+          "https://urbangardennetwork.org/start"
+        ],
+        "smiles": 1100,
+        "commentsCount": 52,
+        "likesCount": 345,
+        "createdAt": "2025-08-06T08:09:47.121Z",
+        "updatedAt": "2025-08-06T08:09:47.121Z",
+        "userId": "user_001",
+        "communityId": "comm_001",
+        "user": {
+          "id": "user_001",
+          "name": "Sarah Chen",
+          "email": "sarah.chen@email.com"
+        },
+        "community": {
+          "id": "comm_001",
+          "name": "Green Earth Initiative"
+        },
+        "comments": [],
+        "likes": []
+      }
+    ]
+  }
+}

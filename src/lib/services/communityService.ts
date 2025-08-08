@@ -1,31 +1,391 @@
-import { communities } from '@/data';
-import { Community, CreateCommunityRequest } from '@/lib/types';
+import { prisma } from '../database/client';
+import { Community, CommunityMember, FeedPost } from '../../generated/prisma';
+import { CommunityWalletService } from '../wallet/communityWalletService';
 
-// Mock community storage
-let mockCommunities = [...communities];
+export interface CreateCommunityData {
+  name: string;
+  description?: string;
+  category: string;
+  logoUrl?: string;
+  bannerUrl?: string;
+  location?: string;
+  website?: string;
+  createdBy?: string;
+}
+
+export interface UpdateCommunityData {
+  name?: string;
+  description?: string;
+  category?: string;
+  logoUrl?: string;
+  bannerUrl?: string;
+  location?: string;
+  website?: string;
+  status?: string;
+}
 
 export class CommunityService {
-  // Get all communities with filtering
+  // ========================================
+  // COMMUNITY CREATION & MANAGEMENT
+  // ========================================
+
+  static async createCommunity(data: CreateCommunityData): Promise<Community> {
+    return await prisma.community.create({
+      data: {
+        name: data.name,
+        description: data.description,
+        category: data.category,
+        logoUrl: data.logoUrl,
+        bannerUrl: data.bannerUrl,
+        location: data.location,
+        website: data.website,
+        createdBy: data.createdBy,
+      },
+    });
+  }
+
+  static async findCommunityById(id: string): Promise<Community | null> {
+    return await prisma.community.findUnique({
+      where: { id },
+      include: {
+        members: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                avatarUrl: true,
+                level: true,
+                score: true,
+              },
+            },
+          },
+        },
+        feedPosts: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                avatarUrl: true,
+              },
+            },
+            comments: {
+              include: {
+                user: {
+                  select: {
+                    id: true,
+                    name: true,
+                    avatarUrl: true,
+                  },
+                },
+              },
+            },
+            likes: true,
+          },
+          orderBy: { createdAt: 'desc' },
+        },
+      },
+    });
+  }
+
+  static async updateCommunity(id: string, data: UpdateCommunityData): Promise<Community> {
+    return await prisma.community.update({
+      where: { id },
+      data,
+    });
+  }
+
+  static async deleteCommunity(id: string): Promise<void> {
+    await prisma.community.delete({
+      where: { id },
+    });
+  }
+
+  // ========================================
+  // COMMUNITY SEARCH & FILTERING
+  // ========================================
+
+  static async searchCommunities(query: string, limit: number = 10): Promise<Community[]> {
+    return await prisma.community.findMany({
+      where: {
+        OR: [
+          { name: { contains: query, mode: 'insensitive' } },
+          { description: { contains: query, mode: 'insensitive' } },
+        ],
+        status: 'active',
+      },
+      take: limit,
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  static async getCommunitiesByCategory(category: string, limit: number = 10): Promise<Community[]> {
+    return await prisma.community.findMany({
+      where: {
+        category,
+        status: 'active',
+      },
+      take: limit,
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  static async getPopularCommunities(limit: number = 10): Promise<Community[]> {
+    return await prisma.community.findMany({
+      where: { status: 'active' },
+      take: limit,
+      orderBy: [
+        { members: { _count: 'desc' } },
+        { createdAt: 'desc' },
+      ],
+    });
+  }
+
+  static async getAllCommunities(limit: number = 50): Promise<Community[]> {
+    return await prisma.community.findMany({
+      where: { status: 'active' },
+      take: limit,
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  // ========================================
+  // MEMBERSHIP MANAGEMENT
+  // ========================================
+
+  static async joinCommunity(userId: string, communityId: string): Promise<CommunityMember> {
+    return await prisma.communityMember.create({
+      data: {
+        userId,
+        communityId,
+        role: 'member',
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            avatarUrl: true,
+          },
+        },
+        community: true,
+      },
+    });
+  }
+
+  static async leaveCommunity(userId: string, communityId: string): Promise<void> {
+    await prisma.communityMember.delete({
+      where: {
+        userId_communityId: {
+          userId,
+          communityId,
+        },
+      },
+    });
+  }
+
+  static async updateMemberRole(userId: string, communityId: string, role: string): Promise<CommunityMember> {
+    return await prisma.communityMember.update({
+      where: {
+        userId_communityId: {
+          userId,
+          communityId,
+        },
+      },
+      data: { role },
+    });
+  }
+
+  static async isMember(userId: string, communityId: string): Promise<boolean> {
+    const membership = await prisma.communityMember.findUnique({
+      where: {
+        userId_communityId: {
+          userId,
+          communityId,
+        },
+      },
+    });
+    return !!membership;
+  }
+
+  static async getMemberRole(userId: string, communityId: string): Promise<string | null> {
+    const membership = await prisma.communityMember.findUnique({
+      where: {
+        userId_communityId: {
+          userId,
+          communityId,
+        },
+      },
+    });
+    return membership?.role || null;
+  }
+
+  static async getCommunityMembers(communityId: string, limit: number = 50): Promise<CommunityMember[]> {
+    return await prisma.communityMember.findMany({
+      where: { communityId },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            avatarUrl: true,
+            level: true,
+            score: true,
+          },
+        },
+      },
+      take: limit,
+      orderBy: { joinedAt: 'desc' },
+    });
+  }
+
+  static async getUserCommunities(userId: string): Promise<Community[]> {
+    const memberships = await prisma.communityMember.findMany({
+      where: { userId },
+      include: { community: true },
+    });
+    return memberships.map(membership => membership.community);
+  }
+
+  // ========================================
+  // FEED POSTS
+  // ========================================
+
+  static async createFeedPost(data: {
+    title?: string;
+    description?: string;
+    mediaType?: string;
+    mediaUrl?: string;
+    challenge?: string;
+    callToAction?: string[];
+    links?: string[];
+    userId?: string;
+    communityId?: string;
+  }): Promise<FeedPost> {
+    return await prisma.feedPost.create({
+      data: {
+        title: data.title,
+        description: data.description,
+        mediaType: data.mediaType || 'text',
+        mediaUrl: data.mediaUrl,
+        challenge: data.challenge,
+        callToAction: data.callToAction || [],
+        links: data.links || [],
+        userId: data.userId,
+        communityId: data.communityId,
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            avatarUrl: true,
+          },
+        },
+        community: {
+          select: {
+            id: true,
+            name: true,
+            logoUrl: true,
+          },
+        },
+      },
+    });
+  }
+
+  static async getCommunityFeed(communityId: string, limit: number = 20): Promise<FeedPost[]> {
+    return await prisma.feedPost.findMany({
+      where: { communityId },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            avatarUrl: true,
+          },
+        },
+        comments: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                avatarUrl: true,
+              },
+            },
+          },
+        },
+        likes: true,
+      },
+      take: limit,
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  // ========================================
+  // ANALYTICS
+  // ========================================
+
+  static async getCommunityStats(communityId: string): Promise<{
+    memberCount: number;
+    postCount: number;
+    totalSmiles: number;
+  }> {
+    const [memberCount, postCount, totalSmiles] = await Promise.all([
+      prisma.communityMember.count({ where: { communityId } }),
+      prisma.feedPost.count({ where: { communityId } }),
+      prisma.feedPost.aggregate({
+        where: { communityId },
+        _sum: { smiles: true },
+      }),
+    ]);
+
+    return {
+      memberCount,
+      postCount,
+      totalSmiles: totalSmiles._sum.smiles || 0,
+    };
+  }
+
+  // ========================================
+  // VERIFICATION & MODERATION
+  // ========================================
+
+  static async verifyCommunity(id: string): Promise<Community> {
+    return await prisma.community.update({
+      where: { id },
+      data: { isVerified: true },
+    });
+  }
+
+  static async deactivateCommunity(id: string): Promise<Community> {
+    return await prisma.community.update({
+      where: { id },
+      data: { status: 'inactive' },
+    });
+  }
+
+  // ========================================
+  // API COMPATIBILITY METHODS
+  // ========================================
+
   static async getCommunities(query: {
     category?: string;
     status?: string;
     page?: number;
     pageSize?: number;
-  }): Promise<Community[]> {
-    let filteredCommunities = [...mockCommunities];
+  }): Promise<any[]> {
+    let communities = await this.getAllCommunities(100);
 
     // Filter by category
     if (query.category && query.category !== 'all') {
-      filteredCommunities = filteredCommunities.filter(
-        community => community.category === query.category
-      );
+      communities = communities.filter(community => community.category === query.category);
     }
 
     // Filter by status
     if (query.status && query.status !== 'all') {
-      filteredCommunities = filteredCommunities.filter(
-        community => community.status === query.status
-      );
+      communities = communities.filter(community => community.status === query.status);
     }
 
     // Pagination
@@ -34,186 +394,45 @@ export class CommunityService {
     const startIndex = (page - 1) * pageSize;
     const endIndex = startIndex + pageSize;
 
-    return filteredCommunities.slice(startIndex, endIndex);
+    return communities.slice(startIndex, endIndex);
   }
 
-  // Get community by ID
-  static async getCommunityById(communityId: string): Promise<Community | null> {
-    const community = mockCommunities.find(c => c.id === communityId);
-    return community || null;
-  }
+  static async createCommunityWithUser(data: any, userId: string): Promise<any> {
+    const community = await this.createCommunity({
+      name: data.name,
+      description: data.description,
+      category: data.category,
+      logoUrl: data.logo,
+      bannerUrl: data.banner,
+      location: data.location,
+      website: data.website,
+      createdBy: userId,
+    });
 
-  // Create new community
-  static async createCommunity(communityData: CreateCommunityRequest, createdBy: string): Promise<Community> {
-    const newCommunity: Community = {
-      id: `comm_${Date.now()}`,
-      name: communityData.name,
-      description: communityData.description,
-      category: communityData.category,
-      logo: communityData.logo || 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=100&h=100&fit=crop',
-      banner: communityData.banner || 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=300&fit=crop',
-      members: 1, // Creator is first member
-      missions: 0,
-      totalSmiles: 0,
-      status: 'active',
-      createdBy,
-      createdAt: new Date().toISOString(),
-      location: communityData.location || '',
-      website: communityData.website || '',
-      recentPosts: [],
-      recentMissions: []
+    // Automatically create community wallet
+    try {
+      console.log('🔐 Starting automatic wallet creation for community:', community.id);
+      const communityWalletService = new CommunityWalletService();
+      const wallet = await communityWalletService.createWalletForCommunity(community.id);
+      console.log('✅ Successfully created community wallet for community:', community.id, 'Account ID:', wallet.accountId);
+    } catch (walletError) {
+      console.error('❌ Failed to create community wallet for community:', community.id, 'Error:', walletError);
+      console.error('❌ Community wallet creation error details:', {
+        message: walletError instanceof Error ? walletError.message : 'Unknown error',
+        stack: walletError instanceof Error ? walletError.stack : undefined
+      });
+      // Continue with community creation even if wallet creation fails
+      // The community can create the wallet later if needed
+    }
+
+    // Add creator as admin
+    await this.joinCommunity(userId, community.id);
+    await this.updateMemberRole(userId, community.id, 'admin');
+
+    return {
+      id: community.id,
+      name: community.name,
+      status: community.status,
     };
-
-    mockCommunities.push(newCommunity);
-    return newCommunity;
-  }
-
-  // Update community
-  static async updateCommunity(communityId: string, updates: Partial<Community>): Promise<Community> {
-    const communityIndex = mockCommunities.findIndex(c => c.id === communityId);
-    if (communityIndex === -1) {
-      throw new Error('Community not found');
-    }
-
-    mockCommunities[communityIndex] = {
-      ...mockCommunities[communityIndex],
-      ...updates
-    };
-
-    return mockCommunities[communityIndex];
-  }
-
-  // Delete community
-  static async deleteCommunity(communityId: string): Promise<void> {
-    const communityIndex = mockCommunities.findIndex(c => c.id === communityId);
-    if (communityIndex === -1) {
-      throw new Error('Community not found');
-    }
-
-    mockCommunities.splice(communityIndex, 1);
-  }
-
-  // Join community
-  static async joinCommunity(communityId: string, userId: string): Promise<Community> {
-    const community = mockCommunities.find(c => c.id === communityId);
-    if (!community) {
-      throw new Error('Community not found');
-    }
-
-    // In real app, you'd add user to community members list
-    // For now, we'll just increment the member count
-    community.members += 1;
-
-    return community;
-  }
-
-  // Leave community
-  static async leaveCommunity(communityId: string, userId: string): Promise<Community> {
-    const community = mockCommunities.find(c => c.id === communityId);
-    if (!community) {
-      throw new Error('Community not found');
-    }
-
-    // In real app, you'd remove user from community members list
-    // For now, we'll just decrement the member count
-    community.members = Math.max(0, community.members - 1);
-
-    return community;
-  }
-
-  // Get communities by user
-  static async getCommunitiesByUser(userId: string): Promise<Community[]> {
-    // In real app, you'd query communities where user is a member
-    // For now, return featured communities
-    return mockCommunities.filter(c => c.status === 'featured');
-  }
-
-  // Get communities created by user
-  static async getCommunitiesCreatedByUser(userId: string): Promise<Community[]> {
-    return mockCommunities.filter(c => c.createdBy === userId);
-  }
-
-  // Update community stats
-  static async updateCommunityStats(communityId: string, updates: {
-    missions?: number;
-    totalSmiles?: number;
-  }): Promise<Community> {
-    const communityIndex = mockCommunities.findIndex(c => c.id === communityId);
-    if (communityIndex === -1) {
-      throw new Error('Community not found');
-    }
-
-    mockCommunities[communityIndex] = {
-      ...mockCommunities[communityIndex],
-      ...updates
-    };
-
-    return mockCommunities[communityIndex];
-  }
-
-  // Add recent post to community
-  static async addRecentPost(communityId: string, post: {
-    id: string;
-    title: string;
-    mediaUrl: string;
-    createdAt: string;
-  }): Promise<Community> {
-    const communityIndex = mockCommunities.findIndex(c => c.id === communityId);
-    if (communityIndex === -1) {
-      throw new Error('Community not found');
-    }
-
-    mockCommunities[communityIndex].recentPosts.unshift(post);
-    
-    // Keep only last 5 posts
-    mockCommunities[communityIndex].recentPosts = mockCommunities[communityIndex].recentPosts.slice(0, 5);
-
-    return mockCommunities[communityIndex];
-  }
-
-  // Add recent mission to community
-  static async addRecentMission(communityId: string, mission: {
-    id: string;
-    title: string;
-    reward: number;
-    status: string;
-  }): Promise<Community> {
-    const communityIndex = mockCommunities.findIndex(c => c.id === communityId);
-    if (communityIndex === -1) {
-      throw new Error('Community not found');
-    }
-
-    mockCommunities[communityIndex].recentMissions.unshift(mission);
-    
-    // Keep only last 5 missions
-    mockCommunities[communityIndex].recentMissions = mockCommunities[communityIndex].recentMissions.slice(0, 5);
-
-    return mockCommunities[communityIndex];
-  }
-
-  // Search communities
-  static async searchCommunities(query: string): Promise<Community[]> {
-    const searchTerm = query.toLowerCase();
-    return mockCommunities.filter(community => 
-      community.name.toLowerCase().includes(searchTerm) ||
-      community.description.toLowerCase().includes(searchTerm) ||
-      community.category.toLowerCase().includes(searchTerm)
-    );
-  }
-
-  // Get featured communities
-  static async getFeaturedCommunities(): Promise<Community[]> {
-    return mockCommunities.filter(c => c.status === 'featured');
-  }
-
-  // Get communities by category
-  static async getCommunitiesByCategory(category: string): Promise<Community[]> {
-    return mockCommunities.filter(c => c.category === category);
-  }
-
-  // Get all categories
-  static async getCategories(): Promise<string[]> {
-    const categories = new Set(mockCommunities.map(c => c.category));
-    return Array.from(categories);
   }
 } 

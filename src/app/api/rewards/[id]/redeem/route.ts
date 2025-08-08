@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { RewardService } from '@/lib/services/rewardService';
+import { AuthMiddleware } from '@/lib/middleware/auth';
 
 // POST /api/rewards/[id]/redeem
 export async function POST(
@@ -7,21 +8,24 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
-    // In real app, validate JWT token from Authorization header
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    // Validate authentication and extract user ID from JWT token
+    const authResult = await AuthMiddleware.requireAuth(request);
+    
+    if (authResult instanceof NextResponse) {
+      return authResult; // Return error response
+    }
+
+    const userId = AuthMiddleware.getCurrentUserId(authResult);
+    if (!userId) {
       return NextResponse.json(
-        { success: false, error: 'Authorization token required' },
+        { success: false, error: 'User ID not found in token' },
         { status: 401 }
       );
     }
 
     const { id } = params;
 
-    // For mock implementation, use a default user ID
-    const userId = 'user_001';
-
-    // Redeem reward
+    // Redeem reward with authenticated user
     const result = await RewardService.redeemReward(id, userId);
 
     return NextResponse.json({
