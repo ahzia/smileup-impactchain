@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
     "db:generate": "prisma generate",
@@ -52,6 +52,7 @@
     "@walletconnect/utils": "^2.21.6",
     "axios": "^1.11.0",
     "bcryptjs": "^3.0.2",
+    "bufferutil": "^4.0.9",
     "class-variance-authority": "^0.7.1",
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
@@ -69,6 +70,7 @@
     "react-intersection-observer": "^9.16.0",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.3.1",
+    "utf-8-validate": "^5.0.10",
     "zod": "^4.0.14"
   },
   "devDependencies": {

@@ -1,5 +1,5 @@
+import { User } from '@prisma/client';
 import { prisma } from '../database/client';
-import { User } from '../../generated/prisma';
 import bcrypt from 'bcryptjs';
 import { CustodialWalletService } from '../wallet/custodialWalletService';
 

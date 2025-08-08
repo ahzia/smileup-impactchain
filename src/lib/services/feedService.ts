@@ -1,5 +1,5 @@
+import { FeedPost, Comment, Like } from '@prisma/client';
 import { prisma } from '../database/client';
-import { FeedPost, Comment, Like } from '../../generated/prisma';
 
 export interface CreateFeedPostData {
   title?: string;

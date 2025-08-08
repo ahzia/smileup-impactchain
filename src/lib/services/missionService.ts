@@ -1,5 +1,5 @@
+import { Mission, UserMission, MissionProof } from '@prisma/client';
 import { prisma } from '../database/client';
-import { Mission, UserMission, MissionProof } from '../../generated/prisma';
 
 export interface CreateMissionData {
   title: string;

@@ -1,7 +1,7 @@
 import { UserService } from './userService';
 import { JWTService } from './jwtService';
 import { CustodialWalletService } from '../wallet/custodialWalletService';
-import { User } from '../../generated/prisma';
+import { User } from '@prisma/client';
 
 export interface LoginRequest {
   email: string;

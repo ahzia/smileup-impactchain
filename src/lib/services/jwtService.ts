@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { User } from '../../generated/prisma';
+import { User } from '@prisma/client';
 
 // JWT Configuration
 const JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET || 'your-access-secret-key-development';
