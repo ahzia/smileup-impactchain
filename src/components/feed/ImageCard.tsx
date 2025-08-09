@@ -8,7 +8,7 @@ import { motion } from 'framer-motion';
 interface ImageCardProps {
   index: number;
   post: FeedPost;
-  onSmile: (postId: string) => void;
+  onSmile: (postId: string, amount?: number) => void;
   onSave: (postId: string) => void;
   onAIChat: (post: FeedPost) => void;
   onShare: (post: FeedPost) => void;
@@ -16,6 +16,7 @@ interface ImageCardProps {
   setAiChatOpen: (open: boolean) => void;
   lastPostIndex: number;
   isDonating?: boolean;
+  donationSuccess?: boolean;
 }
 
 export const ImageCard: React.FC<ImageCardProps> = React.memo(({
@@ -29,11 +30,12 @@ export const ImageCard: React.FC<ImageCardProps> = React.memo(({
   setAiChatOpen,
   lastPostIndex,
   isDonating = false,
+  donationSuccess = false,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const handleSmile = () => {
-    onSmile(post.id);
+  const handleSmile = (amount?: number) => {
+    onSmile(post.id, amount);
   };
 
   const toggleExpanded = () => {
@@ -57,6 +59,8 @@ export const ImageCard: React.FC<ImageCardProps> = React.memo(({
           onSave={() => onSave(post.id)}
           onAIChat={() => onAIChat(post)}
           onShare={() => onShare(post)}
+          isDonating={isDonating}
+          donationSuccess={donationSuccess}
         />
       )}
 

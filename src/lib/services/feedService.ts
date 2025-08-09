@@ -433,24 +433,42 @@ export class FeedService {
     error?: string;
   }> {
     try {
+      console.log('🎯 FeedService.donateToPost called');
+      console.log('- Post ID:', postId);
+      console.log('- User ID:', userId);
+      console.log('- Amount:', amount);
+
       // Get the feed post
       const post = await this.findFeedPostById(postId);
       if (!post) {
+        console.log('❌ Feed post not found');
         throw new Error('Feed post not found');
       }
+
+      console.log('📋 Feed post found:', {
+        id: post.id,
+        title: post.title,
+        communityId: post.communityId,
+        currentSmiles: post.smiles
+      });
 
       // Import blockchain service for donation
       const { BlockchainService } = await import('./blockchainService');
 
       // Check if user has enough smiles (real-time balance)
+      console.log('🔍 Checking user balance...');
       const userBalance = await BlockchainService.getUserBalance(userId);
+      console.log('💰 User balance:', userBalance);
+
       if (userBalance < amount) {
+        console.log('❌ Insufficient balance');
         throw new Error('Insufficient smiles balance');
       }
 
       let newCommunitySmiles: number | undefined;
 
       // Transfer tokens using the new donation transfer method
+      console.log('🔄 Starting blockchain transfer...');
       const transferResult = await BlockchainService.transferDonation({
         userId,
         communityId: post.communityId || undefined,
@@ -458,18 +476,25 @@ export class FeedService {
         postId
       });
 
+      console.log('📊 Transfer result:', transferResult);
+
       if (!transferResult.success) {
+        console.log('❌ Transfer failed');
         throw new Error('Failed to transfer tokens');
       }
 
       const blockchainTransactionId: string | undefined = transferResult.blockchainTransactionId;
+      console.log('🔗 Blockchain transaction ID:', blockchainTransactionId);
 
       // If post has a community, get community balance
       if (post.communityId) {
+        console.log('🏢 Getting community balance...');
         newCommunitySmiles = await BlockchainService.getCommunityBalance(post.communityId);
+        console.log('🏢 Community balance:', newCommunitySmiles);
       }
 
       // Create donation record in database
+      console.log('💾 Creating donation record...');
       const donation = await prisma.donation.create({
         data: {
           userId,
@@ -479,15 +504,21 @@ export class FeedService {
           blockchainTransactionId
         }
       });
+      console.log('✅ Donation record created:', donation.id);
 
       // Update post smiles count
+      console.log('📝 Updating post smiles count...');
       await this.updateFeedPost(postId, {
         smiles: { increment: amount }
       });
+      console.log('✅ Post smiles updated');
 
       // Get updated user balance
+      console.log('💰 Getting updated user balance...');
       const newBalance = await BlockchainService.getUserBalance(userId);
+      console.log('💰 New user balance:', newBalance);
 
+      console.log('🎉 Donation completed successfully!');
       return {
         success: true,
         newBalance,
