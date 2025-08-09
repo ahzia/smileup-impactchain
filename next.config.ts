@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   serverExternalPackages: ['@prisma/client'],
+  devIndicators: false
 };
 
 export default nextConfig;

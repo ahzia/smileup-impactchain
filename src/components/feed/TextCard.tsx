@@ -8,7 +8,7 @@ import SlideShowCard from './SlideShowCard';
 interface TextCardProps {
   index: number;
   post: FeedPost;
-  onSmile: (postId: string) => void;
+  onSmile: (postId: string, amount?: number) => void;
   onSave: (postId: string) => void;
   onAIChat: (post: FeedPost) => void;
   onShare: (post: FeedPost) => void;
@@ -16,6 +16,7 @@ interface TextCardProps {
   setAiChatOpen: (open: boolean) => void;
   lastPostIndex: number;
   isDonating?: boolean;
+  donationSuccess?: boolean;
 }
 
 export const TextCard: React.FC<TextCardProps> = React.memo(({
@@ -29,9 +30,10 @@ export const TextCard: React.FC<TextCardProps> = React.memo(({
   setAiChatOpen,
   lastPostIndex,
   isDonating = false,
+  donationSuccess = false,
 }) => {
-  const handleSmile = () => {
-    onSmile(post.id);
+  const handleSmile = (amount?: number) => {
+    onSmile(post.id, amount);
   };
 
   return (
@@ -44,6 +46,8 @@ export const TextCard: React.FC<TextCardProps> = React.memo(({
           onSave={() => onSave(post.id)}
           onAIChat={() => onAIChat(post)}
           onShare={() => onShare(post)}
+          isDonating={isDonating}
+          donationSuccess={donationSuccess}
         />
       )}
 

@@ -241,6 +241,14 @@ export class BlockchainService {
     postId: string;
   }) {
     try {
+      this.initializeServices();
+      
+      // Get user's custodial wallet
+      const userWallet = await this.custodialWalletService.getWalletForUser(data.userId);
+      if (!userWallet) {
+        throw new Error('User wallet not found');
+      }
+
       // Check if user has enough smiles (real-time balance)
       const userBalance = await this.getUserBalance(data.userId);
       if (userBalance < data.amount) {
@@ -265,9 +273,18 @@ export class BlockchainService {
           console.log(`✅ Successfully created community wallet: ${communityWallet.accountId}`);
         }
 
-        // Transfer tokens from user to community
-        const transferResult = await this.tokenService.transferTokens(
-          data.amount, communityWallet.accountId
+        // Get user's decrypted private key
+        const userPrivateKey = await this.custodialWalletService.getDecryptedPrivateKey(data.userId);
+        if (!userPrivateKey) {
+          throw new Error('Failed to get user private key');
+        }
+
+        // Transfer tokens from user wallet to community wallet
+        const transferResult = await this.tokenService.transferTokensFromAccount(
+          data.amount,
+          userWallet.accountId,
+          communityWallet.accountId,
+          userPrivateKey
         );
 
         if (!transferResult.success) {

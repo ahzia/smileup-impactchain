@@ -8,15 +8,19 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    console.log('🎯 Donation API called');
+    
     // Validate authentication and extract user ID from JWT token
     const authResult = await AuthMiddleware.requireAuth(request);
     
     if (authResult instanceof NextResponse) {
+      console.log('❌ Authentication failed');
       return authResult; // Return error response
     }
 
     const userId = AuthMiddleware.getCurrentUserId(authResult);
     if (!userId) {
+      console.log('❌ User ID not found in token');
       return NextResponse.json(
         { success: false, error: 'User ID not found in token' },
         { status: 401 }
@@ -26,16 +30,32 @@ export async function POST(
     const { id } = await params;
     const { amount } = await request.json();
 
-    // Donate to post with authenticated user
-    const result = await FeedService.donateToPost(id, userId, amount);
+    console.log('📋 Donation details:');
+    console.log('- Post ID:', id);
+    console.log('- User ID:', userId);
+    console.log('- Amount:', amount);
 
+    // Donate to post with authenticated user
+    console.log('🔄 Calling FeedService.donateToPost...');
+    const result = await FeedService.donateToPost(id, userId, amount);
+    console.log('✅ FeedService.donateToPost result:', result);
+
+    if (!result.success) {
+      console.log('❌ Donation failed:', result.error);
+      return NextResponse.json(
+        { success: false, error: result.error },
+        { status: 400 }
+      );
+    }
+
+    console.log('🎉 Donation successful!');
     return NextResponse.json({
       success: true,
       data: result
     });
 
   } catch (error) {
-    console.error('Donate to post error:', error);
+    console.error('❌ Donate to post error:', error);
     return NextResponse.json(
       { 
         success: false, 
