@@ -10,6 +10,7 @@ import { useFeed } from '@/lib/hooks/useFeed';
 import { FeedPost } from '@/lib/types';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthModal } from '@/components/auth/AuthModal';
+import { apiClient } from '@/lib/api/client';
 
 export default function FeedContainer() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -58,54 +59,42 @@ export default function FeedContainer() {
 
   const handleSmile = async (postId: string, amount: number = 1) => {
     // Check if user is authenticated
-    if (!isAuthenticated || !user) {
+    if (!isAuthenticated) {
       setShowAuthModal(true);
-      return;
-    }
-
-    // Prevent multiple donations
-    if (donatingPostId === postId) {
       return;
     }
 
     try {
       setDonatingPostId(postId);
       
-      // Call the donation API
-      const response = await fetch(`/api/feed/${postId}/donate`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-        },
-        body: JSON.stringify({ amount }) // Use the passed amount
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        console.log('Donation successful:', result);
+      // Use the API client which handles authentication automatically
+      const response = await apiClient.donateSmiles(postId, amount);
+      
+      if (response.success) {
+        // Update the post's smile count in local state
+        setPosts(prevPosts =>
+          prevPosts.map(post =>
+            post.id === postId
+              ? { ...post, smiles: (post.smiles || 0) + amount }
+              : post
+          )
+        );
         
-        // Set successful donation ID to trigger animation
+        // Set successful donation for animation
         setSuccessfulDonationId(postId);
+        setTimeout(() => setSuccessfulDonationId(null), 2000);
         
-        // Refetch feed to update smile counts
-        await refetch();
-        
-        // Clear donation states after animation
-        setTimeout(() => {
-          setDonatingPostId(null);
-          setSuccessfulDonationId(null);
-        }, 1000);
+        console.log('✅ Donation successful:', response.data?.message);
       } else {
-        const errorData = await response.json();
-        console.error('Donation failed:', errorData);
-        setDonatingPostId(null);
-        // You could show an error toast here
+        console.error('❌ Donation failed:', response.error);
+        // You could show a toast notification here
       }
     } catch (error) {
       console.error('Error during donation:', error);
       setDonatingPostId(null);
       // You could show an error toast here
+    } finally {
+      setDonatingPostId(null);
     }
   };
 

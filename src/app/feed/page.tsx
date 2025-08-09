@@ -11,6 +11,7 @@ import { useInView } from 'react-intersection-observer';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { apiClient } from '@/lib/api/client';
 
 // Loading skeleton component
 const FeedSkeleton = () => (
@@ -53,22 +54,10 @@ export default function FeedPage() {
     try {
       setDonatingPostId(postId);
       
-      const token = localStorage.getItem('smileup_token');
-      const response = await fetch(`/api/feed/${postId}/donate`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          amount: 1, // Default to 1 smile
-          message: 'Smile donation'
-        })
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
+      // Use the API client which handles authentication automatically
+      const response = await apiClient.donateSmiles(postId, 1);
+      
+      if (response.success) {
         // Update the post's smile count in local state
         setPosts(prevPosts =>
           prevPosts.map(post =>
@@ -78,9 +67,9 @@ export default function FeedPage() {
           )
         );
         
-        console.log('✅ Donation successful:', data.data.message);
+        console.log('✅ Donation successful:', response.data?.message);
       } else {
-        console.error('❌ Donation failed:', data.error);
+        console.error('❌ Donation failed:', response.error);
         // You could show a toast notification here
       }
     } catch (error) {
