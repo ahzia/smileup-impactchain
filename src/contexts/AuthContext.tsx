@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, LoginResponse, RegisterRequest } from '@/lib/types';
+import { apiClient } from '@/lib/api/client';
 
 interface AuthContextType {
   user: User | null;
@@ -125,15 +126,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
+      const data = await apiClient.login({ email, password });
 
       if (data.success && data.data) {
         const { accessToken, refreshToken: newRefreshToken, user: userData } = data.data;
@@ -161,15 +154,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const register = async (userData: RegisterRequest): Promise<boolean> => {
     try {
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      });
-
-      const data = await response.json();
+      const data = await apiClient.register(userData);
 
       if (data.success && data.data) {
         const { accessToken, refreshToken: newRefreshToken, user: userData } = data.data;

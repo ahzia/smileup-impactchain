@@ -1,30 +1,105 @@
 'use client';
 
-import { Smile, Bot, Share, Bookmark, MessageCircle, Loader2 } from 'lucide-react';
+import { Smile, Bot, Share, Bookmark, MessageCircle, Loader2, Plus, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { FeedPost } from '@/lib/types';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface FeedSidebarProps {
   post: FeedPost;
-  onSmile: () => void;
+  onSmile: (amount?: number) => void;
   onSave: () => void;
   onAIChat: () => void;
   onShare: () => void;
   isDonating?: boolean;
+  donationSuccess?: boolean;
 }
 
-export function FeedSidebar({ post, onSmile, onSave, onAIChat, onShare, isDonating = false }: FeedSidebarProps) {
+const DONATION_OPTIONS = [1, 5, 10, 20, 50, 100];
+
+export function FeedSidebar({ post, onSmile, onSave, onAIChat, onShare, isDonating = false, donationSuccess = false }: FeedSidebarProps) {
   const [isSmiling, setIsSmiling] = useState(false);
   const [isSaved, setIsSaved] = useState(post.saved || false);
+  const [showDonationOptions, setShowDonationOptions] = useState(false);
+  const [customAmount, setCustomAmount] = useState('');
+  const [showCustomInput, setShowCustomInput] = useState(false);
+  const holdTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const isHoldingRef = useRef(false);
 
-  const handleSmile = () => {
+  // Trigger smile animation when donation completes successfully
+  useEffect(() => {
+    if (donationSuccess && !isDonating) {
+      setIsSmiling(true);
+      setTimeout(() => setIsSmiling(false), 800);
+    }
+  }, [donationSuccess, isDonating]);
+
+  // Handle clicking outside the modal to close it
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (showDonationOptions) {
+        // Check if the click is outside the modal
+        const modal = document.querySelector('[data-donation-modal]');
+        if (modal && !modal.contains(event.target as Node)) {
+          closeModal();
+        }
+      }
+    };
+
+    // Add global click listener when modal is open
+    if (showDonationOptions) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showDonationOptions]);
+
+  const handleSmilePress = () => {
+    isHoldingRef.current = true;
+    holdTimeoutRef.current = setTimeout(() => {
+      if (isHoldingRef.current) {
+        setShowDonationOptions(true);
+      }
+    }, 300); // Show options after 300ms of holding
+  };
+
+  const handleSmileRelease = () => {
+    isHoldingRef.current = false;
+    if (holdTimeoutRef.current) {
+      clearTimeout(holdTimeoutRef.current);
+      holdTimeoutRef.current = null;
+    }
+    
+    // If options weren't shown, it was a quick tap - donate 1 smile
+    // But only if we're not currently showing donation options
+    if (!showDonationOptions && !isDonating) {
+      handleDonation(1);
+    }
+  };
+
+  const handleDonation = (amount: number) => {
     if (isDonating) return; // Prevent multiple clicks while donating
     
     setIsSmiling(true);
-    onSmile();
+    onSmile(amount);
+    closeModal();
     setTimeout(() => setIsSmiling(false), 800);
+  };
+
+  const handleCustomDonation = () => {
+    const amount = parseInt(customAmount);
+    if (amount > 0) {
+      handleDonation(amount);
+    }
+  };
+
+  const closeModal = () => {
+    setShowDonationOptions(false);
+    setShowCustomInput(false);
+    setCustomAmount('');
   };
 
   const handleSave = () => {
@@ -58,7 +133,11 @@ export function FeedSidebar({ post, onSmile, onSave, onAIChat, onShare, isDonati
             className={`w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 xl:w-18 xl:h-18 rounded-full bg-black/25 dark:bg-black/40 backdrop-blur-md hover:bg-black/35 dark:hover:bg-black/50 border border-white/25 dark:border-white/30 transition-all duration-200 shadow-lg lg:shadow-2xl lg:hover:shadow-yellow-400/25 lg:group-hover:border-yellow-400/50 ${
               isDonating ? 'opacity-50 cursor-not-allowed' : ''
             }`}
-            onClick={handleSmile}
+            onMouseDown={handleSmilePress}
+            onMouseUp={handleSmileRelease}
+            onMouseLeave={handleSmileRelease}
+            onTouchStart={handleSmilePress}
+            onTouchEnd={handleSmileRelease}
           >
             <AnimatePresence>
               {isDonating ? (
@@ -99,6 +178,101 @@ export function FeedSidebar({ post, onSmile, onSave, onAIChat, onShare, isDonati
             {isDonating ? 'Donating...' : 'Smiles'}
           </div>
         </div>
+
+        {/* Donation Options Modal */}
+        <AnimatePresence>
+          {showDonationOptions && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.8, y: 20 }}
+              transition={{ duration: 0.2 }}
+              className="absolute bottom-full mb-4 right-0 bg-black/90 backdrop-blur-md rounded-2xl p-4 border border-white/20 shadow-2xl"
+              data-donation-modal
+            >
+              <div className="flex items-center justify-between mb-2">
+                <div className="text-white/80 text-xs font-medium">
+                  Choose donation amount
+                </div>
+                <button
+                  onClick={closeModal}
+                  className="text-white/60 hover:text-white/80 transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+              <div className="flex flex-col space-y-3">
+                
+                {/* Quick Amount Buttons */}
+                <div className="grid grid-cols-3 gap-2">
+                  {DONATION_OPTIONS.map((amount) => (
+                    <motion.button
+                      key={amount}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDonation(amount);
+                      }}
+                      onMouseUp={(e) => {
+                        e.stopPropagation();
+                      }}
+                      className="bg-yellow-500 hover:bg-yellow-400 text-black font-bold text-sm rounded-lg py-2 px-3 transition-colors"
+                    >
+                      {amount}
+                    </motion.button>
+                  ))}
+                </div>
+
+                {/* Custom Amount */}
+                <div className="flex items-center space-x-2">
+                  {showCustomInput ? (
+                    <>
+                      <input
+                        type="number"
+                        value={customAmount}
+                        onChange={(e) => setCustomAmount(e.target.value)}
+                        placeholder="Amount"
+                        className="flex-1 bg-white/10 text-white placeholder-white/50 rounded-lg px-3 py-2 text-sm border border-white/20 focus:outline-none focus:border-yellow-400"
+                        min="1"
+                        max="1000"
+                      />
+                      <Button
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleCustomDonation();
+                        }}
+                        onMouseUp={(e) => {
+                          e.stopPropagation();
+                        }}
+                        disabled={!customAmount || parseInt(customAmount) <= 0}
+                        className="bg-yellow-500 hover:bg-yellow-400 text-black font-bold text-xs px-3 py-2"
+                      >
+                        Donate
+                      </Button>
+                    </>
+                  ) : (
+                    <Button
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowCustomInput(true);
+                      }}
+                      onMouseUp={(e) => {
+                        e.stopPropagation();
+                      }}
+                      className="w-full bg-white/10 hover:bg-white/20 text-white font-bold text-xs py-2 border border-white/20"
+                    >
+                      <Plus className="w-4 h-4 mr-1" />
+                      Custom Amount
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
 
       {/* AI Chat Button */}
@@ -244,4 +418,4 @@ export function FeedSidebar({ post, onSmile, onSave, onAIChat, onShare, isDonati
       </AnimatePresence>
     </div>
   );
-} 
+}

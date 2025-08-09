@@ -166,6 +166,65 @@ export class TokenService {
   }
 
   /**
+   * Transfer Smiles tokens from a specific source account to recipient
+   */
+  async transferTokensFromAccount(
+    amount: number, 
+    sourceAccountId: string, 
+    recipientId: string,
+    sourcePrivateKey: string
+  ): Promise<TransferResult> {
+    try {
+      console.log(`💸 Transferring ${amount} SMILE tokens from ${sourceAccountId} to ${recipientId}...`);
+
+      const sourceAccount = AccountId.fromString(sourceAccountId);
+      const recipientAccount = AccountId.fromString(recipientId);
+      const sourceKey = PrivateKey.fromString(sourcePrivateKey);
+
+      const transferTx = new TransferTransaction()
+        .addTokenTransfer(
+          this.tokenId,
+          sourceAccount,
+          -amount
+        )
+        .addTokenTransfer(
+          this.tokenId,
+          recipientAccount,
+          amount
+        )
+        .setTransactionMemo(`Donation transfer from ${sourceAccountId} to ${recipientId}`);
+
+      // Freeze the transaction
+      const frozenTx = await transferTx.freezeWith(this.client);
+
+      // Sign with the source account's private key
+      const signedTx = await frozenTx.sign(sourceKey);
+      
+      const transferResponse = await signedTx.execute(this.client);
+      const transferReceipt = await transferResponse.getReceipt(this.client);
+
+      if (transferReceipt.status !== Status.Success) {
+        throw new Error(`Transfer transaction failed with status: ${transferReceipt.status}`);
+      }
+
+      console.log(`✅ Successfully transferred ${amount} SMILE tokens from ${sourceAccountId} to ${recipientId}`);
+      console.log(`📊 Transaction ID: ${transferResponse.transactionId}`);
+
+      return {
+        success: true,
+        transactionId: transferResponse.transactionId.toString()
+      };
+
+    } catch (error) {
+      console.error("❌ Error transferring tokens from account:", error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error"
+      };
+    }
+  }
+
+  /**
    * Get current token balance for operator account
    */
   async getTokenBalance(): Promise<number> {

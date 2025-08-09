@@ -8,13 +8,20 @@ import { TextCard } from './TextCard';
 import { AIChat } from './AIChat';
 import { useFeed } from '@/lib/hooks/useFeed';
 import { FeedPost } from '@/lib/types';
+import { useAuth } from '@/contexts/AuthContext';
+import { AuthModal } from '@/components/auth/AuthModal';
+import { apiClient } from '@/lib/api/client';
 
 export default function FeedContainer() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedPost, setSelectedPost] = useState<FeedPost | null>(null);
   const [aiChatOpen, setAiChatOpen] = useState(false);
+  const [donatingPostId, setDonatingPostId] = useState<string | null>(null);
+  const [successfulDonationId, setSuccessfulDonationId] = useState<string | null>(null);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   
-  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useFeed();
+  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useFeed();
+  const { user, isAuthenticated } = useAuth();
   
   // Flatten all pages into a single array
   const posts = data?.pages.flatMap(page => page.posts) || [];
@@ -50,9 +57,45 @@ export default function FeedContainer() {
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  const handleSmile = (postId: string) => {
-    // TODO: Implement smile functionality with blockchain
-    console.log('Smiled on post:', postId);
+  const handleSmile = async (postId: string, amount: number = 1) => {
+    // Check if user is authenticated
+    if (!isAuthenticated) {
+      setShowAuthModal(true);
+      return;
+    }
+
+    try {
+      setDonatingPostId(postId);
+      
+      // Use the API client which handles authentication automatically
+      const response = await apiClient.donateSmiles(postId, amount);
+      
+      if (response.success) {
+        // Update the post's smile count in local state
+        setPosts(prevPosts =>
+          prevPosts.map(post =>
+            post.id === postId
+              ? { ...post, smiles: (post.smiles || 0) + amount }
+              : post
+          )
+        );
+        
+        // Set successful donation for animation
+        setSuccessfulDonationId(postId);
+        setTimeout(() => setSuccessfulDonationId(null), 2000);
+        
+        console.log('✅ Donation successful:', response.data?.message);
+      } else {
+        console.error('❌ Donation failed:', response.error);
+        // You could show a toast notification here
+      }
+    } catch (error) {
+      console.error('Error during donation:', error);
+      setDonatingPostId(null);
+      // You could show an error toast here
+    } finally {
+      setDonatingPostId(null);
+    }
   };
 
   const handleAIChat = (post: FeedPost) => {
@@ -120,7 +163,8 @@ export default function FeedContainer() {
                 aiChatOpen={aiChatOpen}
                 setAiChatOpen={setAiChatOpen}
                 lastPostIndex={posts.length - 1}
-                isDonating={false}
+                isDonating={donatingPostId === posts[currentIndex].id}
+                donationSuccess={successfulDonationId === posts[currentIndex].id}
               />
             )}
             {posts[currentIndex].mediaType === 'image' && (
@@ -134,7 +178,8 @@ export default function FeedContainer() {
                 aiChatOpen={aiChatOpen}
                 setAiChatOpen={setAiChatOpen}
                 lastPostIndex={posts.length - 1}
-                isDonating={false}
+                isDonating={donatingPostId === posts[currentIndex].id}
+                donationSuccess={successfulDonationId === posts[currentIndex].id}
               />
             )}
             {/* For text posts, we'll use ImageCard with a placeholder image */}
@@ -149,7 +194,8 @@ export default function FeedContainer() {
                 aiChatOpen={aiChatOpen}
                 setAiChatOpen={setAiChatOpen}
                 lastPostIndex={posts.length - 1}
-                isDonating={false}
+                isDonating={donatingPostId === posts[currentIndex].id}
+                donationSuccess={successfulDonationId === posts[currentIndex].id}
               />
             )}
           </div>
@@ -183,6 +229,12 @@ export default function FeedContainer() {
           <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
         </div>
       )}
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+      />
     </div>
   );
 } 

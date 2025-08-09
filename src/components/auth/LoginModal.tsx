@@ -54,11 +54,8 @@ export function LoginModal({ isOpen, onClose, onLoginSuccess, showCreateAccountL
   const handleDemoLogin = async () => {
     setEmail('demo@smileup.com');
     setPassword('demo123');
-    
-    // Auto-submit after setting demo credentials
-    setTimeout(() => {
-      handleSubmit(new Event('submit') as any);
-    }, 100);
+    setError(''); // Clear any existing errors
+    // Remove automatic form submission - let user click Sign In manually
   };
 
   const handleRegisterSuccess = () => {

@@ -10,7 +10,7 @@ import { Play, Volume2, VolumeX } from 'lucide-react';
 interface VideoCardProps {
   index: number;
   post: FeedPost;
-  onSmile: (postId: string) => void;
+  onSmile: (postId: string, amount?: number) => void;
   onSave: (postId: string) => void;
   onAIChat: (post: FeedPost) => void;
   onShare: (post: FeedPost) => void;
@@ -18,6 +18,7 @@ interface VideoCardProps {
   setAiChatOpen: (open: boolean) => void;
   lastPostIndex: number;
   isDonating?: boolean;
+  donationSuccess?: boolean;
 }
 
 export const VideoCard: React.FC<VideoCardProps> = React.memo(({
@@ -31,6 +32,7 @@ export const VideoCard: React.FC<VideoCardProps> = React.memo(({
   setAiChatOpen,
   lastPostIndex,
   isDonating = false,
+  donationSuccess = false,
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -68,8 +70,8 @@ export const VideoCard: React.FC<VideoCardProps> = React.memo(({
     }
   };
 
-  const handleSmile = () => {
-    onSmile(post.id);
+  const handleSmile = (amount?: number) => {
+    onSmile(post.id, amount);
   };
 
   const toggleExpanded = () => {
@@ -236,6 +238,7 @@ export const VideoCard: React.FC<VideoCardProps> = React.memo(({
           onAIChat={() => onAIChat(post)}
           onShare={() => onShare(post)}
           isDonating={isDonating}
+          donationSuccess={donationSuccess}
         />
       )}
     </div>
