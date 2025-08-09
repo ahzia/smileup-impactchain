@@ -25,6 +25,12 @@ SmileUp is a TikTok-style social feed where every interaction can become a meani
 - **$2.3 Trillion Market Opportunity** - UN Sustainable Development Goals
 - **4.9 Billion Potential Users** - Global social media audience
 
+## 🌐 **Live Demo & Resources**
+
+- **🚀 Live Application**: [https://smileup-impactchain.vercel.app/](https://smileup-impactchain.vercel.app/)
+- **📊 Pitch Deck**: [Google Drive](https://drive.google.com/drive/folders/1n4SjoQuEVZ9q6MNBwcBk423hulTz-NOf)
+- **🎬 Demo Video**: [YouTube](https://www.youtube.com/watch?v=E-JnVdnLjwc)
+
 ## 🚀 **Quick Start**
 
 ### **Prerequisites**
